@@ -730,6 +730,17 @@ function MacroZoneChartCard({
     });
 
     chart.timeScale().fitContent();
+    try {
+      const range = chart.timeScale().getVisibleLogicalRange();
+      if (range) {
+        const totalBars = Math.max(10, range.to - range.from);
+        const padding = Math.max(16, Math.round(totalBars * 0.12));
+        chart.timeScale().setVisibleLogicalRange({
+          from: range.from,
+          to: range.to + padding
+        });
+      }
+    } catch (_) {}
 
     const handleResize = () => {
       if (containerRef.current && chartRef.current) {
@@ -749,7 +760,20 @@ function MacroZoneChartCard({
 
   const handleReset = () => {
     if (chartRef.current) {
-      chartRef.current.timeScale().fitContent();
+      try {
+        chartRef.current.timeScale().fitContent();
+        const range = chartRef.current.timeScale().getVisibleLogicalRange();
+        if (range) {
+          const totalBars = Math.max(10, range.to - range.from);
+          const padding = Math.max(16, Math.round(totalBars * 0.12));
+          chartRef.current.timeScale().setVisibleLogicalRange({
+            from: range.from,
+            to: range.to + padding
+          });
+        }
+      } catch (_) {
+        chartRef.current.timeScale().fitContent();
+      }
     }
   };
 
@@ -1307,6 +1331,23 @@ function CorridorSniperZoneChart({
     };
   }, [isDraggingHeight, isFullscreen]);
 
+  // 📏 Helper : Zoom propre avec espace libre sur la droite pour détacher les courbes de l'échelle des prix
+  const applyComfortableZoom = (targetChart, minOffset = 16) => {
+    if (!targetChart) return;
+    try {
+      targetChart.timeScale().fitContent();
+      const range = targetChart.timeScale().getVisibleLogicalRange();
+      if (range) {
+        const totalBars = Math.max(10, range.to - range.from);
+        const padding = Math.max(minOffset, Math.round(totalBars * 0.12));
+        targetChart.timeScale().setVisibleLogicalRange({
+          from: range.from,
+          to: range.to + padding
+        });
+      }
+    } catch (_) {}
+  };
+
   // Recalcul automatique des dimensions lors des changements de ratio, vue duo ou plein écran
   useEffect(() => {
     const handleResizeTimer = () => {
@@ -1315,14 +1356,14 @@ function CorridorSniperZoneChart({
           width: containerRef.current.clientWidth,
           height: effectiveChartHeight
         });
-        chartRef.current.timeScale().fitContent();
+        applyComfortableZoom(chartRef.current);
       }
       if (monthContainerRef.current && monthChartRef.current) {
         monthChartRef.current.applyOptions({
           width: monthContainerRef.current.clientWidth,
           height: effectiveChartHeight
         });
-        monthChartRef.current.timeScale().fitContent();
+        applyComfortableZoom(monthChartRef.current);
       }
     };
 
@@ -1368,14 +1409,16 @@ function CorridorSniperZoneChart({
       },
       rightPriceScale: {
         borderColor: 'rgba(255, 255, 255, 0.08)',
-        scaleMargins: { top: 0.08, bottom: 0.08 },
+        scaleMargins: { top: 0.12, bottom: 0.10 },
         autoScale: true,
       },
       timeScale: {
         borderColor: 'rgba(255, 255, 255, 0.08)',
         timeVisible: true,
         secondsVisible: false,
-        rightOffset: 6
+        rightOffset: 18,
+        fixRightEdge: false,
+        fixLeftEdge: false
       },
       handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
       handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: { time: true, price: true }, mouseWheel: true, pinch: true },
@@ -1541,7 +1584,7 @@ function CorridorSniperZoneChart({
       }
     });
 
-    chart.timeScale().fitContent();
+    applyComfortableZoom(chart);
   }, [corridorTokens, macroResLvl, entryLvl, rejectionLvl, chartProcessedData, highlightedToken, selectedSoloToken, chartUniverse, dailyCgData, dailyMarketCaps]);
 
   // 4b. Initialisation du Canvas Lightweight Charts pour la Charte Macro 30D (Mêmes Tokens du Couloir)
@@ -1569,14 +1612,16 @@ function CorridorSniperZoneChart({
       },
       rightPriceScale: {
         borderColor: 'rgba(255, 255, 255, 0.08)',
-        scaleMargins: { top: 0.08, bottom: 0.08 },
+        scaleMargins: { top: 0.12, bottom: 0.10 },
         autoScale: true,
       },
       timeScale: {
         borderColor: 'rgba(255, 255, 255, 0.08)',
         timeVisible: true,
         secondsVisible: false,
-        rightOffset: 6
+        rightOffset: 18,
+        fixRightEdge: false,
+        fixLeftEdge: false
       },
       handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
       handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: { time: true, price: true }, mouseWheel: true, pinch: true },
@@ -1712,7 +1757,7 @@ function CorridorSniperZoneChart({
       }
     });
 
-    chart.timeScale().fitContent();
+    applyComfortableZoom(chart);
   }, [corridorTokens, macroResLvl, corridor30dMap, corridor30dTimestamps, corridor30dEma, chartProcessedData, highlightedToken, selectedSoloToken, chartUniverse, showDualView]);
 
   // ⚡ 5. MOTEUR LIVE 15M HAUTE FRÉQUENCE (Ticks en direct Bybit WebSocket / REST)
@@ -1802,10 +1847,10 @@ function CorridorSniperZoneChart({
 
   const handleResetZoom = () => {
     if (chartRef.current) {
-      chartRef.current.timeScale().fitContent();
+      applyComfortableZoom(chartRef.current);
     }
     if (monthChartRef.current) {
-      monthChartRef.current.timeScale().fitContent();
+      applyComfortableZoom(monthChartRef.current);
     }
   };
 
@@ -7318,6 +7363,17 @@ export default function MonthlyTop50BenchmarkComparator() {
     }
 
     chart.timeScale().fitContent();
+    try {
+      const range = chart.timeScale().getVisibleLogicalRange();
+      if (range) {
+        const totalBars = Math.max(10, range.to - range.from);
+        const padding = Math.max(16, Math.round(totalBars * 0.12));
+        chart.timeScale().setVisibleLogicalRange({
+          from: range.from,
+          to: range.to + padding
+        });
+      }
+    } catch (_) {}
     setTimeout(updateOverlayPositions, 40);
     setTimeout(updateOverlayPositions, 250);
   }, [tripleAnalysis, activeChartHorizon, chartUniverse, tokensData, selectedPhaseFilter, selectedTopCount, selectedSoloToken, chartProcessedData, updateOverlayPositions, filterAboveStopLossOnly, filterFreshBreakoutsOnly, volumeProfileData, showVolumeProfile, dailyCgData, dailyMarketCaps]);
@@ -7360,7 +7416,20 @@ export default function MonthlyTop50BenchmarkComparator() {
 
   const handleResetZoom = () => {
     if (chartRef.current) {
-      chartRef.current.timeScale().fitContent();
+      try {
+        chartRef.current.timeScale().fitContent();
+        const range = chartRef.current.timeScale().getVisibleLogicalRange();
+        if (range) {
+          const totalBars = Math.max(10, range.to - range.from);
+          const padding = Math.max(16, Math.round(totalBars * 0.12));
+          chartRef.current.timeScale().setVisibleLogicalRange({
+            from: range.from,
+            to: range.to + padding
+          });
+        }
+      } catch (_) {
+        chartRef.current.timeScale().fitContent();
+      }
     }
   };
 
