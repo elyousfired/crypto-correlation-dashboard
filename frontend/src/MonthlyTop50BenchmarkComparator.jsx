@@ -2683,7 +2683,7 @@ export function MonthlyHigherHighRadarChart({
   const [isDraggingHeight, setIsDraggingHeight] = useState(false);
   const [highlightedToken, setHighlightedToken] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [filterMode, setFilterMode] = useState('ATTACK'); // 'ATTACK' (<= -3.5%), 'BREAKOUT' (>= 0%), 'APPROACH' (<= -7%), 'TOP15'
+  const [filterMode, setFilterMode] = useState('TRUE_RETEST'); // 'TRUE_RETEST' (Base saine + Sommet mature), 'BREAKOUT' (>= 0%), 'ATTACK' (<= -3.5%), 'FOMO_RUNNERS' (Pompe active), 'TOP15'
   const [viewMode, setViewMode] = useState('DISTANCE'); // 'DISTANCE' (0% = Sommet) ou 'POINTS_30D' (Points réels)
 
   const dragStartYRef = useRef(0);
@@ -2692,21 +2692,22 @@ export function MonthlyHigherHighRadarChart({
   const prevSymbolsRef = useRef('');
 
   // 1. Détection et extraction des tokens du Top 50 qui testent ou dépassent leur HH des 30 jours
-  const hhTokens = useMemo(() => {
+  // 1. Détection et extraction de l'ensemble des candidats HH des 30 jours
+  const allHhCandidates = useMemo(() => {
     const list = (chartUniverse === 'MONTH_PEAK' ? tripleAnalysis?.listMaxPointsMonth : tripleAnalysis?.listMonth) || [];
     const tokenMonthCurvesMap = chartProcessedData?.tokenMonthCurvesMap || {};
     const tokenMonthBasePricesMap = chartProcessedData?.tokenMonthBasePricesMap || {};
 
-    const candidates = list.filter(t => {
+    return list.filter(t => {
       const sym = t.cleanSymbol;
       if (!sym || sym === 'BTC' || sym === 'ETH') return false;
       const curve = tokenMonthCurvesMap[sym];
       return curve && curve.length > 0;
     }).map((t, idx) => {
       const sym = t.cleanSymbol;
-      const high30d = t.high30d > 0 ? t.high30d : t.price;
+      const targetHH = (t.isTrueRetest && t.histHigh30d > 0) ? t.histHigh30d : (t.high30d > 0 ? t.high30d : t.price);
       const livePrice = livePricesRef?.current?.[sym] || t.price;
-      const liveDistToHH = high30d > 0 ? parseFloat((((livePrice - high30d) / high30d) * 100).toFixed(2)) : (t.pullbackFromPeak || 0);
+      const liveDistToHH = targetHH > 0 ? parseFloat((((livePrice - targetHH) / targetHH) * 100).toFixed(2)) : (t.pullbackFromPeak || 0);
 
       const isBreakout = liveDistToHH >= 0.0;
       const isAttacking = liveDistToHH >= -3.5;
@@ -2715,10 +2716,10 @@ export function MonthlyHigherHighRadarChart({
       const curveMonth = tokenMonthCurvesMap[sym] || [];
       const basePriceMonth = tokenMonthBasePricesMap[sym] || t.price;
 
-      // Courbe normalisée en distance par rapport au HH (0% = Sommet 30D)
+      // Courbe normalisée en distance par rapport au HH cible (0% = Résistance Sommet)
       const distCurve = curveMonth.map(pt => {
-        const pAtTime = basePriceMonth > 0 ? basePriceMonth * (1 + pt.value / 100) : high30d;
-        const dist = high30d > 0 ? ((pAtTime - high30d) / high30d) * 100 : 0;
+        const pAtTime = basePriceMonth > 0 ? basePriceMonth * (1 + pt.value / 100) : targetHH;
+        const dist = targetHH > 0 ? ((pAtTime - targetHH) / targetHH) * 100 : 0;
         return {
           time: pt.time,
           value: parseFloat(dist.toFixed(2))
@@ -2729,7 +2730,7 @@ export function MonthlyHigherHighRadarChart({
         ...t,
         sym,
         rankMonth: t.rankMonth || idx + 1,
-        high30d,
+        targetHH,
         livePrice,
         liveDistToHH,
         isBreakout,
@@ -2739,24 +2740,41 @@ export function MonthlyHigherHighRadarChart({
         curveMonth,
         basePriceMonth
       };
-    });
+    }).sort((a, b) => b.liveDistToHH - a.liveDistToHH);
+  }, [chartUniverse, tripleAnalysis, chartProcessedData, livePricesRef]);
 
-    const sorted = [...candidates].sort((a, b) => b.liveDistToHH - a.liveDistToHH);
-
+  // Filtrage selon le mode sélectionné
+  const hhTokens = useMemo(() => {
+    if (filterMode === 'TRUE_RETEST') {
+      // 🛡️ Filtre Anti-FOMO : Uniquement les vrais retests avec base saine
+      const f = allHhCandidates.filter(t => t.isTrueRetest || (!t.isFomoRunner && t.hasHealthyBase && t.isAttacking));
+      return f.length > 0 ? f : allHhCandidates.filter(t => !t.isFomoRunner).slice(0, 5);
+    }
     if (filterMode === 'BREAKOUT') {
-      const f = sorted.filter(t => t.isBreakout);
-      return f.length > 0 ? f : sorted.slice(0, 3);
+      // 🚀 Breakouts propres ayant une base saine
+      const f = allHhCandidates.filter(t => t.isBreakout && !t.isFomoRunner);
+      return f.length > 0 ? f : allHhCandidates.filter(t => t.isBreakout).slice(0, 3);
+    }
+    if (filterMode === 'FOMO_RUNNERS') {
+      // ⚠️ Pompes paraboliques sans repli (signalées pour vigilance)
+      const f = allHhCandidates.filter(t => t.isFomoRunner);
+      return f.length > 0 ? f : allHhCandidates.slice(0, 3);
     }
     if (filterMode === 'ATTACK') {
-      const f = sorted.filter(t => t.isAttacking);
-      return f.length > 0 ? f : sorted.slice(0, 5);
+      const f = allHhCandidates.filter(t => t.isAttacking);
+      return f.length > 0 ? f : allHhCandidates.slice(0, 5);
     }
     if (filterMode === 'APPROACH') {
-      const f = sorted.filter(t => t.isApproaching);
-      return f.length > 0 ? f : sorted.slice(0, 8);
+      const f = allHhCandidates.filter(t => t.isApproaching);
+      return f.length > 0 ? f : allHhCandidates.slice(0, 8);
     }
-    return sorted.slice(0, 15);
-  }, [chartUniverse, tripleAnalysis, chartProcessedData, livePricesRef, filterMode]);
+    return allHhCandidates.slice(0, 15);
+  }, [allHhCandidates, filterMode]);
+
+  const trueRetestCount = allHhCandidates.filter(t => t.isTrueRetest || (!t.isFomoRunner && t.hasHealthyBase && t.isAttacking)).length;
+  const breakoutsCount = allHhCandidates.filter(t => t.isBreakout && !t.isFomoRunner).length;
+  const fomoRunnersCount = allHhCandidates.filter(t => t.isFomoRunner).length;
+  const attackingCount = allHhCandidates.filter(t => t.isAttacking).length;
 
   // Helper zoom avec marge droite native
   const applyComfortableZoom = (targetChart, offset = 35) => {
@@ -3007,10 +3025,10 @@ export function MonthlyHigherHighRadarChart({
         if (livePrice && livePrice > 0) {
           const lineSeries = seriesMapRef.current[sym];
           if (lineSeries) {
-            const high30d = item.high30d;
+            const targetHH = item.targetHH || item.high30d;
             let val = 0;
             if (viewMode === 'DISTANCE') {
-              val = high30d > 0 ? parseFloat((((livePrice - high30d) / high30d) * 100).toFixed(2)) : 0;
+              val = targetHH > 0 ? parseFloat((((livePrice - targetHH) / targetHH) * 100).toFixed(2)) : 0;
             } else {
               const basePriceMonth = item.basePriceMonth;
               val = basePriceMonth > 0 ? parseFloat((((livePrice - basePriceMonth) / basePriceMonth) * 100).toFixed(2)) : 0;
@@ -3038,9 +3056,6 @@ export function MonthlyHigherHighRadarChart({
       applyComfortableZoom(chartRef.current, 35);
     }
   };
-
-  const breakoutsCount = hhTokens.filter(t => t.isBreakout).length;
-  const attackingCount = hhTokens.filter(t => t.isAttacking).length;
 
   return (
     <div style={{
@@ -3106,17 +3121,27 @@ export function MonthlyHigherHighRadarChart({
             fontSize: '0.72rem',
             color: '#94a3b8'
           }}>
-            <span>Sommet: <strong style={{ color: '#facc15' }}>0.00% (HH 30D)</strong></span>
+            <span>Sommet Ref: <strong style={{ color: '#facc15' }}>0.00% (HH)</strong></span>
             <span style={{ color: '#475569' }}>•</span>
-            <span>Attaque: <strong style={{ color: '#38bdf8' }}>≤ -3.5%</strong></span>
-            <span style={{ color: '#475569' }}>•</span>
-            <span style={{ color: breakoutsCount > 0 ? '#4ade80' : '#cbd5e1' }}>
-              <strong>{breakoutsCount}</strong> en Breakout 🚀
+            <span style={{ color: trueRetestCount > 0 ? '#4ade80' : '#94a3b8' }}>
+              <strong>{trueRetestCount}</strong> Vrais Retests 🛡️
             </span>
             <span style={{ color: '#475569' }}>•</span>
-            <span style={{ color: '#38bdf8' }}>
+            <span style={{ color: breakoutsCount > 0 ? '#38bdf8' : '#94a3b8' }}>
+              <strong>{breakoutsCount}</strong> Breakouts 🚀
+            </span>
+            <span style={{ color: '#475569' }}>•</span>
+            <span style={{ color: '#e2e8f0' }}>
               <strong>{attackingCount}</strong> en Attaque 🔥
             </span>
+            {fomoRunnersCount > 0 && (
+              <>
+                <span style={{ color: '#475569' }}>•</span>
+                <span style={{ color: '#f87171' }}>
+                  <strong>{fomoRunnersCount}</strong> Pompes FOMO ⚠️
+                </span>
+              </>
+            )}
           </div>
         </div>
 
@@ -3132,11 +3157,43 @@ export function MonthlyHigherHighRadarChart({
             border: '1px solid rgba(255, 255, 255, 0.08)'
           }}>
             <button
+              onClick={() => setFilterMode('TRUE_RETEST')}
+              style={{
+                background: filterMode === 'TRUE_RETEST' ? 'rgba(74, 222, 128, 0.2)' : 'transparent',
+                color: filterMode === 'TRUE_RETEST' ? '#4ade80' : '#64748b',
+                border: filterMode === 'TRUE_RETEST' ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid transparent',
+                padding: '3px 8px',
+                borderRadius: '4px',
+                fontSize: '0.68rem',
+                fontWeight: '800',
+                cursor: 'pointer'
+              }}
+              title="Filtre Anti-FOMO : Uniquement les vrais retests avec résistance mature (>18h) et base de repli consolidée (-4% min)"
+            >
+              🛡️ VRAI RETEST ({trueRetestCount})
+            </button>
+            <button
+              onClick={() => setFilterMode('BREAKOUT')}
+              style={{
+                background: filterMode === 'BREAKOUT' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                color: filterMode === 'BREAKOUT' ? '#38bdf8' : '#64748b',
+                border: filterMode === 'BREAKOUT' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid transparent',
+                padding: '3px 8px',
+                borderRadius: '4px',
+                fontSize: '0.68rem',
+                fontWeight: '800',
+                cursor: 'pointer'
+              }}
+              title="Breakouts confirmés au-dessus de la résistance historique"
+            >
+              🚀 BREAKOUT ({breakoutsCount})
+            </button>
+            <button
               onClick={() => setFilterMode('ATTACK')}
               style={{
-                background: filterMode === 'ATTACK' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
-                color: filterMode === 'ATTACK' ? '#38bdf8' : '#64748b',
-                border: filterMode === 'ATTACK' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid transparent',
+                background: filterMode === 'ATTACK' ? 'rgba(250, 204, 21, 0.2)' : 'transparent',
+                color: filterMode === 'ATTACK' ? '#facc15' : '#64748b',
+                border: filterMode === 'ATTACK' ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid transparent',
                 padding: '3px 8px',
                 borderRadius: '4px',
                 fontSize: '0.68rem',
@@ -3146,42 +3203,30 @@ export function MonthlyHigherHighRadarChart({
             >
               🔥 ATTAQUE (≤ -3.5%)
             </button>
-            <button
-              onClick={() => setFilterMode('BREAKOUT')}
-              style={{
-                background: filterMode === 'BREAKOUT' ? 'rgba(74, 222, 128, 0.2)' : 'transparent',
-                color: filterMode === 'BREAKOUT' ? '#4ade80' : '#64748b',
-                border: filterMode === 'BREAKOUT' ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid transparent',
-                padding: '3px 8px',
-                borderRadius: '4px',
-                fontSize: '0.68rem',
-                fontWeight: '800',
-                cursor: 'pointer'
-              }}
-            >
-              🚀 BREAKOUT (≥ 0%)
-            </button>
-            <button
-              onClick={() => setFilterMode('APPROACH')}
-              style={{
-                background: filterMode === 'APPROACH' ? 'rgba(168, 85, 247, 0.2)' : 'transparent',
-                color: filterMode === 'APPROACH' ? '#c084fc' : '#64748b',
-                border: filterMode === 'APPROACH' ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid transparent',
-                padding: '3px 8px',
-                borderRadius: '4px',
-                fontSize: '0.68rem',
-                fontWeight: '800',
-                cursor: 'pointer'
-              }}
-            >
-              ⚡ APPROCHE (≤ -7%)
-            </button>
+            {fomoRunnersCount > 0 && (
+              <button
+                onClick={() => setFilterMode('FOMO_RUNNERS')}
+                style={{
+                  background: filterMode === 'FOMO_RUNNERS' ? 'rgba(239, 68, 68, 0.2)' : 'transparent',
+                  color: filterMode === 'FOMO_RUNNERS' ? '#f87171' : '#64748b',
+                  border: filterMode === 'FOMO_RUNNERS' ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid transparent',
+                  padding: '3px 8px',
+                  borderRadius: '4px',
+                  fontSize: '0.68rem',
+                  fontWeight: '800',
+                  cursor: 'pointer'
+                }}
+                title="Tokens en pompe verticale active / climax (HH imprimé à la minute, 0 base de repli)"
+              >
+                ⚠️ POMPES FOMO ({fomoRunnersCount})
+              </button>
+            )}
             <button
               onClick={() => setFilterMode('TOP15')}
               style={{
-                background: filterMode === 'TOP15' ? 'rgba(250, 204, 21, 0.2)' : 'transparent',
-                color: filterMode === 'TOP15' ? '#facc15' : '#64748b',
-                border: filterMode === 'TOP15' ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid transparent',
+                background: filterMode === 'TOP15' ? 'rgba(168, 85, 247, 0.2)' : 'transparent',
+                color: filterMode === 'TOP15' ? '#c084fc' : '#64748b',
+                border: filterMode === 'TOP15' ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid transparent',
                 padding: '3px 8px',
                 borderRadius: '4px',
                 fontSize: '0.68rem',
@@ -3328,8 +3373,8 @@ export function MonthlyHigherHighRadarChart({
               style={{
                 background: isSelected ? 'rgba(250, 204, 21, 0.18)' : 'rgba(255, 255, 255, 0.02)',
                 color: isSelected ? '#ffffff' : '#94a3b8',
-                border: isSelected ? `1.5px solid ${color}` : '1px solid rgba(255, 255, 255, 0.06)',
-                padding: '3px 9px',
+                border: isSelected ? `1.5px solid ${color}` : (t.isTrueRetest ? '1px solid rgba(74, 222, 128, 0.45)' : t.isFomoRunner ? '1px solid rgba(239, 68, 68, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)'),
+                padding: '3px 8px',
                 borderRadius: '5px',
                 fontSize: '0.68rem',
                 fontWeight: isSelected ? '900' : '700',
@@ -3340,7 +3385,7 @@ export function MonthlyHigherHighRadarChart({
                 whiteSpace: 'nowrap',
                 transition: 'all 0.12s ease'
               }}
-              title={`Prix: $${t.livePrice} | Sommet HH: $${t.high30d} | Écart: ${t.liveDistToHH}%`}
+              title={`Prix: $${t.livePrice} | Résistance HH: $${t.targetHH || t.high30d} | Écart: ${t.liveDistToHH}% | Âge sommet: ${t.histPeakAgeHours || t.peakAgeHours}h | Base repli: ${t.histPullbackPct}% | 24h: ${t.p1d}%`}
             >
               <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: color }} />
               <span style={{ color: isSelected ? '#ffffff' : '#cbd5e1' }}>#{t.rankMonth} {t.cleanSymbol}</span>
@@ -3351,6 +3396,36 @@ export function MonthlyHigherHighRadarChart({
               }}>
                 {isPos ? `+${t.liveDistToHH}% 🚀` : `${t.liveDistToHH}% ${isNear ? '🔥' : '⚡'}`}
               </span>
+
+              {/* Badge Vrai Retest SÉCURISÉ */}
+              {t.isTrueRetest && (
+                <span style={{
+                  background: 'rgba(74, 222, 128, 0.15)',
+                  color: '#4ade80',
+                  border: '1px solid rgba(74, 222, 128, 0.35)',
+                  padding: '1px 4px',
+                  borderRadius: '3px',
+                  fontSize: '0.60rem',
+                  fontWeight: '800'
+                }}>
+                  🛡️ BASE {t.histPullbackPct}% ({t.histPeakAgeHours > 24 ? `${Math.round(t.histPeakAgeHours / 24)}j` : `${Math.round(t.histPeakAgeHours)}h`})
+                </span>
+              )}
+
+              {/* Badge Alerte Pompe FOMO */}
+              {t.isFomoRunner && (
+                <span style={{
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  color: '#f87171',
+                  border: '1px solid rgba(239, 68, 68, 0.35)',
+                  padding: '1px 4px',
+                  borderRadius: '3px',
+                  fontSize: '0.60rem',
+                  fontWeight: '800'
+                }}>
+                  ⚠️ POMPE FOMO
+                </span>
+              )}
             </button>
           );
         })}
@@ -6214,6 +6289,14 @@ export default function MonthlyTop50BenchmarkComparator() {
           const klines4h = [];
           let high30d = -Infinity;
           let low30d = Infinity;
+          let high30dIdx = -1;
+          let high30dTime = 0;
+
+          // Seuil de séparation pour isoler le Sommet Historique (Ancien) vs la pompe récente (dernières 24h = 96 bougies 15m)
+          const recentCutoffIdx = Math.max(0, len - 96);
+          let histHigh30d = -Infinity;
+          let histHigh30dIdx = -1;
+          let histHigh30dTime = 0;
 
           for (let b = 0; b < len; b += 16) {
             const chunkEnd = Math.min(len - 1, b + 15);
@@ -6223,13 +6306,69 @@ export default function MonthlyTop50BenchmarkComparator() {
             for (let c = b; c <= chunkEnd; c++) {
               const h = parseFloat(klines[c][2]);
               const l = parseFloat(klines[c][3]);
+              const tMs = parseInt(klines[c][0]);
               if (h > highP) highP = h;
               if (l < lowP) lowP = l;
-              if (h > high30d) high30d = h;
+              if (h > high30d) {
+                high30d = h;
+                high30dIdx = c;
+                high30dTime = tMs;
+              }
               if (l < low30d) low30d = l;
+
+              // Sommet Historique (antérieur aux dernières 24h)
+              if (c < recentCutoffIdx && h > histHigh30d) {
+                histHigh30d = h;
+                histHigh30dIdx = c;
+                histHigh30dTime = tMs;
+              }
             }
             klines4h.push({ open: openP, high: highP, low: lowP, close: closeP, time: parseInt(klines[b][0]) });
           }
+
+          // 🛡️ ANALYSE QUANTITATIVE ANTI-FOMO : Âge du sommet et profondeur de la base de repli
+          const nowMs = parseInt(klines[len - 1][0]);
+          const peakAgeHours = high30dTime > 0 ? Math.max(0, parseFloat(((nowMs - high30dTime) / (3600 * 1000)).toFixed(1))) : 0;
+          const histPeakAgeHours = histHigh30dTime > 0 ? Math.max(0, parseFloat(((nowMs - histHigh30dTime) / (3600 * 1000)).toFixed(1))) : 0;
+
+          // Creux le plus bas enregistré depuis le sommet historique (Vraie base de repli / consolidation)
+          let histLowSincePeak = Infinity;
+          if (histHigh30dIdx >= 0) {
+            for (let c = histHigh30dIdx + 1; c < len; c++) {
+              const l = parseFloat(klines[c][3]);
+              if (l < histLowSincePeak) histLowSincePeak = l;
+            }
+          }
+          if (histLowSincePeak === Infinity) histLowSincePeak = curPrice;
+
+          // Creux après le pic absolu
+          let absLowSincePeak = Infinity;
+          if (high30dIdx >= 0) {
+            for (let c = high30dIdx + 1; c < len; c++) {
+              const l = parseFloat(klines[c][3]);
+              if (l < absLowSincePeak) absLowSincePeak = l;
+            }
+          }
+          if (absLowSincePeak === Infinity) absLowSincePeak = curPrice;
+
+          const histPullbackPct = (histHigh30d > 0 && histLowSincePeak < histHigh30d)
+            ? parseFloat((((histLowSincePeak - histHigh30d) / histHigh30d) * 100).toFixed(1))
+            : 0;
+          const absPullbackPct = (high30d > 0 && absLowSincePeak < high30d)
+            ? parseFloat((((absLowSincePeak - high30d) / high30d) * 100).toFixed(1))
+            : 0;
+
+          const hasHealthyBase = histPullbackPct <= -4.0;
+          const hasMaturePeak = histPeakAgeHours >= 18;
+          const targetResistance = (hasMaturePeak && histHigh30d > 0) ? histHigh30d : high30d;
+          const distToTargetHH = targetResistance > 0 ? parseFloat((((curPrice - targetResistance) / targetResistance) * 100).toFixed(2)) : 0;
+
+          // Classification Vrai Retest SÉCURISÉ (Cup & Handle / Résistance historique avec base saine)
+          const isTrueRetest = hasMaturePeak && hasHealthyBase && distToTargetHH >= -4.5 && distToTargetHH <= 3.5 && p1d <= 25;
+
+          // Détection Pompe FOMO / Parabolique active en cours (Sommet imprimé à la minute, 0 base de repli)
+          const isFomoRunner = (peakAgeHours < 6 && absPullbackPct > -2.5 && (p1d >= 12 || p4h >= 8)) ||
+                               (p1d >= 25 && absPullbackPct > -3.5);
 
           const alpha20_4h = 2 / (20 + 1);
           const alpha50_4h = 2 / (50 + 1);
@@ -6348,6 +6487,18 @@ export default function MonthlyTop50BenchmarkComparator() {
             netDelta24h: parseFloat(netDelta24h.toFixed(2)),
             maxPointsMonth,
             high30d: high30d > -Infinity ? parseFloat(high30d.toFixed(4)) : curPrice,
+            high30dTime,
+            peakAgeHours,
+            pullbackDepth: absPullbackPct,
+            histHigh30d: (histHigh30d > -Infinity && histHigh30d > 0) ? parseFloat(histHigh30d.toFixed(4)) : (high30d > -Infinity ? parseFloat(high30d.toFixed(4)) : curPrice),
+            histHigh30dTime,
+            histPeakAgeHours,
+            histPullbackPct,
+            hasHealthyBase,
+            isTrueRetest,
+            isFomoRunner,
+            targetResistance: targetResistance > 0 ? parseFloat(targetResistance.toFixed(4)) : curPrice,
+            distToTargetHH,
             pullbackFromPeak,
             confMonth: parseFloat(confMonth.toFixed(1)),
             scoreMonth,
