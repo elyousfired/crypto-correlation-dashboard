@@ -5,7 +5,8 @@ import tokenEntries from './data/token_entries.json';
 import { 
   Crown, Search, RefreshCw, TrendingUp, RotateCcw, Activity, 
   ArrowUpRight, LayoutGrid, CheckCircle2, AlertTriangle, Layers, Zap, Flame,
-  Bell, Volume2, VolumeX, Trash2, Download, ExternalLink, X, ShieldAlert, Rocket, Check, Sparkles, BarChart2
+  Bell, Volume2, VolumeX, Trash2, Download, ExternalLink, X, ShieldAlert, Rocket, Check, Sparkles, BarChart2,
+  Maximize2, Minimize2, Target
 } from 'lucide-react';
 import { getDeFiLlamaMetricsForSymbols, formatCurrencyUSD } from './logic/defillamaService';
 import { getTokenIntelligence } from './logic/tokenIntelligence';
@@ -2656,6 +2657,768 @@ function CorridorSniperZoneChart({
 
 
 // ========================================================================================
+// 👑 COMPOSANT CHARTE DÉDIÉE : RADAR HIGHER HIGH 30D (RETETS & BREAKOUTS DU SOMMET MENSUEL)
+// ========================================================================================
+export function MonthlyHigherHighRadarChart({
+  tokensData = [],
+  tripleAnalysis = {},
+  chartProcessedData = {},
+  activeChartHorizon = 'day',
+  chartUniverse = 'MONTH_SCORE',
+  selectedSoloToken,
+  setSelectedSoloToken,
+  onClose,
+  dailyCgData = {},
+  dailyMarketCaps = {},
+  livePricesRef
+}) {
+  const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const seriesMapRef = useRef({});
+  const refHhLineSeriesRef = useRef(null);
+  const refImpactLineSeriesRef = useRef(null);
+  const refApproachLineSeriesRef = useRef(null);
+
+  const [hhChartHeight, setHhChartHeight] = useState(420);
+  const [isDraggingHeight, setIsDraggingHeight] = useState(false);
+  const [highlightedToken, setHighlightedToken] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [filterMode, setFilterMode] = useState('ATTACK'); // 'ATTACK' (<= -3.5%), 'BREAKOUT' (>= 0%), 'APPROACH' (<= -7%), 'TOP15'
+  const [viewMode, setViewMode] = useState('DISTANCE'); // 'DISTANCE' (0% = Sommet) ou 'POINTS_30D' (Points réels)
+
+  const dragStartYRef = useRef(0);
+  const dragStartHeightRef = useRef(420);
+  const hasFittedRef = useRef(false);
+  const prevSymbolsRef = useRef('');
+
+  // 1. Détection et extraction des tokens du Top 50 qui testent ou dépassent leur HH des 30 jours
+  const hhTokens = useMemo(() => {
+    const list = (chartUniverse === 'MONTH_PEAK' ? tripleAnalysis?.listMaxPointsMonth : tripleAnalysis?.listMonth) || [];
+    const tokenMonthCurvesMap = chartProcessedData?.tokenMonthCurvesMap || {};
+    const tokenMonthBasePricesMap = chartProcessedData?.tokenMonthBasePricesMap || {};
+
+    const candidates = list.filter(t => {
+      const sym = t.cleanSymbol;
+      if (!sym || sym === 'BTC' || sym === 'ETH') return false;
+      const curve = tokenMonthCurvesMap[sym];
+      return curve && curve.length > 0;
+    }).map((t, idx) => {
+      const sym = t.cleanSymbol;
+      const high30d = t.high30d > 0 ? t.high30d : t.price;
+      const livePrice = livePricesRef?.current?.[sym] || t.price;
+      const liveDistToHH = high30d > 0 ? parseFloat((((livePrice - high30d) / high30d) * 100).toFixed(2)) : (t.pullbackFromPeak || 0);
+
+      const isBreakout = liveDistToHH >= 0.0;
+      const isAttacking = liveDistToHH >= -3.5;
+      const isApproaching = liveDistToHH >= -7.0;
+
+      const curveMonth = tokenMonthCurvesMap[sym] || [];
+      const basePriceMonth = tokenMonthBasePricesMap[sym] || t.price;
+
+      // Courbe normalisée en distance par rapport au HH (0% = Sommet 30D)
+      const distCurve = curveMonth.map(pt => {
+        const pAtTime = basePriceMonth > 0 ? basePriceMonth * (1 + pt.value / 100) : high30d;
+        const dist = high30d > 0 ? ((pAtTime - high30d) / high30d) * 100 : 0;
+        return {
+          time: pt.time,
+          value: parseFloat(dist.toFixed(2))
+        };
+      });
+
+      return {
+        ...t,
+        sym,
+        rankMonth: t.rankMonth || idx + 1,
+        high30d,
+        livePrice,
+        liveDistToHH,
+        isBreakout,
+        isAttacking,
+        isApproaching,
+        distCurve,
+        curveMonth,
+        basePriceMonth
+      };
+    });
+
+    const sorted = [...candidates].sort((a, b) => b.liveDistToHH - a.liveDistToHH);
+
+    if (filterMode === 'BREAKOUT') {
+      const f = sorted.filter(t => t.isBreakout);
+      return f.length > 0 ? f : sorted.slice(0, 3);
+    }
+    if (filterMode === 'ATTACK') {
+      const f = sorted.filter(t => t.isAttacking);
+      return f.length > 0 ? f : sorted.slice(0, 5);
+    }
+    if (filterMode === 'APPROACH') {
+      const f = sorted.filter(t => t.isApproaching);
+      return f.length > 0 ? f : sorted.slice(0, 8);
+    }
+    return sorted.slice(0, 15);
+  }, [chartUniverse, tripleAnalysis, chartProcessedData, livePricesRef, filterMode]);
+
+  // Helper zoom avec marge droite native
+  const applyComfortableZoom = (targetChart, offset = 35) => {
+    if (!targetChart) return;
+    try {
+      targetChart.timeScale().applyOptions({
+        rightOffset: offset,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      });
+      targetChart.timeScale().fitContent();
+    } catch (_) {}
+  };
+
+  // Redimensionnement de hauteur
+  const handleMouseDownHeight = (e) => {
+    e.preventDefault();
+    setIsDraggingHeight(true);
+    dragStartYRef.current = e.clientY;
+    dragStartHeightRef.current = hhChartHeight;
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingHeight) return;
+      const delta = e.clientY - dragStartYRef.current;
+      const newH = Math.max(300, Math.min(800, dragStartHeightRef.current + delta));
+      setHhChartHeight(newH);
+      if (chartRef.current) {
+        chartRef.current.applyOptions({ height: newH });
+      }
+    };
+    const handleMouseUp = () => {
+      if (isDraggingHeight) setIsDraggingHeight(false);
+    };
+    if (isDraggingHeight) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDraggingHeight]);
+
+  const effectiveHeight = isFullscreen ? (typeof window !== 'undefined' ? window.innerHeight - 150 : 600) : hhChartHeight;
+
+  // Initialisation du canvas Lightweight Charts
+  useEffect(() => {
+    if (!containerRef.current) return;
+    if (chartRef.current) {
+      try { chartRef.current.remove(); } catch (_) {}
+      chartRef.current = null;
+      seriesMapRef.current = {};
+    }
+
+    const container = containerRef.current;
+    const chart = createChart(container, {
+      width: container.clientWidth || 800,
+      height: effectiveHeight,
+      layout: {
+        background: { color: '#040711' },
+        textColor: '#64748b',
+        fontSize: 11,
+        fontFamily: 'JetBrains Mono, monospace'
+      },
+      grid: {
+        vertLines: { color: 'rgba(255, 255, 255, 0.03)' },
+        horzLines: { color: 'rgba(255, 255, 255, 0.03)' }
+      },
+      rightPriceScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        scaleMargins: { top: 0.12, bottom: 0.10 },
+        autoScale: true,
+      },
+      timeScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        timeVisible: true,
+        secondsVisible: false,
+        rightOffset: 35,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      },
+      handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+      handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: { time: true, price: true }, mouseWheel: true, pinch: true },
+      crosshair: {
+        mode: 0,
+        vertLine: { color: 'rgba(250, 204, 21, 0.35)', width: 1, style: 2 },
+        horzLine: { color: 'rgba(250, 204, 21, 0.35)', width: 1, style: 2 },
+      }
+    });
+
+    chartRef.current = chart;
+
+    refHhLineSeriesRef.current = chart.addLineSeries({
+      color: '#facc15',
+      lineWidth: 2.5,
+      lineStyle: 0,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '👑 SOMMET HH (0.00%)'
+    });
+
+    refImpactLineSeriesRef.current = chart.addLineSeries({
+      color: '#38bdf8',
+      lineWidth: 1.5,
+      lineStyle: 2,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '🔥 ZONE IMPACT (-3.00%)'
+    });
+
+    refApproachLineSeriesRef.current = chart.addLineSeries({
+      color: '#a855f7',
+      lineWidth: 1.5,
+      lineStyle: 3,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '⚡ APPROCHE (-6.00%)'
+    });
+
+    const handleResize = () => {
+      if (containerRef.current && chartRef.current) {
+        chartRef.current.applyOptions({
+          width: containerRef.current.clientWidth,
+          height: effectiveHeight
+        });
+      }
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (chartRef.current) {
+        try { chartRef.current.remove(); } catch (_) {}
+        chartRef.current = null;
+        seriesMapRef.current = {};
+      }
+    };
+  }, [effectiveHeight]);
+
+  // Synchronisation des Séries & Courbes
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || !hhTokens) return;
+
+    const timestamps = chartProcessedData?.monthHorizonTimestamps || [];
+
+    if (viewMode === 'DISTANCE') {
+      if (refHhLineSeriesRef.current && timestamps.length > 0) {
+        refHhLineSeriesRef.current.applyOptions({ title: '👑 SOMMET HH (0.00%)' });
+        refHhLineSeriesRef.current.setData(timestamps.map(t => ({ time: t, value: 0 })));
+      }
+      if (refImpactLineSeriesRef.current && timestamps.length > 0) {
+        refImpactLineSeriesRef.current.applyOptions({ title: '🔥 IMPACT (-3.00%)' });
+        refImpactLineSeriesRef.current.setData(timestamps.map(t => ({ time: t, value: -3.0 })));
+      }
+      if (refApproachLineSeriesRef.current && timestamps.length > 0) {
+        refApproachLineSeriesRef.current.applyOptions({ title: '⚡ APPROCHE (-6.00%)' });
+        refApproachLineSeriesRef.current.setData(timestamps.map(t => ({ time: t, value: -6.0 })));
+      }
+    } else {
+      if (refHhLineSeriesRef.current) refHhLineSeriesRef.current.setData([]);
+      if (refImpactLineSeriesRef.current) refImpactLineSeriesRef.current.setData([]);
+      if (refApproachLineSeriesRef.current) refApproachLineSeriesRef.current.setData([]);
+    }
+
+    const currentSymbols = new Set(hhTokens.map(t => t.cleanSymbol));
+    Object.keys(seriesMapRef.current).forEach(sym => {
+      if (!currentSymbols.has(sym)) {
+        try {
+          chart.removeSeries(seriesMapRef.current[sym]);
+          delete seriesMapRef.current[sym];
+        } catch (_) {}
+      }
+    });
+
+    hhTokens.forEach((item, idx) => {
+      const fixedColor = getTokenFixedColor(item.cleanSymbol);
+      const isSolo = highlightedToken === item.cleanSymbol || selectedSoloToken?.cleanSymbol === item.cleanSymbol;
+      const rankNum = item.rankMonth || idx + 1;
+      const statusIcon = item.isBreakout ? '🚀' : item.isAttacking ? '🔥' : '⚡';
+      const title = `#${rankNum} ${item.cleanSymbol} (${item.liveDistToHH >= 0 ? '+' : ''}${item.liveDistToHH}% ${statusIcon})`;
+
+      let lineColor = fixedColor;
+      let lineWidth = 2.5;
+      let lastValVisible = true;
+
+      if (highlightedToken) {
+        if (isSolo) {
+          lineColor = fixedColor;
+          lineWidth = 4.5;
+          lastValVisible = true;
+        } else {
+          lineColor = 'rgba(148, 163, 184, 0.16)';
+          lineWidth = 1.0;
+          lastValVisible = false;
+        }
+      }
+
+      let lineSeries = seriesMapRef.current[item.cleanSymbol];
+      if (!lineSeries) {
+        lineSeries = chart.addLineSeries({
+          color: lineColor,
+          lineWidth: lineWidth,
+          lineStyle: 0,
+          title: isSolo || !highlightedToken ? title : '',
+          priceLineVisible: false,
+          lastValueVisible: lastValVisible,
+        });
+        seriesMapRef.current[item.cleanSymbol] = lineSeries;
+      } else {
+        lineSeries.applyOptions({
+          color: lineColor,
+          lineWidth: lineWidth,
+          title: isSolo || !highlightedToken ? title : '',
+          lastValueVisible: lastValVisible
+        });
+      }
+
+      const curve = viewMode === 'DISTANCE' ? item.distCurve : item.curveMonth;
+      if (curve && curve.length > 0) {
+        lineSeries.setData(curve);
+      }
+    });
+
+    const currentKey = hhTokens.map(t => t.cleanSymbol).sort().join(',') + '_' + viewMode;
+    const shouldFit = !hasFittedRef.current || (prevSymbolsRef.current !== '' && prevSymbolsRef.current !== currentKey);
+    if (shouldFit && hhTokens.length > 0) {
+      applyComfortableZoom(chart, 35);
+      hasFittedRef.current = true;
+    }
+    prevSymbolsRef.current = currentKey;
+  }, [hhTokens, viewMode, highlightedToken, selectedSoloToken, chartProcessedData]);
+
+  // Moteur Live 15m haute fréquence
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || !hhTokens || hhTokens.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      const nowSec = Math.floor(Date.now() / 1000);
+      const activeCandleTime = Math.floor(nowSec / 900) * 900;
+
+      hhTokens.forEach(item => {
+        const sym = item.cleanSymbol;
+        const livePrice = livePricesRef?.current?.[sym];
+        if (livePrice && livePrice > 0) {
+          const lineSeries = seriesMapRef.current[sym];
+          if (lineSeries) {
+            const high30d = item.high30d;
+            let val = 0;
+            if (viewMode === 'DISTANCE') {
+              val = high30d > 0 ? parseFloat((((livePrice - high30d) / high30d) * 100).toFixed(2)) : 0;
+            } else {
+              const basePriceMonth = item.basePriceMonth;
+              val = basePriceMonth > 0 ? parseFloat((((livePrice - basePriceMonth) / basePriceMonth) * 100).toFixed(2)) : 0;
+            }
+
+            const curve = viewMode === 'DISTANCE' ? item.distCurve : item.curveMonth;
+            const lastCandleTime = (curve && curve.length > 0) ? curve[curve.length - 1].time : activeCandleTime;
+            const targetTime = Math.max(lastCandleTime, activeCandleTime);
+            try {
+              lineSeries.update({
+                time: targetTime,
+                value: val
+              });
+            } catch (_) {}
+          }
+        }
+      });
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, [hhTokens, viewMode, livePricesRef]);
+
+  const handleResetZoom = () => {
+    if (chartRef.current) {
+      applyComfortableZoom(chartRef.current, 35);
+    }
+  };
+
+  const breakoutsCount = hhTokens.filter(t => t.isBreakout).length;
+  const attackingCount = hhTokens.filter(t => t.isAttacking).length;
+
+  return (
+    <div style={{
+      marginTop: isFullscreen ? 0 : '14px',
+      background: '#040711',
+      border: isFullscreen ? 'none' : '1px solid rgba(250, 204, 21, 0.25)',
+      borderRadius: isFullscreen ? 0 : '12px',
+      padding: isFullscreen ? '14px 18px 10px 18px' : '12px 14px 8px 14px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '8px',
+      position: isFullscreen ? 'fixed' : 'relative',
+      top: isFullscreen ? 0 : 'auto',
+      left: isFullscreen ? 0 : 'auto',
+      right: isFullscreen ? 0 : 'auto',
+      bottom: isFullscreen ? 0 : 'auto',
+      width: isFullscreen ? '100vw' : '100%',
+      height: isFullscreen ? '100vh' : 'auto',
+      zIndex: isFullscreen ? 99999 : 1,
+      overflow: isFullscreen ? 'hidden' : 'visible',
+      boxShadow: isFullscreen ? '0 0 50px rgba(0, 0, 0, 0.95)' : '0 4px 20px rgba(0, 0, 0, 0.4)'
+    }}>
+      {/* 🟢 EN-TÊTE DU RADAR HIGHER HIGH */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '8px',
+        paddingBottom: '8px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+      }}>
+        {/* Titre & Badges */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(250, 204, 21, 0.18), rgba(245, 158, 11, 0.08))',
+            border: '1px solid rgba(250, 204, 21, 0.4)',
+            padding: '5px 12px',
+            borderRadius: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <Crown size={15} style={{ color: '#facc15' }} />
+            <span style={{
+              color: '#fef08a',
+              fontSize: '0.82rem',
+              fontWeight: '900',
+              letterSpacing: '0.4px'
+            }}>
+              RADAR HIGHER HIGH 30D
+            </span>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.07)',
+            padding: '4px 10px',
+            borderRadius: '5px',
+            fontSize: '0.72rem',
+            color: '#94a3b8'
+          }}>
+            <span>Sommet: <strong style={{ color: '#facc15' }}>0.00% (HH 30D)</strong></span>
+            <span style={{ color: '#475569' }}>•</span>
+            <span>Attaque: <strong style={{ color: '#38bdf8' }}>≤ -3.5%</strong></span>
+            <span style={{ color: '#475569' }}>•</span>
+            <span style={{ color: breakoutsCount > 0 ? '#4ade80' : '#cbd5e1' }}>
+              <strong>{breakoutsCount}</strong> en Breakout 🚀
+            </span>
+            <span style={{ color: '#475569' }}>•</span>
+            <span style={{ color: '#38bdf8' }}>
+              <strong>{attackingCount}</strong> en Attaque 🔥
+            </span>
+          </div>
+        </div>
+
+        {/* Contrôles : Filtres, Modes, Reset, Plein Écran */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+          {/* Filtres de seuil */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            background: 'rgba(0, 0, 0, 0.4)',
+            padding: '2px',
+            borderRadius: '6px',
+            border: '1px solid rgba(255, 255, 255, 0.08)'
+          }}>
+            <button
+              onClick={() => setFilterMode('ATTACK')}
+              style={{
+                background: filterMode === 'ATTACK' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                color: filterMode === 'ATTACK' ? '#38bdf8' : '#64748b',
+                border: filterMode === 'ATTACK' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid transparent',
+                padding: '3px 8px',
+                borderRadius: '4px',
+                fontSize: '0.68rem',
+                fontWeight: '800',
+                cursor: 'pointer'
+              }}
+            >
+              🔥 ATTAQUE (≤ -3.5%)
+            </button>
+            <button
+              onClick={() => setFilterMode('BREAKOUT')}
+              style={{
+                background: filterMode === 'BREAKOUT' ? 'rgba(74, 222, 128, 0.2)' : 'transparent',
+                color: filterMode === 'BREAKOUT' ? '#4ade80' : '#64748b',
+                border: filterMode === 'BREAKOUT' ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid transparent',
+                padding: '3px 8px',
+                borderRadius: '4px',
+                fontSize: '0.68rem',
+                fontWeight: '800',
+                cursor: 'pointer'
+              }}
+            >
+              🚀 BREAKOUT (≥ 0%)
+            </button>
+            <button
+              onClick={() => setFilterMode('APPROACH')}
+              style={{
+                background: filterMode === 'APPROACH' ? 'rgba(168, 85, 247, 0.2)' : 'transparent',
+                color: filterMode === 'APPROACH' ? '#c084fc' : '#64748b',
+                border: filterMode === 'APPROACH' ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid transparent',
+                padding: '3px 8px',
+                borderRadius: '4px',
+                fontSize: '0.68rem',
+                fontWeight: '800',
+                cursor: 'pointer'
+              }}
+            >
+              ⚡ APPROCHE (≤ -7%)
+            </button>
+            <button
+              onClick={() => setFilterMode('TOP15')}
+              style={{
+                background: filterMode === 'TOP15' ? 'rgba(250, 204, 21, 0.2)' : 'transparent',
+                color: filterMode === 'TOP15' ? '#facc15' : '#64748b',
+                border: filterMode === 'TOP15' ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid transparent',
+                padding: '3px 8px',
+                borderRadius: '4px',
+                fontSize: '0.68rem',
+                fontWeight: '800',
+                cursor: 'pointer'
+              }}
+            >
+              🌟 TOP 15
+            </button>
+          </div>
+
+          {/* Sélecteur de mode de vue */}
+          <button
+            onClick={() => setViewMode(viewMode === 'DISTANCE' ? 'POINTS_30D' : 'DISTANCE')}
+            style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              color: '#e2e8f0',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              padding: '4px 10px',
+              borderRadius: '6px',
+              fontSize: '0.68rem',
+              fontWeight: '800',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+            title="Bascule entre la vue normalisée relative au sommet (0%) et la vue classique en points 30D"
+          >
+            <Target size={12} style={{ color: '#facc15' }} />
+            <span>{viewMode === 'DISTANCE' ? 'MODE : DISTANCE AU HH (0%)' : 'MODE : POINTS 30D RÉELS'}</span>
+          </button>
+
+          {/* Reset Zoom */}
+          <button
+            onClick={handleResetZoom}
+            style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              color: '#94a3b8',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 8px',
+              borderRadius: '6px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title="Réinitialiser le zoom"
+          >
+            <RotateCcw size={11} />
+            <span>RESET ZOOM</span>
+          </button>
+
+          {/* Plein Écran */}
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            style={{
+              background: isFullscreen ? 'rgba(250, 204, 21, 0.15)' : 'rgba(255, 255, 255, 0.04)',
+              color: isFullscreen ? '#facc15' : '#94a3b8',
+              border: isFullscreen ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 8px',
+              borderRadius: '6px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title={isFullscreen ? 'Quitter le plein écran' : 'Plein écran'}
+          >
+            {isFullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+            <span>{isFullscreen ? 'RÉDUIRE' : 'PLEIN ÉCRAN'}</span>
+          </button>
+
+          {/* Fermer */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              style={{
+                background: 'rgba(239, 68, 68, 0.08)',
+                color: '#f87171',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
+                padding: '4px 8px',
+                borderRadius: '6px',
+                fontSize: '0.68rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+              title="Fermer cette charte"
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 🏷️ BANDEAU DES PILLS DES TOKENS EN RETEST HH */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+        overflowX: 'auto',
+        padding: '3px 0 5px 0',
+        scrollbarWidth: 'thin'
+      }}>
+        <button
+          onClick={() => {
+            setHighlightedToken(null);
+            if (setSelectedSoloToken) setSelectedSoloToken(null);
+          }}
+          style={{
+            background: !highlightedToken ? 'rgba(250, 204, 21, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+            color: !highlightedToken ? '#facc15' : '#64748b',
+            border: !highlightedToken ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '4px 10px',
+            borderRadius: '5px',
+            fontSize: '0.68rem',
+            fontWeight: '800',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          ◈ TOUS ({hhTokens.length})
+        </button>
+
+        {hhTokens.map((t) => {
+          const isSelected = highlightedToken === t.cleanSymbol || selectedSoloToken?.cleanSymbol === t.cleanSymbol;
+          const color = getTokenFixedColor(t.cleanSymbol);
+          const isPos = t.liveDistToHH >= 0;
+          const isNear = t.liveDistToHH >= -3.5;
+
+          return (
+            <button
+              key={t.cleanSymbol}
+              onClick={() => {
+                const next = isSelected ? null : t.cleanSymbol;
+                setHighlightedToken(next);
+                if (setSelectedSoloToken) setSelectedSoloToken(isSelected ? null : t);
+              }}
+              style={{
+                background: isSelected ? 'rgba(250, 204, 21, 0.18)' : 'rgba(255, 255, 255, 0.02)',
+                color: isSelected ? '#ffffff' : '#94a3b8',
+                border: isSelected ? `1.5px solid ${color}` : '1px solid rgba(255, 255, 255, 0.06)',
+                padding: '3px 9px',
+                borderRadius: '5px',
+                fontSize: '0.68rem',
+                fontWeight: isSelected ? '900' : '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.12s ease'
+              }}
+              title={`Prix: $${t.livePrice} | Sommet HH: $${t.high30d} | Écart: ${t.liveDistToHH}%`}
+            >
+              <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: color }} />
+              <span style={{ color: isSelected ? '#ffffff' : '#cbd5e1' }}>#{t.rankMonth} {t.cleanSymbol}</span>
+              <span style={{
+                color: isPos ? '#4ade80' : isNear ? '#38bdf8' : '#a855f7',
+                fontWeight: '900',
+                fontSize: '0.65rem'
+              }}>
+                {isPos ? `+${t.liveDistToHH}% 🚀` : `${t.liveDistToHH}% ${isNear ? '🔥' : '⚡'}`}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 📊 CANVAS DE LA CHARTE */}
+      <div style={{ position: 'relative', width: '100%', height: `${effectiveHeight}px`, borderRadius: '8px', overflow: 'hidden' }}>
+        <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
+
+        {/* Badge explicatif du mode distance */}
+        {viewMode === 'DISTANCE' && (
+          <div style={{
+            position: 'absolute',
+            top: '10px',
+            left: '12px',
+            background: 'rgba(4, 7, 17, 0.75)',
+            border: '1px solid rgba(250, 204, 21, 0.25)',
+            padding: '4px 10px',
+            borderRadius: '5px',
+            fontSize: '0.66rem',
+            color: '#facc15',
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}>
+            <span>👑 <strong>Ligne 0.00% = Sommet 30D (HH)</strong></span>
+            <span style={{ color: '#64748b' }}>|</span>
+            <span style={{ color: '#38bdf8' }}>Zone d'impact: &gt; -3.00%</span>
+            <span style={{ color: '#64748b' }}>|</span>
+            <span style={{ color: '#4ade80' }}>&gt; 0.00% = Breakout Ath 🚀</span>
+          </div>
+        )}
+      </div>
+
+      {/* ↕️ BARRE DE REDIMENSIONNEMENT DE HAUTEUR */}
+      {!isFullscreen && (
+        <div
+          onMouseDown={handleMouseDownHeight}
+          style={{
+            width: '100%',
+            height: '18px',
+            background: isDraggingHeight ? 'rgba(250, 204, 21, 0.25)' : 'rgba(255, 255, 255, 0.02)',
+            borderTop: isDraggingHeight ? '1.5px solid #facc15' : '1px solid rgba(255, 255, 255, 0.05)',
+            borderRadius: '0 0 8px 8px',
+            cursor: 'row-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            userSelect: 'none',
+            transition: 'background 0.15s ease'
+          }}
+          title="Glisser vers le haut ou le bas pour ajuster la hauteur"
+        >
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#facc15' : '#475569', borderRadius: '1px' }} />
+          <span style={{ color: isDraggingHeight ? '#facc15' : '#64748b', fontSize: '0.64rem', fontWeight: '700' }}>
+            ↕ HAUTEUR ({hhChartHeight}px)
+          </span>
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#facc15' : '#475569', borderRadius: '1px' }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ========================================================================================
 // 🔬 COMPOSANT DÉDIÉ (STANDALONE) : RADAR DIAGNOSTIC BREAKOUT & SUPPLY (AIR POCKETS & VOL/MC)
 // ========================================================================================
 export function CorridorSupplyDiagnosticPanel({
@@ -4909,6 +5672,7 @@ export default function MonthlyTop50BenchmarkComparator() {
   const [vpvrZoneScope, setVpvrZoneScope] = useState('PUMP');
   const [activeMainChartMode, setActiveMainChartMode] = useState('CURVES');
   const [showCorridorSniperChart, setShowCorridorSniperChart] = useState(true);
+  const [showHhRadarChart, setShowHhRadarChart] = useState(true);
   const [showBreakoutDiagnostics, setShowBreakoutDiagnostics] = useState(true);
   const [showVolMcapChart, setShowVolMcapChart] = useState(false); // Désactivé par défaut
   const [showMainChart, setShowMainChart] = useState(true); // Afficher / Masquer la charte principale benchmark Top 50
@@ -7728,6 +8492,28 @@ export default function MonthlyTop50BenchmarkComparator() {
               {showCorridorSniperChart ? 'CORRIDOR SNIPER (ON)' : 'CORRIDOR SNIPER (OFF)'}
             </button>
 
+            {/* BOUTON RADAR HIGHER HIGH 30D */}
+            <button
+              onClick={() => setShowHhRadarChart(!showHhRadarChart)}
+              style={{
+                background: showHhRadarChart ? 'rgba(250, 204, 21, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                color: showHhRadarChart ? '#facc15' : '#64748b',
+                border: showHhRadarChart ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '0.72rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Crown size={13} style={{ color: showHhRadarChart ? '#facc15' : '#64748b' }} />
+              {showHhRadarChart ? 'RADAR HH 30D (ON)' : 'RADAR HH 30D (OFF)'}
+            </button>
+
             {/* BOUTON DIAGNOSTIC BREAKOUT */}
             <button
               onClick={() => setShowBreakoutDiagnostics(!showBreakoutDiagnostics)}
@@ -7809,6 +8595,23 @@ export default function MonthlyTop50BenchmarkComparator() {
             onClose={() => setShowCorridorSniperChart(false)}
             marketSentiment={marketSentiment}
             btcMarketData={btcMarketData}
+            dailyCgData={dailyCgData}
+            dailyMarketCaps={dailyMarketCaps}
+            livePricesRef={livePricesRef}
+          />
+        )}
+
+        {/* 👑 1.55 CHARTE DÉDIÉE : RADAR HIGHER HIGH 30D (TOKENS TESTANT OU CASSANT LE SOMMET MENSUEL) */}
+        {showHhRadarChart && (
+          <MonthlyHigherHighRadarChart
+            tokensData={tokensData}
+            tripleAnalysis={tripleAnalysis}
+            chartProcessedData={chartProcessedData}
+            activeChartHorizon={activeChartHorizon}
+            chartUniverse={chartUniverse}
+            selectedSoloToken={selectedSoloToken}
+            setSelectedSoloToken={setSelectedSoloToken}
+            onClose={() => setShowHhRadarChart(false)}
             dailyCgData={dailyCgData}
             dailyMarketCaps={dailyMarketCaps}
             livePricesRef={livePricesRef}
