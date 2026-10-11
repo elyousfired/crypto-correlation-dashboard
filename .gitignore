@@ -1,0 +1,30 @@
+# Node
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Vercel
+.vercel/
+**/.vercel/
+
+# Environment & Cache
+.env
+.env.local
+.env.*.local
+*.log
+
+# Temp & OS
+.DS_Store
+Thumbs.db
+scratch/

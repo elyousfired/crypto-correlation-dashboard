@@ -1,0 +1,7543 @@
+{
+  "SYN": [
+    {
+      "timestamp": 1784938140000,
+      "score": "67/100",
+      "entryPrice": 0.15332
+    },
+    {
+      "timestamp": 1784939640000,
+      "score": "62/100",
+      "entryPrice": 0.15093
+    },
+    {
+      "timestamp": 1784940840000,
+      "score": "86/100",
+      "entryPrice": 0.15445
+    },
+    {
+      "timestamp": 1784943240000,
+      "score": "62/100",
+      "entryPrice": 0.15602
+    },
+    {
+      "timestamp": 1784946240000,
+      "score": "64/100",
+      "entryPrice": 0.1546
+    },
+    {
+      "timestamp": 1784947440000,
+      "score": "81/100",
+      "entryPrice": 0.16165
+    },
+    {
+      "timestamp": 1784960640000,
+      "score": "63/100",
+      "entryPrice": 0.15225
+    },
+    {
+      "timestamp": 1784961540000,
+      "score": "64/100",
+      "entryPrice": 0.15255
+    },
+    {
+      "timestamp": 1784962140000,
+      "score": "82/100",
+      "entryPrice": 0.15385
+    },
+    {
+      "timestamp": 1784969340000,
+      "score": "61/100",
+      "entryPrice": 0.15269
+    },
+    {
+      "timestamp": 1784969940000,
+      "score": "62/100",
+      "entryPrice": 0.15205
+    },
+    {
+      "timestamp": 1784987340000,
+      "score": "61/100",
+      "entryPrice": 0.15655
+    },
+    {
+      "timestamp": 1784987940000,
+      "score": "84/100",
+      "entryPrice": 0.1598
+    },
+    {
+      "timestamp": 1784988840000,
+      "score": "80/100",
+      "entryPrice": 0.16369
+    },
+    {
+      "timestamp": 1784990040000,
+      "score": "84/100",
+      "entryPrice": 0.16194
+    },
+    {
+      "timestamp": 1784992440000,
+      "score": "81/100",
+      "entryPrice": 0.17431
+    },
+    {
+      "timestamp": 1784993040000,
+      "score": "83/100",
+      "entryPrice": 0.17347
+    },
+    {
+      "timestamp": 1784993940000,
+      "score": "84/100",
+      "entryPrice": 0.18078
+    },
+    {
+      "timestamp": 1784997540000,
+      "score": "66/100",
+      "entryPrice": 0.18287
+    },
+    {
+      "timestamp": 1785165900000,
+      "score": "61/100",
+      "entryPrice": 0.14412
+    },
+    {
+      "timestamp": 1785231660000,
+      "score": "66/100",
+      "entryPrice": 0.14775
+    },
+    {
+      "timestamp": 1785232560000,
+      "score": "81/100",
+      "entryPrice": 0.14917
+    },
+    {
+      "timestamp": 1785236160000,
+      "score": "63/100",
+      "entryPrice": 0.1496
+    },
+    {
+      "timestamp": 1785516743000,
+      "score": "66/100",
+      "entryPrice": 0.10495
+    },
+    {
+      "timestamp": 1785548259000,
+      "score": "74/100",
+      "entryPrice": 0.10528
+    },
+    {
+      "timestamp": 1785548859000,
+      "score": "90/100",
+      "entryPrice": 0.10776
+    },
+    {
+      "timestamp": 1785581561000,
+      "score": "68/100",
+      "entryPrice": 0.10187
+    },
+    {
+      "timestamp": 1785582761000,
+      "score": "84/100",
+      "entryPrice": 0.1136
+    },
+    {
+      "timestamp": 1785583361000,
+      "score": "72/100",
+      "entryPrice": 0.10804
+    },
+    {
+      "timestamp": 1785664692000,
+      "score": "77/100",
+      "entryPrice": 0.0956
+    },
+    {
+      "timestamp": 1785701597000,
+      "score": "63/100",
+      "entryPrice": 0.09473
+    },
+    {
+      "timestamp": 1785702496000,
+      "score": "85/100",
+      "entryPrice": 0.09636
+    },
+    {
+      "timestamp": 1785823434000,
+      "score": "72/100",
+      "entryPrice": 0.08902
+    },
+    {
+      "timestamp": 1785858846000,
+      "score": "81/100",
+      "entryPrice": 0.09761
+    },
+    {
+      "timestamp": 1785867248000,
+      "score": "67/100",
+      "entryPrice": 0.09772
+    },
+    {
+      "timestamp": 1785869650000,
+      "score": "66/100",
+      "entryPrice": 0.09822
+    },
+    {
+      "timestamp": 1785871151000,
+      "score": "61/100",
+      "entryPrice": 0.10134
+    },
+    {
+      "timestamp": 1785873258000,
+      "score": "61/100",
+      "entryPrice": 0.10172
+    },
+    {
+      "timestamp": 1785898161000,
+      "score": "65/100",
+      "entryPrice": 0.09952
+    },
+    {
+      "timestamp": 1785900556000,
+      "score": "60/100",
+      "entryPrice": 0.1024
+    },
+    {
+      "timestamp": 1785901761000,
+      "score": "63/100",
+      "entryPrice": 0.10318
+    },
+    {
+      "timestamp": 1785903856000,
+      "score": "65/100",
+      "entryPrice": 0.1096
+    },
+    {
+      "timestamp": 1785905358000,
+      "score": "71/100",
+      "entryPrice": 0.11044
+    },
+    {
+      "timestamp": 1785908060000,
+      "score": "69/100",
+      "entryPrice": 0.11216
+    },
+    {
+      "timestamp": 1785910158000,
+      "score": "60/100",
+      "entryPrice": 0.12716
+    },
+    {
+      "timestamp": 1785911365000,
+      "score": "61/100",
+      "entryPrice": 0.12749
+    },
+    {
+      "timestamp": 1785912559000,
+      "score": "72/100",
+      "entryPrice": 0.12771
+    },
+    {
+      "timestamp": 1785923670000,
+      "score": "63/100",
+      "entryPrice": 0.12589
+    },
+    {
+      "timestamp": 1785959674000,
+      "score": "64/100",
+      "entryPrice": 0.13498
+    },
+    {
+      "timestamp": 1785974378000,
+      "score": "66/100",
+      "entryPrice": 0.14219
+    },
+    {
+      "timestamp": 1786151439000,
+      "score": "63/100",
+      "entryPrice": 0.11222
+    },
+    {
+      "timestamp": 1786168542000,
+      "score": "76/100",
+      "entryPrice": 0.11376
+    },
+    {
+      "timestamp": 1786182642000,
+      "score": "73/100",
+      "entryPrice": 0.12559
+    },
+    {
+      "timestamp": 1786185644000,
+      "score": "62/100",
+      "entryPrice": 0.12607
+    }
+  ],
+  "DEXE": [
+    {
+      "timestamp": 1784939040000,
+      "score": "75/100",
+      "entryPrice": 4.093
+    },
+    {
+      "timestamp": 1784939640000,
+      "score": "64/100",
+      "entryPrice": 4.078
+    },
+    {
+      "timestamp": 1784946240000,
+      "score": "68/100",
+      "entryPrice": 4.064
+    },
+    {
+      "timestamp": 1784947440000,
+      "score": "71/100",
+      "entryPrice": 4.046
+    },
+    {
+      "timestamp": 1784948640000,
+      "score": "80/100",
+      "entryPrice": 4.224
+    },
+    {
+      "timestamp": 1784950140000,
+      "score": "81/100",
+      "entryPrice": 4.491
+    },
+    {
+      "timestamp": 1784950740000,
+      "score": "81/100",
+      "entryPrice": 4.64
+    },
+    {
+      "timestamp": 1784952540000,
+      "score": "74/100",
+      "entryPrice": 4.92
+    },
+    {
+      "timestamp": 1784953140000,
+      "score": "80/100",
+      "entryPrice": 5.29
+    },
+    {
+      "timestamp": 1784955240000,
+      "score": "84/100",
+      "entryPrice": 4.934
+    },
+    {
+      "timestamp": 1784958240000,
+      "score": "64/100",
+      "entryPrice": 4.974
+    },
+    {
+      "timestamp": 1784961540000,
+      "score": "77/100",
+      "entryPrice": 5.055
+    },
+    {
+      "timestamp": 1784963640000,
+      "score": "69/100",
+      "entryPrice": 5.299
+    },
+    {
+      "timestamp": 1784965440000,
+      "score": "93/100",
+      "entryPrice": 5.93
+    },
+    {
+      "timestamp": 1784966040000,
+      "score": "94/100",
+      "entryPrice": 6.039
+    },
+    {
+      "timestamp": 1784968440000,
+      "score": "60/100",
+      "entryPrice": 6.09
+    },
+    {
+      "timestamp": 1784969940000,
+      "score": "87/100",
+      "entryPrice": 6.366
+    },
+    {
+      "timestamp": 1784983440000,
+      "score": "82/100",
+      "entryPrice": 4.163
+    },
+    {
+      "timestamp": 1784984640000,
+      "score": "71/100",
+      "entryPrice": 4.357
+    },
+    {
+      "timestamp": 1784985840000,
+      "score": "69/100",
+      "entryPrice": 4.309
+    },
+    {
+      "timestamp": 1784988840000,
+      "score": "63/100",
+      "entryPrice": 4.593
+    },
+    {
+      "timestamp": 1784995440000,
+      "score": "71/100",
+      "entryPrice": 4.52
+    },
+    {
+      "timestamp": 1785001740000,
+      "score": "61/100",
+      "entryPrice": 4.573
+    },
+    {
+      "timestamp": 1785012840000,
+      "score": "74/100",
+      "entryPrice": 4.532
+    },
+    {
+      "timestamp": 1785014940000,
+      "score": "61/100",
+      "entryPrice": 4.561
+    },
+    {
+      "timestamp": 1785015840000,
+      "score": "80/100",
+      "entryPrice": 4.806
+    },
+    {
+      "timestamp": 1785017340000,
+      "score": "72/100",
+      "entryPrice": 4.86
+    },
+    {
+      "timestamp": 1785020940000,
+      "score": "74/100",
+      "entryPrice": 4.898
+    },
+    {
+      "timestamp": 1785198000000,
+      "score": "67/100",
+      "entryPrice": 2.771
+    },
+    {
+      "timestamp": 1785200700000,
+      "score": "72/100",
+      "entryPrice": 2.825
+    },
+    {
+      "timestamp": 1785203100000,
+      "score": "84/100",
+      "entryPrice": 2.946
+    },
+    {
+      "timestamp": 1785206100000,
+      "score": "73/100",
+      "entryPrice": 2.944
+    },
+    {
+      "timestamp": 1785207300000,
+      "score": "88/100",
+      "entryPrice": 2.954
+    },
+    {
+      "timestamp": 1785207900000,
+      "score": "76/100",
+      "entryPrice": 2.963
+    },
+    {
+      "timestamp": 1785216000000,
+      "score": "66/100",
+      "entryPrice": 2.984
+    },
+    {
+      "timestamp": 1785217500000,
+      "score": "82/100",
+      "entryPrice": 3.041
+    },
+    {
+      "timestamp": 1785218700000,
+      "score": "77/100",
+      "entryPrice": 3.173
+    },
+    {
+      "timestamp": 1785219600000,
+      "score": "87/100",
+      "entryPrice": 3.212
+    },
+    {
+      "timestamp": 1785220500000,
+      "score": "87/100",
+      "entryPrice": 3.26
+    },
+    {
+      "timestamp": 1785221400000,
+      "score": "83/100",
+      "entryPrice": 3.168
+    },
+    {
+      "timestamp": 1785223200000,
+      "score": "79/100",
+      "entryPrice": 3.346
+    },
+    {
+      "timestamp": 1785224100000,
+      "score": "85/100",
+      "entryPrice": 3.3
+    },
+    {
+      "timestamp": 1785225000000,
+      "score": "81/100",
+      "entryPrice": 3.321
+    },
+    {
+      "timestamp": 1785226800000,
+      "score": "71/100",
+      "entryPrice": 3.42
+    },
+    {
+      "timestamp": 1785227400000,
+      "score": "94/100",
+      "entryPrice": 3.469
+    },
+    {
+      "timestamp": 1785234900000,
+      "score": "80/100",
+      "entryPrice": 3.329
+    },
+    {
+      "timestamp": 1785234960000,
+      "score": "72/100",
+      "entryPrice": 3.351
+    },
+    {
+      "timestamp": 1785242460000,
+      "score": "60/100",
+      "entryPrice": 3.3
+    },
+    {
+      "timestamp": 1785243060000,
+      "score": "83/100",
+      "entryPrice": 3.381
+    },
+    {
+      "timestamp": 1785245460000,
+      "score": "65/100",
+      "entryPrice": 3.364
+    },
+    {
+      "timestamp": 1785246960000,
+      "score": "63/100",
+      "entryPrice": 3.32
+    },
+    {
+      "timestamp": 1785509240000,
+      "score": "61/100",
+      "entryPrice": 2.499
+    },
+    {
+      "timestamp": 1785510739000,
+      "score": "60/100",
+      "entryPrice": 2.559
+    },
+    {
+      "timestamp": 1785511340000,
+      "score": "72/100",
+      "entryPrice": 2.627
+    },
+    {
+      "timestamp": 1785513140000,
+      "score": "63/100",
+      "entryPrice": 2.582
+    },
+    {
+      "timestamp": 1785516441000,
+      "score": "62/100",
+      "entryPrice": 2.63
+    },
+    {
+      "timestamp": 1785519142000,
+      "score": "61/100",
+      "entryPrice": 2.684
+    },
+    {
+      "timestamp": 1785541348000,
+      "score": "61/100",
+      "entryPrice": 2.567
+    },
+    {
+      "timestamp": 1785542249000,
+      "score": "63/100",
+      "entryPrice": 2.609
+    },
+    {
+      "timestamp": 1785860044000,
+      "score": "63/100",
+      "entryPrice": 2.357
+    },
+    {
+      "timestamp": 1785874448000,
+      "score": "70/100",
+      "entryPrice": 2.394
+    },
+    {
+      "timestamp": 1785875349000,
+      "score": "81/100",
+      "entryPrice": 2.387
+    },
+    {
+      "timestamp": 1785892454000,
+      "score": "62/100",
+      "entryPrice": 2.386
+    },
+    {
+      "timestamp": 1785893353000,
+      "score": "76/100",
+      "entryPrice": 2.399
+    },
+    {
+      "timestamp": 1785898154000,
+      "score": "62/100",
+      "entryPrice": 2.483
+    },
+    {
+      "timestamp": 1786022392000,
+      "score": "62/100",
+      "entryPrice": 2.259
+    }
+  ],
+  "ZAMA": [
+    {
+      "timestamp": 1784940840000,
+      "score": "61/100",
+      "entryPrice": 0.05608
+    },
+    {
+      "timestamp": 1784944140000,
+      "score": "61/100",
+      "entryPrice": 0.05649
+    },
+    {
+      "timestamp": 1784950740000,
+      "score": "65/100",
+      "entryPrice": 0.05824
+    },
+    {
+      "timestamp": 1784954340000,
+      "score": "62/100",
+      "entryPrice": 0.06127
+    },
+    {
+      "timestamp": 1784955240000,
+      "score": "67/100",
+      "entryPrice": 0.06169
+    },
+    {
+      "timestamp": 1784960640000,
+      "score": "64/100",
+      "entryPrice": 0.06317
+    },
+    {
+      "timestamp": 1785166200000,
+      "score": "68/100",
+      "entryPrice": 0.06254
+    },
+    {
+      "timestamp": 1785547651000,
+      "score": "64/100",
+      "entryPrice": 0.05425
+    },
+    {
+      "timestamp": 1785548852000,
+      "score": "65/100",
+      "entryPrice": 0.05413
+    },
+    {
+      "timestamp": 1785551252000,
+      "score": "60/100",
+      "entryPrice": 0.05498
+    },
+    {
+      "timestamp": 1785551852000,
+      "score": "75/100",
+      "entryPrice": 0.0556
+    },
+    {
+      "timestamp": 1785554855000,
+      "score": "61/100",
+      "entryPrice": 0.05589
+    },
+    {
+      "timestamp": 1785555760000,
+      "score": "74/100",
+      "entryPrice": 0.05595
+    },
+    {
+      "timestamp": 1785567456000,
+      "score": "74/100",
+      "entryPrice": 0.05669
+    },
+    {
+      "timestamp": 1785585461000,
+      "score": "71/100",
+      "entryPrice": 0.05611
+    },
+    {
+      "timestamp": 1785735207000,
+      "score": "62/100",
+      "entryPrice": 0.05002
+    },
+    {
+      "timestamp": 1785735806000,
+      "score": "66/100",
+      "entryPrice": 0.05065
+    },
+    {
+      "timestamp": 1785736411000,
+      "score": "62/100",
+      "entryPrice": 0.05075
+    },
+    {
+      "timestamp": 1785925164000,
+      "score": "60/100",
+      "entryPrice": 0.0511
+    },
+    {
+      "timestamp": 1785926072000,
+      "score": "64/100",
+      "entryPrice": 0.05116
+    },
+    {
+      "timestamp": 1785926666000,
+      "score": "84/100",
+      "entryPrice": 0.05197
+    },
+    {
+      "timestamp": 1785930265000,
+      "score": "67/100",
+      "entryPrice": 0.05154
+    },
+    {
+      "timestamp": 1785930866000,
+      "score": "65/100",
+      "entryPrice": 0.05158
+    },
+    {
+      "timestamp": 1785934466000,
+      "score": "61/100",
+      "entryPrice": 0.05229
+    },
+    {
+      "timestamp": 1786031699000,
+      "score": "61/100",
+      "entryPrice": 0.05187
+    },
+    {
+      "timestamp": 1786034400000,
+      "score": "62/100",
+      "entryPrice": 0.05319
+    },
+    {
+      "timestamp": 1786034709000,
+      "score": "80/100",
+      "entryPrice": 0.05375
+    },
+    {
+      "timestamp": 1786038897000,
+      "score": "66/100",
+      "entryPrice": 0.0542
+    },
+    {
+      "timestamp": 1786041904000,
+      "score": "65/100",
+      "entryPrice": 0.05446
+    },
+    {
+      "timestamp": 1786042799000,
+      "score": "60/100",
+      "entryPrice": 0.05454
+    }
+  ],
+  "MIRA": [
+    {
+      "timestamp": 1784944140000,
+      "score": "69/100",
+      "entryPrice": 0.0474
+    },
+    {
+      "timestamp": 1784978940000,
+      "score": "61/100",
+      "entryPrice": 0.0459
+    },
+    {
+      "timestamp": 1785339060000,
+      "score": "60/100",
+      "entryPrice": 0.0435
+    },
+    {
+      "timestamp": 1785339960000,
+      "score": "67/100",
+      "entryPrice": 0.0431
+    },
+    {
+      "timestamp": 1785737306000,
+      "score": "60/100",
+      "entryPrice": 0.0426
+    },
+    {
+      "timestamp": 1785739706000,
+      "score": "60/100",
+      "entryPrice": 0.0426
+    },
+    {
+      "timestamp": 1785741807000,
+      "score": "60/100",
+      "entryPrice": 0.0428
+    },
+    {
+      "timestamp": 1785745108000,
+      "score": "69/100",
+      "entryPrice": 0.0442
+    },
+    {
+      "timestamp": 1785746608000,
+      "score": "73/100",
+      "entryPrice": 0.0442
+    },
+    {
+      "timestamp": 1785749009000,
+      "score": "67/100",
+      "entryPrice": 0.0445
+    },
+    {
+      "timestamp": 1785937767000,
+      "score": "61/100",
+      "entryPrice": 0.0422
+    },
+    {
+      "timestamp": 1785941069000,
+      "score": "61/100",
+      "entryPrice": 0.0424
+    },
+    {
+      "timestamp": 1785950969000,
+      "score": "65/100",
+      "entryPrice": 0.0432
+    },
+    {
+      "timestamp": 1785951869000,
+      "score": "61/100",
+      "entryPrice": 0.0434
+    },
+    {
+      "timestamp": 1785954274000,
+      "score": "61/100",
+      "entryPrice": 0.044
+    },
+    {
+      "timestamp": 1785986382000,
+      "score": "71/100",
+      "entryPrice": 0.0454
+    },
+    {
+      "timestamp": 1786066504000,
+      "score": "63/100",
+      "entryPrice": 0.0435
+    },
+    {
+      "timestamp": 1786067710000,
+      "score": "60/100",
+      "entryPrice": 0.0451
+    }
+  ],
+  "PROM": [
+    {
+      "timestamp": 1784953740000,
+      "score": "70/100",
+      "entryPrice": 1.952
+    },
+    {
+      "timestamp": 1784954340000,
+      "score": "61/100",
+      "entryPrice": 1.929
+    },
+    {
+      "timestamp": 1784957340000,
+      "score": "65/100",
+      "entryPrice": 2.013
+    },
+    {
+      "timestamp": 1784958240000,
+      "score": "63/100",
+      "entryPrice": 1.992
+    },
+    {
+      "timestamp": 1784967240000,
+      "score": "74/100",
+      "entryPrice": 1.944
+    },
+    {
+      "timestamp": 1784969340000,
+      "score": "76/100",
+      "entryPrice": 1.976
+    },
+    {
+      "timestamp": 1784970840000,
+      "score": "63/100",
+      "entryPrice": 2.063
+    },
+    {
+      "timestamp": 1784972640000,
+      "score": "80/100",
+      "entryPrice": 2.13
+    },
+    {
+      "timestamp": 1784980140000,
+      "score": "63/100",
+      "entryPrice": 2.112
+    }
+  ],
+  "EUL": [
+    {
+      "timestamp": 1784960040000,
+      "score": "65/100",
+      "entryPrice": 1.359
+    },
+    {
+      "timestamp": 1784972040000,
+      "score": "68/100",
+      "entryPrice": 1.584
+    },
+    {
+      "timestamp": 1784975340000,
+      "score": "67/100",
+      "entryPrice": 1.7
+    },
+    {
+      "timestamp": 1784976840000,
+      "score": "68/100",
+      "entryPrice": 1.756
+    },
+    {
+      "timestamp": 1784980140000,
+      "score": "61/100",
+      "entryPrice": 1.673
+    },
+    {
+      "timestamp": 1785003540000,
+      "score": "63/100",
+      "entryPrice": 1.601
+    },
+    {
+      "timestamp": 1785005640000,
+      "score": "69/100",
+      "entryPrice": 1.642
+    },
+    {
+      "timestamp": 1785009840000,
+      "score": "61/100",
+      "entryPrice": 1.728
+    },
+    {
+      "timestamp": 1785023340000,
+      "score": "64/100",
+      "entryPrice": 1.919
+    },
+    {
+      "timestamp": 1785027000000,
+      "score": "66/100",
+      "entryPrice": 2.081
+    },
+    {
+      "timestamp": 1785027540000,
+      "score": "80/100",
+      "entryPrice": 2.303
+    },
+    {
+      "timestamp": 1785030600000,
+      "score": "75/100",
+      "entryPrice": 2.315
+    },
+    {
+      "timestamp": 1785032100000,
+      "score": "60/100",
+      "entryPrice": 2.324
+    },
+    {
+      "timestamp": 1785033300000,
+      "score": "60/100",
+      "entryPrice": 2.27
+    },
+    {
+      "timestamp": 1785037500000,
+      "score": "60/100",
+      "entryPrice": 2.204
+    },
+    {
+      "timestamp": 1785039300000,
+      "score": "60/100",
+      "entryPrice": 2.327
+    },
+    {
+      "timestamp": 1785040800000,
+      "score": "61/100",
+      "entryPrice": 2.273
+    },
+    {
+      "timestamp": 1785041700000,
+      "score": "70/100",
+      "entryPrice": 2.311
+    },
+    {
+      "timestamp": 1785042600000,
+      "score": "63/100",
+      "entryPrice": 2.432
+    },
+    {
+      "timestamp": 1785043800000,
+      "score": "68/100",
+      "entryPrice": 2.631
+    },
+    {
+      "timestamp": 1785045600000,
+      "score": "64/100",
+      "entryPrice": 2.576
+    },
+    {
+      "timestamp": 1785198000000,
+      "score": "70/100",
+      "entryPrice": 1.721
+    },
+    {
+      "timestamp": 1785234060000,
+      "score": "70/100",
+      "entryPrice": 1.656
+    },
+    {
+      "timestamp": 1785238800000,
+      "score": "80/100",
+      "entryPrice": 1.689
+    },
+    {
+      "timestamp": 1785284760000,
+      "score": "64/100",
+      "entryPrice": 1.613
+    },
+    {
+      "timestamp": 1785289260000,
+      "score": "71/100",
+      "entryPrice": 1.669
+    },
+    {
+      "timestamp": 1785294660000,
+      "score": "76/100",
+      "entryPrice": 1.755
+    },
+    {
+      "timestamp": 1785295860000,
+      "score": "68/100",
+      "entryPrice": 1.763
+    },
+    {
+      "timestamp": 1785298860000,
+      "score": "72/100",
+      "entryPrice": 1.826
+    },
+    {
+      "timestamp": 1785303660000,
+      "score": "60/100",
+      "entryPrice": 1.885
+    },
+    {
+      "timestamp": 1785319860000,
+      "score": "60/100",
+      "entryPrice": 1.833
+    },
+    {
+      "timestamp": 1785346860000,
+      "score": "71/100",
+      "entryPrice": 1.682
+    },
+    {
+      "timestamp": 1785585161000,
+      "score": "64/100",
+      "entryPrice": 1.393
+    },
+    {
+      "timestamp": 1785591163000,
+      "score": "89/100",
+      "entryPrice": 1.477
+    },
+    {
+      "timestamp": 1785591463000,
+      "score": "93/100",
+      "entryPrice": 1.512
+    },
+    {
+      "timestamp": 1785593563000,
+      "score": "61/100",
+      "entryPrice": 1.628
+    },
+    {
+      "timestamp": 1785594164000,
+      "score": "66/100",
+      "entryPrice": 1.663
+    },
+    {
+      "timestamp": 1785598664000,
+      "score": "67/100",
+      "entryPrice": 1.603
+    },
+    {
+      "timestamp": 1785634975000,
+      "score": "68/100",
+      "entryPrice": 1.644
+    },
+    {
+      "timestamp": 1785635875000,
+      "score": "62/100",
+      "entryPrice": 1.652
+    },
+    {
+      "timestamp": 1785658682000,
+      "score": "68/100",
+      "entryPrice": 1.557
+    },
+    {
+      "timestamp": 1785661983000,
+      "score": "67/100",
+      "entryPrice": 1.553
+    },
+    {
+      "timestamp": 1785663784000,
+      "score": "62/100",
+      "entryPrice": 1.546
+    },
+    {
+      "timestamp": 1785664684000,
+      "score": "65/100",
+      "entryPrice": 1.571
+    },
+    {
+      "timestamp": 1785721401000,
+      "score": "63/100",
+      "entryPrice": 1.489
+    },
+    {
+      "timestamp": 1785758318000,
+      "score": "79/100",
+      "entryPrice": 1.464
+    },
+    {
+      "timestamp": 1785760714000,
+      "score": "71/100",
+      "entryPrice": 1.495
+    },
+    {
+      "timestamp": 1785768816000,
+      "score": "60/100",
+      "entryPrice": 1.513
+    },
+    {
+      "timestamp": 1785805131000,
+      "score": "64/100",
+      "entryPrice": 1.517
+    },
+    {
+      "timestamp": 1785889151000,
+      "score": "62/100",
+      "entryPrice": 1.458
+    },
+    {
+      "timestamp": 1785889751000,
+      "score": "73/100",
+      "entryPrice": 1.476
+    },
+    {
+      "timestamp": 1785890953000,
+      "score": "72/100",
+      "entryPrice": 1.474
+    },
+    {
+      "timestamp": 1785891551000,
+      "score": "63/100",
+      "entryPrice": 1.462
+    }
+  ],
+  "BANK": [
+    {
+      "timestamp": 1784961540000,
+      "score": "60/100",
+      "entryPrice": 0.3296
+    },
+    {
+      "timestamp": 1784991540000,
+      "score": "64/100",
+      "entryPrice": 0.3495
+    },
+    {
+      "timestamp": 1784996040000,
+      "score": "64/100",
+      "entryPrice": 0.3149
+    },
+    {
+      "timestamp": 1785030600000,
+      "score": "63/100",
+      "entryPrice": 0.3737
+    },
+    {
+      "timestamp": 1785132900000,
+      "score": "61/100",
+      "entryPrice": 0.4239
+    },
+    {
+      "timestamp": 1785135900000,
+      "score": "61/100",
+      "entryPrice": 0.4445
+    },
+    {
+      "timestamp": 1785137400000,
+      "score": "64/100",
+      "entryPrice": 0.4358
+    },
+    {
+      "timestamp": 1785138300000,
+      "score": "64/100",
+      "entryPrice": 0.4317
+    },
+    {
+      "timestamp": 1785142200000,
+      "score": "61/100",
+      "entryPrice": 0.4148
+    },
+    {
+      "timestamp": 1785238260000,
+      "score": "66/100",
+      "entryPrice": 0.347
+    },
+    {
+      "timestamp": 1785238860000,
+      "score": "64/100",
+      "entryPrice": 0.3468
+    },
+    {
+      "timestamp": 1785526944000,
+      "score": "67/100",
+      "entryPrice": 0.0629
+    },
+    {
+      "timestamp": 1785527845000,
+      "score": "61/100",
+      "entryPrice": 0.063
+    },
+    {
+      "timestamp": 1785555754000,
+      "score": "62/100",
+      "entryPrice": 0.0616
+    },
+    {
+      "timestamp": 1785557553000,
+      "score": "62/100",
+      "entryPrice": 0.0629
+    },
+    {
+      "timestamp": 1785558153000,
+      "score": "71/100",
+      "entryPrice": 0.0642
+    },
+    {
+      "timestamp": 1785558454000,
+      "score": "87/100",
+      "entryPrice": 0.0671
+    },
+    {
+      "timestamp": 1785563555000,
+      "score": "66/100",
+      "entryPrice": 0.0624
+    },
+    {
+      "timestamp": 1785739407000,
+      "score": "69/100",
+      "entryPrice": 0.0459
+    },
+    {
+      "timestamp": 1785789823000,
+      "score": "67/100",
+      "entryPrice": 0.0455
+    },
+    {
+      "timestamp": 1785790722000,
+      "score": "60/100",
+      "entryPrice": 0.0453
+    },
+    {
+      "timestamp": 1785835435000,
+      "score": "63/100",
+      "entryPrice": 0.0439
+    },
+    {
+      "timestamp": 1785836035000,
+      "score": "90/100",
+      "entryPrice": 0.0469
+    },
+    {
+      "timestamp": 1785836936000,
+      "score": "85/100",
+      "entryPrice": 0.046
+    },
+    {
+      "timestamp": 1785838436000,
+      "score": "91/100",
+      "entryPrice": 0.0476
+    },
+    {
+      "timestamp": 1785839042000,
+      "score": "87/100",
+      "entryPrice": 0.0474
+    },
+    {
+      "timestamp": 1785841740000,
+      "score": "77/100",
+      "entryPrice": 0.0515
+    },
+    {
+      "timestamp": 1785842037000,
+      "score": "85/100",
+      "entryPrice": 0.0511
+    },
+    {
+      "timestamp": 1785842937000,
+      "score": "89/100",
+      "entryPrice": 0.0517
+    },
+    {
+      "timestamp": 1785843537000,
+      "score": "84/100",
+      "entryPrice": 0.0515
+    },
+    {
+      "timestamp": 1785844739000,
+      "score": "87/100",
+      "entryPrice": 0.0523
+    },
+    {
+      "timestamp": 1785845639000,
+      "score": "69/100",
+      "entryPrice": 0.0527
+    },
+    {
+      "timestamp": 1785846838000,
+      "score": "91/100",
+      "entryPrice": 0.0537
+    },
+    {
+      "timestamp": 1785848039000,
+      "score": "82/100",
+      "entryPrice": 0.0538
+    },
+    {
+      "timestamp": 1785849539000,
+      "score": "71/100",
+      "entryPrice": 0.0534
+    },
+    {
+      "timestamp": 1785849839000,
+      "score": "93/100",
+      "entryPrice": 0.0559
+    },
+    {
+      "timestamp": 1785852541000,
+      "score": "78/100",
+      "entryPrice": 0.0569
+    },
+    {
+      "timestamp": 1785853142000,
+      "score": "80/100",
+      "entryPrice": 0.0573
+    },
+    {
+      "timestamp": 1785854641000,
+      "score": "86/100",
+      "entryPrice": 0.0573
+    },
+    {
+      "timestamp": 1785854942000,
+      "score": "94/100",
+      "entryPrice": 0.0582
+    },
+    {
+      "timestamp": 1785857042000,
+      "score": "80/100",
+      "entryPrice": 0.06
+    },
+    {
+      "timestamp": 1785858242000,
+      "score": "82/100",
+      "entryPrice": 0.0614
+    },
+    {
+      "timestamp": 1785896353000,
+      "score": "70/100",
+      "entryPrice": 0.0557
+    },
+    {
+      "timestamp": 1785896953000,
+      "score": "68/100",
+      "entryPrice": 0.0557
+    },
+    {
+      "timestamp": 1786001386000,
+      "score": "80/100",
+      "entryPrice": 0.0458
+    },
+    {
+      "timestamp": 1786002285000,
+      "score": "82/100",
+      "entryPrice": 0.0463
+    },
+    {
+      "timestamp": 1786056903000,
+      "score": "61/100",
+      "entryPrice": 0.0443
+    }
+  ],
+  "TNSR": [
+    {
+      "timestamp": 1784963640000,
+      "score": "77/100",
+      "entryPrice": 0.0365
+    }
+  ],
+  "RE": [
+    {
+      "timestamp": 1784965440000,
+      "score": "63/100",
+      "entryPrice": 0.5831
+    },
+    {
+      "timestamp": 1785123300000,
+      "score": "68/100",
+      "entryPrice": 0.5011
+    },
+    {
+      "timestamp": 1785127500000,
+      "score": "65/100",
+      "entryPrice": 0.5008
+    },
+    {
+      "timestamp": 1785228300000,
+      "score": "62/100",
+      "entryPrice": 0.4475
+    },
+    {
+      "timestamp": 1785343260000,
+      "score": "62/100",
+      "entryPrice": 0.4599
+    },
+    {
+      "timestamp": 1785343860000,
+      "score": "72/100",
+      "entryPrice": 0.4674
+    },
+    {
+      "timestamp": 1785345660000,
+      "score": "63/100",
+      "entryPrice": 0.4714
+    },
+    {
+      "timestamp": 1785347460000,
+      "score": "85/100",
+      "entryPrice": 0.4836
+    },
+    {
+      "timestamp": 1785348360000,
+      "score": "64/100",
+      "entryPrice": 0.4939
+    },
+    {
+      "timestamp": 1785352860000,
+      "score": "67/100",
+      "entryPrice": 0.5231
+    },
+    {
+      "timestamp": 1786041005000,
+      "score": "65/100",
+      "entryPrice": 0.404
+    },
+    {
+      "timestamp": 1786041299000,
+      "score": "81/100",
+      "entryPrice": 0.4055
+    },
+    {
+      "timestamp": 1786041912000,
+      "score": "82/100",
+      "entryPrice": 0.405
+    },
+    {
+      "timestamp": 1786042206000,
+      "score": "87/100",
+      "entryPrice": 0.4073
+    },
+    {
+      "timestamp": 1786043706000,
+      "score": "65/100",
+      "entryPrice": 0.4206
+    },
+    {
+      "timestamp": 1786044599000,
+      "score": "80/100",
+      "entryPrice": 0.4203
+    },
+    {
+      "timestamp": 1786046400000,
+      "score": "80/100",
+      "entryPrice": 0.4225
+    },
+    {
+      "timestamp": 1786149335000,
+      "score": "62/100",
+      "entryPrice": 0.4028
+    },
+    {
+      "timestamp": 1786157134000,
+      "score": "61/100",
+      "entryPrice": 0.4087
+    },
+    {
+      "timestamp": 1786157737000,
+      "score": "61/100",
+      "entryPrice": 0.4081
+    },
+    {
+      "timestamp": 1786161936000,
+      "score": "82/100",
+      "entryPrice": 0.4274
+    },
+    {
+      "timestamp": 1786162236000,
+      "score": "87/100",
+      "entryPrice": 0.4289
+    },
+    {
+      "timestamp": 1786163736000,
+      "score": "82/100",
+      "entryPrice": 0.4261
+    },
+    {
+      "timestamp": 1786164634000,
+      "score": "81/100",
+      "entryPrice": 0.4291
+    },
+    {
+      "timestamp": 1786166136000,
+      "score": "63/100",
+      "entryPrice": 0.424
+    },
+    {
+      "timestamp": 1786171837000,
+      "score": "70/100",
+      "entryPrice": 0.4228
+    },
+    {
+      "timestamp": 1786174837000,
+      "score": "73/100",
+      "entryPrice": 0.4276
+    },
+    {
+      "timestamp": 1786175737000,
+      "score": "61/100",
+      "entryPrice": 0.4257
+    },
+    {
+      "timestamp": 1786177839000,
+      "score": "60/100",
+      "entryPrice": 0.4338
+    },
+    {
+      "timestamp": 1786179051000,
+      "score": "68/100",
+      "entryPrice": 0.4353
+    },
+    {
+      "timestamp": 1786180539000,
+      "score": "67/100",
+      "entryPrice": 0.4452
+    },
+    {
+      "timestamp": 1786186540000,
+      "score": "63/100",
+      "entryPrice": 0.4468
+    },
+    {
+      "timestamp": 1786190141000,
+      "score": "71/100",
+      "entryPrice": 0.4533
+    },
+    {
+      "timestamp": 1786191943000,
+      "score": "63/100",
+      "entryPrice": 0.4658
+    },
+    {
+      "timestamp": 1786193142000,
+      "score": "69/100",
+      "entryPrice": 0.4719
+    }
+  ],
+  "LUMIA": [
+    {
+      "timestamp": 1784967240000,
+      "score": "67/100",
+      "entryPrice": 0.075
+    },
+    {
+      "timestamp": 1784969640000,
+      "score": "62/100",
+      "entryPrice": 0.0751
+    },
+    {
+      "timestamp": 1784970840000,
+      "score": "62/100",
+      "entryPrice": 0.0772
+    },
+    {
+      "timestamp": 1784972640000,
+      "score": "62/100",
+      "entryPrice": 0.0771
+    }
+  ],
+  "PYR": [
+    {
+      "timestamp": 1784968440000,
+      "score": "61/100",
+      "entryPrice": 0.095
+    },
+    {
+      "timestamp": 1785810536000,
+      "score": "79/100",
+      "entryPrice": 0.071
+    },
+    {
+      "timestamp": 1785810832000,
+      "score": "82/100",
+      "entryPrice": 0.071
+    },
+    {
+      "timestamp": 1785814732000,
+      "score": "67/100",
+      "entryPrice": 0.071
+    }
+  ],
+  "AIGENSYN": [
+    {
+      "timestamp": 1784974440000,
+      "score": "60/100",
+      "entryPrice": 0.02728
+    },
+    {
+      "timestamp": 1784975940000,
+      "score": "62/100",
+      "entryPrice": 0.02728
+    }
+  ],
+  "VANRY": [
+    {
+      "timestamp": 1784978040000,
+      "score": "76/100",
+      "entryPrice": 0.005037
+    },
+    {
+      "timestamp": 1784978940000,
+      "score": "81/100",
+      "entryPrice": 0.005088
+    },
+    {
+      "timestamp": 1784980740000,
+      "score": "82/100",
+      "entryPrice": 0.005369
+    },
+    {
+      "timestamp": 1785224100000,
+      "score": "67/100",
+      "entryPrice": 0.004311
+    },
+    {
+      "timestamp": 1785225000000,
+      "score": "86/100",
+      "entryPrice": 0.004387
+    },
+    {
+      "timestamp": 1785228360000,
+      "score": "64/100",
+      "entryPrice": 0.004455
+    },
+    {
+      "timestamp": 1785229500000,
+      "score": "80/100",
+      "entryPrice": 0.00473
+    },
+    {
+      "timestamp": 1785229560000,
+      "score": "68/100",
+      "entryPrice": 0.00479
+    },
+    {
+      "timestamp": 1785230700000,
+      "score": "85/100",
+      "entryPrice": 0.004865
+    },
+    {
+      "timestamp": 1785233460000,
+      "score": "61/100",
+      "entryPrice": 0.004744
+    },
+    {
+      "timestamp": 1785247560000,
+      "score": "60/100",
+      "entryPrice": 0.004767
+    },
+    {
+      "timestamp": 1785248760000,
+      "score": "75/100",
+      "entryPrice": 0.004795
+    },
+    {
+      "timestamp": 1785249360000,
+      "score": "73/100",
+      "entryPrice": 0.004797
+    },
+    {
+      "timestamp": 1785250260000,
+      "score": "65/100",
+      "entryPrice": 0.004798
+    },
+    {
+      "timestamp": 1785252960000,
+      "score": "76/100",
+      "entryPrice": 0.004919
+    },
+    {
+      "timestamp": 1785253860000,
+      "score": "72/100",
+      "entryPrice": 0.004919
+    },
+    {
+      "timestamp": 1785255060000,
+      "score": "66/100",
+      "entryPrice": 0.005054
+    },
+    {
+      "timestamp": 1785264960000,
+      "score": "66/100",
+      "entryPrice": 0.005029
+    },
+    {
+      "timestamp": 1785570460000,
+      "score": "81/100",
+      "entryPrice": 0.004261
+    },
+    {
+      "timestamp": 1785572861000,
+      "score": "68/100",
+      "entryPrice": 0.004214
+    },
+    {
+      "timestamp": 1785729807000,
+      "score": "76/100",
+      "entryPrice": 0.003973
+    },
+    {
+      "timestamp": 1785762817000,
+      "score": "60/100",
+      "entryPrice": 0.00339
+    },
+    {
+      "timestamp": 1785764319000,
+      "score": "62/100",
+      "entryPrice": 0.003491
+    },
+    {
+      "timestamp": 1785797925000,
+      "score": "62/100",
+      "entryPrice": 0.003592
+    },
+    {
+      "timestamp": 1785810529000,
+      "score": "64/100",
+      "entryPrice": 0.00371
+    },
+    {
+      "timestamp": 1785811733000,
+      "score": "82/100",
+      "entryPrice": 0.003772
+    },
+    {
+      "timestamp": 1785813230000,
+      "score": "65/100",
+      "entryPrice": 0.003776
+    },
+    {
+      "timestamp": 1785814431000,
+      "score": "82/100",
+      "entryPrice": 0.003798
+    },
+    {
+      "timestamp": 1785816832000,
+      "score": "61/100",
+      "entryPrice": 0.003791
+    },
+    {
+      "timestamp": 1785824033000,
+      "score": "64/100",
+      "entryPrice": 0.003767
+    },
+    {
+      "timestamp": 1785825834000,
+      "score": "70/100",
+      "entryPrice": 0.003746
+    },
+    {
+      "timestamp": 1785826733000,
+      "score": "68/100",
+      "entryPrice": 0.00375
+    },
+    {
+      "timestamp": 1785827334000,
+      "score": "75/100",
+      "entryPrice": 0.003945
+    },
+    {
+      "timestamp": 1785827633000,
+      "score": "87/100",
+      "entryPrice": 0.003977
+    },
+    {
+      "timestamp": 1785828835000,
+      "score": "72/100",
+      "entryPrice": 0.003817
+    },
+    {
+      "timestamp": 1785829138000,
+      "score": "88/100",
+      "entryPrice": 0.003888
+    },
+    {
+      "timestamp": 1785912565000,
+      "score": "72/100",
+      "entryPrice": 0.003499
+    },
+    {
+      "timestamp": 1785914059000,
+      "score": "62/100",
+      "entryPrice": 0.003521
+    },
+    {
+      "timestamp": 1785915263000,
+      "score": "60/100",
+      "entryPrice": 0.003505
+    },
+    {
+      "timestamp": 1785916170000,
+      "score": "70/100",
+      "entryPrice": 0.003532
+    },
+    {
+      "timestamp": 1785923964000,
+      "score": "76/100",
+      "entryPrice": 0.00362
+    },
+    {
+      "timestamp": 1785924564000,
+      "score": "74/100",
+      "entryPrice": 0.003706
+    },
+    {
+      "timestamp": 1785926964000,
+      "score": "65/100",
+      "entryPrice": 0.00362
+    },
+    {
+      "timestamp": 1785930871000,
+      "score": "82/100",
+      "entryPrice": 0.003676
+    },
+    {
+      "timestamp": 1785936267000,
+      "score": "78/100",
+      "entryPrice": 0.003735
+    },
+    {
+      "timestamp": 1785939571000,
+      "score": "67/100",
+      "entryPrice": 0.003894
+    },
+    {
+      "timestamp": 1785965378000,
+      "score": "60/100",
+      "entryPrice": 0.003657
+    },
+    {
+      "timestamp": 1786134927000,
+      "score": "80/100",
+      "entryPrice": 0.003493
+    }
+  ],
+  "ATM": [
+    {
+      "timestamp": 1784987340000,
+      "score": "65/100",
+      "entryPrice": 1.942
+    },
+    {
+      "timestamp": 1784989440000,
+      "score": "74/100",
+      "entryPrice": 2.005
+    },
+    {
+      "timestamp": 1784990040000,
+      "score": "61/100",
+      "entryPrice": 1.936
+    },
+    {
+      "timestamp": 1784992440000,
+      "score": "64/100",
+      "entryPrice": 1.849
+    },
+    {
+      "timestamp": 1784993340000,
+      "score": "60/100",
+      "entryPrice": 1.845
+    },
+    {
+      "timestamp": 1784993940000,
+      "score": "63/100",
+      "entryPrice": 1.87
+    },
+    {
+      "timestamp": 1785004440000,
+      "score": "78/100",
+      "entryPrice": 1.863
+    },
+    {
+      "timestamp": 1785011940000,
+      "score": "68/100",
+      "entryPrice": 1.881
+    },
+    {
+      "timestamp": 1785057000000,
+      "score": "68/100",
+      "entryPrice": 1.928
+    },
+    {
+      "timestamp": 1785057600000,
+      "score": "64/100",
+      "entryPrice": 1.893
+    }
+  ],
+  "SHIB": [
+    {
+      "timestamp": 1784991540000,
+      "score": "67/100",
+      "entryPrice": 0.00000446
+    },
+    {
+      "timestamp": 1784993040000,
+      "score": "61/100",
+      "entryPrice": 0.00000455
+    },
+    {
+      "timestamp": 1784994840000,
+      "score": "80/100",
+      "entryPrice": 0.00000478
+    },
+    {
+      "timestamp": 1784996040000,
+      "score": "63/100",
+      "entryPrice": 0.00000487
+    },
+    {
+      "timestamp": 1785000840000,
+      "score": "60/100",
+      "entryPrice": 0.00000499
+    },
+    {
+      "timestamp": 1785001740000,
+      "score": "65/100",
+      "entryPrice": 0.00000504
+    },
+    {
+      "timestamp": 1785008340000,
+      "score": "68/100",
+      "entryPrice": 0.000005
+    },
+    {
+      "timestamp": 1785009240000,
+      "score": "64/100",
+      "entryPrice": 0.00000507
+    },
+    {
+      "timestamp": 1785045300000,
+      "score": "61/100",
+      "entryPrice": 0.00000574
+    },
+    {
+      "timestamp": 1785545851000,
+      "score": "69/100",
+      "entryPrice": 0.00000493
+    },
+    {
+      "timestamp": 1785548253000,
+      "score": "64/100",
+      "entryPrice": 0.00000499
+    },
+    {
+      "timestamp": 1785552453000,
+      "score": "60/100",
+      "entryPrice": 0.00000497
+    },
+    {
+      "timestamp": 1785598669000,
+      "score": "68/100",
+      "entryPrice": 0.00000508
+    },
+    {
+      "timestamp": 1785599566000,
+      "score": "67/100",
+      "entryPrice": 0.00000512
+    }
+  ],
+  "SCR": [
+    {
+      "timestamp": 1784996040000,
+      "score": "68/100",
+      "entryPrice": 0.02294
+    },
+    {
+      "timestamp": 1784996640000,
+      "score": "65/100",
+      "entryPrice": 0.0229
+    }
+  ],
+  "WIF": [
+    {
+      "timestamp": 1785004440000,
+      "score": "65/100",
+      "entryPrice": 0.156
+    },
+    {
+      "timestamp": 1785008640000,
+      "score": "60/100",
+      "entryPrice": 0.1552
+    },
+    {
+      "timestamp": 1785009240000,
+      "score": "73/100",
+      "entryPrice": 0.1564
+    }
+  ],
+  "QI": [
+    {
+      "timestamp": 1785008340000,
+      "score": "62/100",
+      "entryPrice": 0.001808
+    },
+    {
+      "timestamp": 1785009840000,
+      "score": "72/100",
+      "entryPrice": 0.001765
+    },
+    {
+      "timestamp": 1785048300000,
+      "score": "71/100",
+      "entryPrice": 0.001589
+    }
+  ],
+  "REQ": [
+    {
+      "timestamp": 1785011940000,
+      "score": "68/100",
+      "entryPrice": 0.0668
+    },
+    {
+      "timestamp": 1785033900000,
+      "score": "71/100",
+      "entryPrice": 0.0691
+    }
+  ],
+  "LISTA": [
+    {
+      "timestamp": 1785023340000,
+      "score": "61/100",
+      "entryPrice": 0.0496
+    }
+  ],
+  "RIF": [
+    {
+      "timestamp": 1785024840000,
+      "score": "62/100",
+      "entryPrice": 0.0819
+    },
+    {
+      "timestamp": 1785025800000,
+      "score": "83/100",
+      "entryPrice": 0.0865
+    },
+    {
+      "timestamp": 1785028140000,
+      "score": "82/100",
+      "entryPrice": 0.0955
+    },
+    {
+      "timestamp": 1785029100000,
+      "score": "66/100",
+      "entryPrice": 0.0979
+    },
+    {
+      "timestamp": 1785030540000,
+      "score": "60/100",
+      "entryPrice": 0.0908
+    },
+    {
+      "timestamp": 1785046500000,
+      "score": "61/100",
+      "entryPrice": 0.0836
+    },
+    {
+      "timestamp": 1785048300000,
+      "score": "63/100",
+      "entryPrice": 0.0825
+    },
+    {
+      "timestamp": 1785051300000,
+      "score": "65/100",
+      "entryPrice": 0.0858
+    },
+    {
+      "timestamp": 1785052200000,
+      "score": "73/100",
+      "entryPrice": 0.0893
+    },
+    {
+      "timestamp": 1785061800000,
+      "score": "61/100",
+      "entryPrice": 0.0947
+    },
+    {
+      "timestamp": 1785063300000,
+      "score": "61/100",
+      "entryPrice": 0.0956
+    },
+    {
+      "timestamp": 1785064800000,
+      "score": "61/100",
+      "entryPrice": 0.0977
+    },
+    {
+      "timestamp": 1785065700000,
+      "score": "68/100",
+      "entryPrice": 0.0993
+    },
+    {
+      "timestamp": 1785068700000,
+      "score": "68/100",
+      "entryPrice": 0.0964
+    },
+    {
+      "timestamp": 1785168600000,
+      "score": "70/100",
+      "entryPrice": 0.0817
+    },
+    {
+      "timestamp": 1785170100000,
+      "score": "68/100",
+      "entryPrice": 0.0816
+    },
+    {
+      "timestamp": 1785171300000,
+      "score": "64/100",
+      "entryPrice": 0.0856
+    },
+    {
+      "timestamp": 1785177300000,
+      "score": "70/100",
+      "entryPrice": 0.0858
+    },
+    {
+      "timestamp": 1785178800000,
+      "score": "67/100",
+      "entryPrice": 0.0852
+    },
+    {
+      "timestamp": 1785182100000,
+      "score": "73/100",
+      "entryPrice": 0.096
+    },
+    {
+      "timestamp": 1785198300000,
+      "score": "66/100",
+      "entryPrice": 0.0807
+    },
+    {
+      "timestamp": 1785201300000,
+      "score": "62/100",
+      "entryPrice": 0.0822
+    },
+    {
+      "timestamp": 1785202200000,
+      "score": "69/100",
+      "entryPrice": 0.083
+    },
+    {
+      "timestamp": 1785204300000,
+      "score": "68/100",
+      "entryPrice": 0.0852
+    },
+    {
+      "timestamp": 1785205500000,
+      "score": "62/100",
+      "entryPrice": 0.0851
+    },
+    {
+      "timestamp": 1785206700000,
+      "score": "61/100",
+      "entryPrice": 0.0864
+    },
+    {
+      "timestamp": 1785207900000,
+      "score": "63/100",
+      "entryPrice": 0.0885
+    },
+    {
+      "timestamp": 1785209100000,
+      "score": "68/100",
+      "entryPrice": 0.0881
+    },
+    {
+      "timestamp": 1785210600000,
+      "score": "62/100",
+      "entryPrice": 0.0876
+    },
+    {
+      "timestamp": 1785247560000,
+      "score": "70/100",
+      "entryPrice": 0.0814
+    },
+    {
+      "timestamp": 1785262860000,
+      "score": "67/100",
+      "entryPrice": 0.0838
+    },
+    {
+      "timestamp": 1785263760000,
+      "score": "70/100",
+      "entryPrice": 0.0854
+    },
+    {
+      "timestamp": 1785266760000,
+      "score": "65/100",
+      "entryPrice": 0.0892
+    },
+    {
+      "timestamp": 1785267360000,
+      "score": "69/100",
+      "entryPrice": 0.0903
+    },
+    {
+      "timestamp": 1785268560000,
+      "score": "66/100",
+      "entryPrice": 0.0904
+    },
+    {
+      "timestamp": 1785328860000,
+      "score": "62/100",
+      "entryPrice": 0.0914
+    },
+    {
+      "timestamp": 1785343260000,
+      "score": "72/100",
+      "entryPrice": 0.0997
+    },
+    {
+      "timestamp": 1785347460000,
+      "score": "66/100",
+      "entryPrice": 0.1026
+    },
+    {
+      "timestamp": 1785609471000,
+      "score": "65/100",
+      "entryPrice": 0.088
+    },
+    {
+      "timestamp": 1785656291000,
+      "score": "64/100",
+      "entryPrice": 0.0924
+    },
+    {
+      "timestamp": 1785830039000,
+      "score": "68/100",
+      "entryPrice": 0.0779
+    },
+    {
+      "timestamp": 1785837538000,
+      "score": "72/100",
+      "entryPrice": 0.0802
+    }
+  ],
+  "LA": [
+    {
+      "timestamp": 1785028200000,
+      "score": "60/100",
+      "entryPrice": 0.0688
+    },
+    {
+      "timestamp": 1785029100000,
+      "score": "66/100",
+      "entryPrice": 0.0677
+    },
+    {
+      "timestamp": 1785036900000,
+      "score": "61/100",
+      "entryPrice": 0.0683
+    },
+    {
+      "timestamp": 1785044700000,
+      "score": "73/100",
+      "entryPrice": 0.0698
+    },
+    {
+      "timestamp": 1785047100000,
+      "score": "72/100",
+      "entryPrice": 0.0735
+    },
+    {
+      "timestamp": 1785048600000,
+      "score": "63/100",
+      "entryPrice": 0.0711
+    },
+    {
+      "timestamp": 1785073800000,
+      "score": "63/100",
+      "entryPrice": 0.0708
+    },
+    {
+      "timestamp": 1785075900000,
+      "score": "67/100",
+      "entryPrice": 0.0719
+    },
+    {
+      "timestamp": 1785077100000,
+      "score": "67/100",
+      "entryPrice": 0.0736
+    },
+    {
+      "timestamp": 1785080100000,
+      "score": "68/100",
+      "entryPrice": 0.0741
+    },
+    {
+      "timestamp": 1785081000000,
+      "score": "65/100",
+      "entryPrice": 0.0742
+    },
+    {
+      "timestamp": 1785081300000,
+      "score": "80/100",
+      "entryPrice": 0.0762
+    },
+    {
+      "timestamp": 1785171900000,
+      "score": "61/100",
+      "entryPrice": 0.0861
+    },
+    {
+      "timestamp": 1785173700000,
+      "score": "62/100",
+      "entryPrice": 0.1019
+    },
+    {
+      "timestamp": 1785178500000,
+      "score": "64/100",
+      "entryPrice": 0.1042
+    },
+    {
+      "timestamp": 1785198600000,
+      "score": "62/100",
+      "entryPrice": 0.0648
+    },
+    {
+      "timestamp": 1785199200000,
+      "score": "66/100",
+      "entryPrice": 0.0653
+    },
+    {
+      "timestamp": 1785199800000,
+      "score": "83/100",
+      "entryPrice": 0.0661
+    },
+    {
+      "timestamp": 1785202200000,
+      "score": "68/100",
+      "entryPrice": 0.0673
+    },
+    {
+      "timestamp": 1785207900000,
+      "score": "63/100",
+      "entryPrice": 0.0677
+    },
+    {
+      "timestamp": 1785218700000,
+      "score": "66/100",
+      "entryPrice": 0.0673
+    },
+    {
+      "timestamp": 1786113629000,
+      "score": "75/100",
+      "entryPrice": 0.0522
+    },
+    {
+      "timestamp": 1786119926000,
+      "score": "61/100",
+      "entryPrice": 0.052
+    },
+    {
+      "timestamp": 1786149331000,
+      "score": "60/100",
+      "entryPrice": 0.0539
+    },
+    {
+      "timestamp": 1786150232000,
+      "score": "63/100",
+      "entryPrice": 0.0543
+    }
+  ],
+  "DIA": [
+    {
+      "timestamp": 1785029040000,
+      "score": "62/100",
+      "entryPrice": 0.1135
+    },
+    {
+      "timestamp": 1785029700000,
+      "score": "60/100",
+      "entryPrice": 0.1143
+    },
+    {
+      "timestamp": 1785030600000,
+      "score": "76/100",
+      "entryPrice": 0.1156
+    },
+    {
+      "timestamp": 1785035400000,
+      "score": "61/100",
+      "entryPrice": 0.1175
+    },
+    {
+      "timestamp": 1785041100000,
+      "score": "65/100",
+      "entryPrice": 0.1274
+    },
+    {
+      "timestamp": 1785042300000,
+      "score": "63/100",
+      "entryPrice": 0.1445
+    },
+    {
+      "timestamp": 1785043800000,
+      "score": "64/100",
+      "entryPrice": 0.1449
+    },
+    {
+      "timestamp": 1785045600000,
+      "score": "63/100",
+      "entryPrice": 0.1451
+    },
+    {
+      "timestamp": 1785048000000,
+      "score": "61/100",
+      "entryPrice": 0.1369
+    },
+    {
+      "timestamp": 1785058800000,
+      "score": "65/100",
+      "entryPrice": 0.1451
+    },
+    {
+      "timestamp": 1785118800000,
+      "score": "61/100",
+      "entryPrice": 0.1543
+    },
+    {
+      "timestamp": 1785120900000,
+      "score": "61/100",
+      "entryPrice": 0.164
+    },
+    {
+      "timestamp": 1785137100000,
+      "score": "67/100",
+      "entryPrice": 0.1731
+    },
+    {
+      "timestamp": 1785138600000,
+      "score": "60/100",
+      "entryPrice": 0.1839
+    },
+    {
+      "timestamp": 1785142200000,
+      "score": "64/100",
+      "entryPrice": 0.1973
+    },
+    {
+      "timestamp": 1785144600000,
+      "score": "60/100",
+      "entryPrice": 0.1998
+    },
+    {
+      "timestamp": 1785342360000,
+      "score": "77/100",
+      "entryPrice": 0.1231
+    },
+    {
+      "timestamp": 1785343860000,
+      "score": "79/100",
+      "entryPrice": 0.1251
+    },
+    {
+      "timestamp": 1785347460000,
+      "score": "66/100",
+      "entryPrice": 0.1258
+    },
+    {
+      "timestamp": 1785348360000,
+      "score": "66/100",
+      "entryPrice": 0.1291
+    },
+    {
+      "timestamp": 1785523353000,
+      "score": "79/100",
+      "entryPrice": 0.1275
+    },
+    {
+      "timestamp": 1785544052000,
+      "score": "61/100",
+      "entryPrice": 0.1219
+    }
+  ],
+  "PEPE": [
+    {
+      "timestamp": 1785033240000,
+      "score": "67/100",
+      "entryPrice": 0.00000282
+    },
+    {
+      "timestamp": 1785038400000,
+      "score": "71/100",
+      "entryPrice": 0.00000293
+    }
+  ],
+  "ORDI": [
+    {
+      "timestamp": 1785035400000,
+      "score": "67/100",
+      "entryPrice": 3.871
+    },
+    {
+      "timestamp": 1785037500000,
+      "score": "60/100",
+      "entryPrice": 3.9
+    },
+    {
+      "timestamp": 1785508043000,
+      "score": "67/100",
+      "entryPrice": 3.348
+    },
+    {
+      "timestamp": 1785508342000,
+      "score": "82/100",
+      "entryPrice": 3.39
+    },
+    {
+      "timestamp": 1785508645000,
+      "score": "91/100",
+      "entryPrice": 3.405
+    },
+    {
+      "timestamp": 1785510442000,
+      "score": "80/100",
+      "entryPrice": 3.434
+    },
+    {
+      "timestamp": 1785512543000,
+      "score": "67/100",
+      "entryPrice": 3.377
+    },
+    {
+      "timestamp": 1785516746000,
+      "score": "61/100",
+      "entryPrice": 3.42
+    },
+    {
+      "timestamp": 1785518845000,
+      "score": "71/100",
+      "entryPrice": 3.511
+    },
+    {
+      "timestamp": 1785519446000,
+      "score": "68/100",
+      "entryPrice": 3.526
+    },
+    {
+      "timestamp": 1785519744000,
+      "score": "82/100",
+      "entryPrice": 3.548
+    },
+    {
+      "timestamp": 1785521545000,
+      "score": "61/100",
+      "entryPrice": 3.568
+    },
+    {
+      "timestamp": 1785522145000,
+      "score": "68/100",
+      "entryPrice": 3.571
+    },
+    {
+      "timestamp": 1785523346000,
+      "score": "65/100",
+      "entryPrice": 3.525
+    },
+    {
+      "timestamp": 1785524245000,
+      "score": "70/100",
+      "entryPrice": 3.558
+    },
+    {
+      "timestamp": 1785526046000,
+      "score": "64/100",
+      "entryPrice": 3.563
+    },
+    {
+      "timestamp": 1785527546000,
+      "score": "60/100",
+      "entryPrice": 3.612
+    },
+    {
+      "timestamp": 1786175441000,
+      "score": "67/100",
+      "entryPrice": 3.467
+    },
+    {
+      "timestamp": 1786181141000,
+      "score": "64/100",
+      "entryPrice": 3.525
+    },
+    {
+      "timestamp": 1786182339000,
+      "score": "60/100",
+      "entryPrice": 3.538
+    }
+  ],
+  "BOME": [
+    {
+      "timestamp": 1785051600000,
+      "score": "60/100",
+      "entryPrice": 0.0005314
+    },
+    {
+      "timestamp": 1785223500000,
+      "score": "60/100",
+      "entryPrice": 0.0005711
+    }
+  ],
+  "LPT": [
+    {
+      "timestamp": 1785061200000,
+      "score": "65/100",
+      "entryPrice": 1.76
+    },
+    {
+      "timestamp": 1785063300000,
+      "score": "60/100",
+      "entryPrice": 1.636
+    },
+    {
+      "timestamp": 1785063900000,
+      "score": "60/100",
+      "entryPrice": 1.681
+    },
+    {
+      "timestamp": 1785111600000,
+      "score": "61/100",
+      "entryPrice": 1.58
+    }
+  ],
+  "KAITO": [
+    {
+      "timestamp": 1785064500000,
+      "score": "67/100",
+      "entryPrice": 1.1186
+    },
+    {
+      "timestamp": 1785192000000,
+      "score": "69/100",
+      "entryPrice": 1.3518
+    },
+    {
+      "timestamp": 1785293160000,
+      "score": "66/100",
+      "entryPrice": 1.2804
+    },
+    {
+      "timestamp": 1785342360000,
+      "score": "60/100",
+      "entryPrice": 1.3381
+    },
+    {
+      "timestamp": 1785594174000,
+      "score": "66/100",
+      "entryPrice": 1.1353
+    },
+    {
+      "timestamp": 1785595664000,
+      "score": "66/100",
+      "entryPrice": 1.1393
+    },
+    {
+      "timestamp": 1785596266000,
+      "score": "91/100",
+      "entryPrice": 1.1663
+    },
+    {
+      "timestamp": 1785599569000,
+      "score": "60/100",
+      "entryPrice": 1.1331
+    },
+    {
+      "timestamp": 1785601966000,
+      "score": "61/100",
+      "entryPrice": 1.1642
+    },
+    {
+      "timestamp": 1785604367000,
+      "score": "72/100",
+      "entryPrice": 1.1753
+    },
+    {
+      "timestamp": 1785604967000,
+      "score": "86/100",
+      "entryPrice": 1.1977
+    },
+    {
+      "timestamp": 1785608569000,
+      "score": "60/100",
+      "entryPrice": 1.2354
+    },
+    {
+      "timestamp": 1785610370000,
+      "score": "65/100",
+      "entryPrice": 1.2222
+    },
+    {
+      "timestamp": 1785722002000,
+      "score": "64/100",
+      "entryPrice": 1.0264
+    },
+    {
+      "timestamp": 1785726503000,
+      "score": "60/100",
+      "entryPrice": 1.0531
+    },
+    {
+      "timestamp": 1785837237000,
+      "score": "61/100",
+      "entryPrice": 0.9302
+    }
+  ],
+  "UNI": [
+    {
+      "timestamp": 1785066000000,
+      "score": "60/100",
+      "entryPrice": 3.809
+    },
+    {
+      "timestamp": 1785066600000,
+      "score": "67/100",
+      "entryPrice": 3.815
+    },
+    {
+      "timestamp": 1785655684000,
+      "score": "60/100",
+      "entryPrice": 4.289
+    },
+    {
+      "timestamp": 1785937778000,
+      "score": "62/100",
+      "entryPrice": 4.035
+    },
+    {
+      "timestamp": 1785939867000,
+      "score": "69/100",
+      "entryPrice": 4.094
+    },
+    {
+      "timestamp": 1785941368000,
+      "score": "63/100",
+      "entryPrice": 4.086
+    },
+    {
+      "timestamp": 1785942567000,
+      "score": "63/100",
+      "entryPrice": 4.151
+    },
+    {
+      "timestamp": 1785948870000,
+      "score": "61/100",
+      "entryPrice": 4.114
+    },
+    {
+      "timestamp": 1785951270000,
+      "score": "63/100",
+      "entryPrice": 4.176
+    }
+  ],
+  "EPIC": [
+    {
+      "timestamp": 1785066900000,
+      "score": "63/100",
+      "entryPrice": 0.7705
+    },
+    {
+      "timestamp": 1785523944000,
+      "score": "61/100",
+      "entryPrice": 0.7677
+    },
+    {
+      "timestamp": 1785581564000,
+      "score": "61/100",
+      "entryPrice": 0.8248
+    },
+    {
+      "timestamp": 1785584264000,
+      "score": "67/100",
+      "entryPrice": 0.8566
+    },
+    {
+      "timestamp": 1785586062000,
+      "score": "68/100",
+      "entryPrice": 0.8956
+    },
+    {
+      "timestamp": 1785587563000,
+      "score": "81/100",
+      "entryPrice": 0.9208
+    },
+    {
+      "timestamp": 1785588466000,
+      "score": "81/100",
+      "entryPrice": 0.9259
+    },
+    {
+      "timestamp": 1785589064000,
+      "score": "74/100",
+      "entryPrice": 0.9294
+    },
+    {
+      "timestamp": 1785597165000,
+      "score": "63/100",
+      "entryPrice": 0.9581
+    },
+    {
+      "timestamp": 1785599265000,
+      "score": "65/100",
+      "entryPrice": 0.9358
+    },
+    {
+      "timestamp": 1785836637000,
+      "score": "61/100",
+      "entryPrice": 0.9548
+    },
+    {
+      "timestamp": 1785900856000,
+      "score": "61/100",
+      "entryPrice": 1.1373
+    },
+    {
+      "timestamp": 1786000486000,
+      "score": "62/100",
+      "entryPrice": 0.9302
+    },
+    {
+      "timestamp": 1786001393000,
+      "score": "83/100",
+      "entryPrice": 0.9449
+    },
+    {
+      "timestamp": 1786021792000,
+      "score": "75/100",
+      "entryPrice": 0.9049
+    },
+    {
+      "timestamp": 1786028397000,
+      "score": "71/100",
+      "entryPrice": 0.8899
+    },
+    {
+      "timestamp": 1786031994000,
+      "score": "66/100",
+      "entryPrice": 0.8969
+    },
+    {
+      "timestamp": 1786033794000,
+      "score": "87/100",
+      "entryPrice": 0.9338
+    },
+    {
+      "timestamp": 1786034395000,
+      "score": "60/100",
+      "entryPrice": 0.9239
+    },
+    {
+      "timestamp": 1786094712000,
+      "score": "63/100",
+      "entryPrice": 0.9603
+    },
+    {
+      "timestamp": 1786095315000,
+      "score": "67/100",
+      "entryPrice": 1.0031
+    },
+    {
+      "timestamp": 1786096213000,
+      "score": "72/100",
+      "entryPrice": 1.0443
+    },
+    {
+      "timestamp": 1786098013000,
+      "score": "73/100",
+      "entryPrice": 1.0715
+    },
+    {
+      "timestamp": 1786113618000,
+      "score": "62/100",
+      "entryPrice": 1.1577
+    },
+    {
+      "timestamp": 1786114218000,
+      "score": "61/100",
+      "entryPrice": 1.1626
+    },
+    {
+      "timestamp": 1786120220000,
+      "score": "64/100",
+      "entryPrice": 1.0598
+    },
+    {
+      "timestamp": 1786121720000,
+      "score": "64/100",
+      "entryPrice": 1.1492
+    }
+  ],
+  "ESP": [
+    {
+      "timestamp": 1785074700000,
+      "score": "70/100",
+      "entryPrice": 0.09257
+    },
+    {
+      "timestamp": 1785075000000,
+      "score": "80/100",
+      "entryPrice": 0.0903
+    },
+    {
+      "timestamp": 1785091200000,
+      "score": "74/100",
+      "entryPrice": 0.09807
+    },
+    {
+      "timestamp": 1785093000000,
+      "score": "67/100",
+      "entryPrice": 0.10161
+    },
+    {
+      "timestamp": 1785094500000,
+      "score": "71/100",
+      "entryPrice": 0.10029
+    },
+    {
+      "timestamp": 1785095700000,
+      "score": "60/100",
+      "entryPrice": 0.09857
+    },
+    {
+      "timestamp": 1785099000000,
+      "score": "78/100",
+      "entryPrice": 0.10329
+    },
+    {
+      "timestamp": 1785099300000,
+      "score": "82/100",
+      "entryPrice": 0.10592
+    },
+    {
+      "timestamp": 1785099900000,
+      "score": "62/100",
+      "entryPrice": 0.10995
+    },
+    {
+      "timestamp": 1785100500000,
+      "score": "62/100",
+      "entryPrice": 0.10816
+    },
+    {
+      "timestamp": 1785102600000,
+      "score": "70/100",
+      "entryPrice": 0.11004
+    },
+    {
+      "timestamp": 1785113400000,
+      "score": "63/100",
+      "entryPrice": 0.11528
+    },
+    {
+      "timestamp": 1785116400000,
+      "score": "67/100",
+      "entryPrice": 0.11972
+    },
+    {
+      "timestamp": 1785301560000,
+      "score": "66/100",
+      "entryPrice": 0.06896
+    },
+    {
+      "timestamp": 1785302160000,
+      "score": "60/100",
+      "entryPrice": 0.06821
+    },
+    {
+      "timestamp": 1785303660000,
+      "score": "64/100",
+      "entryPrice": 0.0693
+    },
+    {
+      "timestamp": 1785631976000,
+      "score": "64/100",
+      "entryPrice": 0.06812
+    },
+    {
+      "timestamp": 1785641278000,
+      "score": "69/100",
+      "entryPrice": 0.07031
+    },
+    {
+      "timestamp": 1785642179000,
+      "score": "79/100",
+      "entryPrice": 0.07137
+    },
+    {
+      "timestamp": 1785652683000,
+      "score": "72/100",
+      "entryPrice": 0.07284
+    },
+    {
+      "timestamp": 1785752913000,
+      "score": "78/100",
+      "entryPrice": 0.06783
+    },
+    {
+      "timestamp": 1785757418000,
+      "score": "60/100",
+      "entryPrice": 0.06811
+    },
+    {
+      "timestamp": 1785758014000,
+      "score": "61/100",
+      "entryPrice": 0.06805
+    },
+    {
+      "timestamp": 1786084514000,
+      "score": "70/100",
+      "entryPrice": 0.06921
+    },
+    {
+      "timestamp": 1786087213000,
+      "score": "61/100",
+      "entryPrice": 0.06764
+    },
+    {
+      "timestamp": 1786088112000,
+      "score": "60/100",
+      "entryPrice": 0.0686
+    },
+    {
+      "timestamp": 1786088715000,
+      "score": "63/100",
+      "entryPrice": 0.06831
+    },
+    {
+      "timestamp": 1786104618000,
+      "score": "60/100",
+      "entryPrice": 0.0785
+    },
+    {
+      "timestamp": 1786107017000,
+      "score": "64/100",
+      "entryPrice": 0.07533
+    },
+    {
+      "timestamp": 1786152331000,
+      "score": "68/100",
+      "entryPrice": 0.0712
+    },
+    {
+      "timestamp": 1786153231000,
+      "score": "64/100",
+      "entryPrice": 0.07115
+    },
+    {
+      "timestamp": 1786154131000,
+      "score": "61/100",
+      "entryPrice": 0.07113
+    }
+  ],
+  "币安人生": [
+    {
+      "timestamp": 1785076200000,
+      "score": "63/100",
+      "entryPrice": 0.6578
+    },
+    {
+      "timestamp": 1785077700000,
+      "score": "64/100",
+      "entryPrice": 0.6613
+    },
+    {
+      "timestamp": 1785080100000,
+      "score": "62/100",
+      "entryPrice": 0.6664
+    },
+    {
+      "timestamp": 1785080700000,
+      "score": "60/100",
+      "entryPrice": 0.6666
+    },
+    {
+      "timestamp": 1785297360000,
+      "score": "61/100",
+      "entryPrice": 0.6355
+    },
+    {
+      "timestamp": 1786046407000,
+      "score": "65/100",
+      "entryPrice": 0.5557
+    }
+  ],
+  "LDO": [
+    {
+      "timestamp": 1785077700000,
+      "score": "68/100",
+      "entryPrice": 0.3906
+    },
+    {
+      "timestamp": 1785133500000,
+      "score": "64/100",
+      "entryPrice": 0.4022
+    },
+    {
+      "timestamp": 1785134100000,
+      "score": "63/100",
+      "entryPrice": 0.403
+    },
+    {
+      "timestamp": 1785138600000,
+      "score": "62/100",
+      "entryPrice": 0.4054
+    },
+    {
+      "timestamp": 1785914659000,
+      "score": "79/100",
+      "entryPrice": 0.2941
+    }
+  ],
+  "ONDO": [
+    {
+      "timestamp": 1785083100000,
+      "score": "61/100",
+      "entryPrice": 0.4058
+    }
+  ],
+  "ETHFI": [
+    {
+      "timestamp": 1785084900000,
+      "score": "61/100",
+      "entryPrice": 0.4327
+    },
+    {
+      "timestamp": 1786124125000,
+      "score": "64/100",
+      "entryPrice": 0.3886
+    }
+  ],
+  "PUMP": [
+    {
+      "timestamp": 1785100800000,
+      "score": "69/100",
+      "entryPrice": 0.001928
+    },
+    {
+      "timestamp": 1785101700000,
+      "score": "82/100",
+      "entryPrice": 0.001967
+    },
+    {
+      "timestamp": 1785103500000,
+      "score": "68/100",
+      "entryPrice": 0.00202
+    },
+    {
+      "timestamp": 1785149700000,
+      "score": "64/100",
+      "entryPrice": 0.002145
+    },
+    {
+      "timestamp": 1785508947000,
+      "score": "75/100",
+      "entryPrice": 0.002083
+    },
+    {
+      "timestamp": 1785749313000,
+      "score": "60/100",
+      "entryPrice": 0.002133
+    },
+    {
+      "timestamp": 1785750811000,
+      "score": "63/100",
+      "entryPrice": 0.002144
+    },
+    {
+      "timestamp": 1785776019000,
+      "score": "67/100",
+      "entryPrice": 0.00216
+    },
+    {
+      "timestamp": 1785779622000,
+      "score": "65/100",
+      "entryPrice": 0.002196
+    },
+    {
+      "timestamp": 1785782020000,
+      "score": "65/100",
+      "entryPrice": 0.002256
+    },
+    {
+      "timestamp": 1785830034000,
+      "score": "60/100",
+      "entryPrice": 0.002267
+    },
+    {
+      "timestamp": 1785868148000,
+      "score": "62/100",
+      "entryPrice": 0.002315
+    },
+    {
+      "timestamp": 1785872047000,
+      "score": "64/100",
+      "entryPrice": 0.002393
+    },
+    {
+      "timestamp": 1785873248000,
+      "score": "61/100",
+      "entryPrice": 0.002395
+    },
+    {
+      "timestamp": 1785876848000,
+      "score": "63/100",
+      "entryPrice": 0.002543
+    }
+  ],
+  "AAVE": [
+    {
+      "timestamp": 1785105000000,
+      "score": "61/100",
+      "entryPrice": 100.59
+    },
+    {
+      "timestamp": 1785110100000,
+      "score": "60/100",
+      "entryPrice": 101.5
+    }
+  ],
+  "ENA": [
+    {
+      "timestamp": 1785108300000,
+      "score": "60/100",
+      "entryPrice": 0.0907
+    },
+    {
+      "timestamp": 1785642477000,
+      "score": "62/100",
+      "entryPrice": 0.0846
+    },
+    {
+      "timestamp": 1785645178000,
+      "score": "73/100",
+      "entryPrice": 0.0873
+    },
+    {
+      "timestamp": 1785645778000,
+      "score": "82/100",
+      "entryPrice": 0.0878
+    },
+    {
+      "timestamp": 1785649979000,
+      "score": "62/100",
+      "entryPrice": 0.088
+    },
+    {
+      "timestamp": 1785651780000,
+      "score": "62/100",
+      "entryPrice": 0.0886
+    },
+    {
+      "timestamp": 1785652980000,
+      "score": "60/100",
+      "entryPrice": 0.0886
+    }
+  ],
+  "PEOPLE": [
+    {
+      "timestamp": 1785115800000,
+      "score": "60/100",
+      "entryPrice": 0.00663
+    },
+    {
+      "timestamp": 1785117000000,
+      "score": "64/100",
+      "entryPrice": 0.00655
+    },
+    {
+      "timestamp": 1785166800000,
+      "score": "72/100",
+      "entryPrice": 0.00681
+    },
+    {
+      "timestamp": 1785238860000,
+      "score": "63/100",
+      "entryPrice": 0.00722
+    }
+  ],
+  "MORPHO": [
+    {
+      "timestamp": 1785117300000,
+      "score": "65/100",
+      "entryPrice": 2.003
+    }
+  ],
+  "NIL": [
+    {
+      "timestamp": 1785117300000,
+      "score": "67/100",
+      "entryPrice": 0.04117
+    },
+    {
+      "timestamp": 1785119700000,
+      "score": "68/100",
+      "entryPrice": 0.04225
+    },
+    {
+      "timestamp": 1785127200000,
+      "score": "60/100",
+      "entryPrice": 0.04038
+    },
+    {
+      "timestamp": 1785129900000,
+      "score": "60/100",
+      "entryPrice": 0.04062
+    },
+    {
+      "timestamp": 1785133800000,
+      "score": "61/100",
+      "entryPrice": 0.04146
+    },
+    {
+      "timestamp": 1785139500000,
+      "score": "66/100",
+      "entryPrice": 0.04382
+    },
+    {
+      "timestamp": 1785141300000,
+      "score": "76/100",
+      "entryPrice": 0.04418
+    },
+    {
+      "timestamp": 1785145500000,
+      "score": "65/100",
+      "entryPrice": 0.04454
+    },
+    {
+      "timestamp": 1785147600000,
+      "score": "71/100",
+      "entryPrice": 0.04647
+    },
+    {
+      "timestamp": 1785151800000,
+      "score": "64/100",
+      "entryPrice": 0.04654
+    },
+    {
+      "timestamp": 1785154200000,
+      "score": "62/100",
+      "entryPrice": 0.04725
+    },
+    {
+      "timestamp": 1785156600000,
+      "score": "63/100",
+      "entryPrice": 0.04666
+    },
+    {
+      "timestamp": 1785164100000,
+      "score": "61/100",
+      "entryPrice": 0.04544
+    },
+    {
+      "timestamp": 1785700696000,
+      "score": "82/100",
+      "entryPrice": 0.0321
+    },
+    {
+      "timestamp": 1785740908000,
+      "score": "81/100",
+      "entryPrice": 0.0323
+    },
+    {
+      "timestamp": 1785783523000,
+      "score": "76/100",
+      "entryPrice": 0.03278
+    },
+    {
+      "timestamp": 1785807535000,
+      "score": "60/100",
+      "entryPrice": 0.03504
+    },
+    {
+      "timestamp": 1785817732000,
+      "score": "70/100",
+      "entryPrice": 0.03578
+    },
+    {
+      "timestamp": 1785850742000,
+      "score": "63/100",
+      "entryPrice": 0.03562
+    },
+    {
+      "timestamp": 1786127125000,
+      "score": "66/100",
+      "entryPrice": 0.04077
+    },
+    {
+      "timestamp": 1786128025000,
+      "score": "60/100",
+      "entryPrice": 0.04105
+    }
+  ],
+  "JTO": [
+    {
+      "timestamp": 1785117300000,
+      "score": "62/100",
+      "entryPrice": 0.6063
+    },
+    {
+      "timestamp": 1785136800000,
+      "score": "60/100",
+      "entryPrice": 0.6204
+    },
+    {
+      "timestamp": 1785141000000,
+      "score": "60/100",
+      "entryPrice": 0.6272
+    }
+  ],
+  "AERO": [
+    {
+      "timestamp": 1785124500000,
+      "score": "66/100",
+      "entryPrice": 0.4402
+    }
+  ],
+  "TLM": [
+    {
+      "timestamp": 1785132300000,
+      "score": "67/100",
+      "entryPrice": 0.001771
+    },
+    {
+      "timestamp": 1785165900000,
+      "score": "65/100",
+      "entryPrice": 0.001735
+    },
+    {
+      "timestamp": 1785177300000,
+      "score": "68/100",
+      "entryPrice": 0.001735
+    },
+    {
+      "timestamp": 1785249360000,
+      "score": "69/100",
+      "entryPrice": 0.001738
+    },
+    {
+      "timestamp": 1785251160000,
+      "score": "65/100",
+      "entryPrice": 0.001767
+    },
+    {
+      "timestamp": 1785252960000,
+      "score": "80/100",
+      "entryPrice": 0.001799
+    },
+    {
+      "timestamp": 1785540751000,
+      "score": "67/100",
+      "entryPrice": 0.001848
+    },
+    {
+      "timestamp": 1785541357000,
+      "score": "68/100",
+      "entryPrice": 0.00186
+    },
+    {
+      "timestamp": 1785568958000,
+      "score": "60/100",
+      "entryPrice": 0.001957
+    },
+    {
+      "timestamp": 1785683292000,
+      "score": "70/100",
+      "entryPrice": 0.001725
+    },
+    {
+      "timestamp": 1785722305000,
+      "score": "64/100",
+      "entryPrice": 0.001658
+    },
+    {
+      "timestamp": 1785944974000,
+      "score": "77/100",
+      "entryPrice": 0.001862
+    },
+    {
+      "timestamp": 1785965675000,
+      "score": "64/100",
+      "entryPrice": 0.00166
+    },
+    {
+      "timestamp": 1785966576000,
+      "score": "81/100",
+      "entryPrice": 0.00168
+    },
+    {
+      "timestamp": 1785967176000,
+      "score": "89/100",
+      "entryPrice": 0.00169
+    },
+    {
+      "timestamp": 1785967778000,
+      "score": "62/100",
+      "entryPrice": 0.001715
+    },
+    {
+      "timestamp": 1785969577000,
+      "score": "62/100",
+      "entryPrice": 0.001716
+    }
+  ],
+  "PARTI": [
+    {
+      "timestamp": 1785152700000,
+      "score": "60/100",
+      "entryPrice": 0.0285
+    }
+  ],
+  "APE": [
+    {
+      "timestamp": 1785163500000,
+      "score": "60/100",
+      "entryPrice": 0.1586
+    }
+  ],
+  "ALLO": [
+    {
+      "timestamp": 1785164100000,
+      "score": "60/100",
+      "entryPrice": 0.325
+    },
+    {
+      "timestamp": 1785173700000,
+      "score": "72/100",
+      "entryPrice": 0.3385
+    },
+    {
+      "timestamp": 1785176400000,
+      "score": "84/100",
+      "entryPrice": 0.3438
+    },
+    {
+      "timestamp": 1785177600000,
+      "score": "80/100",
+      "entryPrice": 0.3418
+    },
+    {
+      "timestamp": 1785179100000,
+      "score": "61/100",
+      "entryPrice": 0.3441
+    },
+    {
+      "timestamp": 1785183900000,
+      "score": "71/100",
+      "entryPrice": 0.3472
+    },
+    {
+      "timestamp": 1785185400000,
+      "score": "87/100",
+      "entryPrice": 0.3535
+    },
+    {
+      "timestamp": 1785300360000,
+      "score": "66/100",
+      "entryPrice": 0.3287
+    },
+    {
+      "timestamp": 1785551261000,
+      "score": "64/100",
+      "entryPrice": 0.284
+    },
+    {
+      "timestamp": 1785725009000,
+      "score": "70/100",
+      "entryPrice": 0.2596
+    },
+    {
+      "timestamp": 1785736709000,
+      "score": "71/100",
+      "entryPrice": 0.2615
+    },
+    {
+      "timestamp": 1785745410000,
+      "score": "63/100",
+      "entryPrice": 0.2685
+    },
+    {
+      "timestamp": 1785747512000,
+      "score": "86/100",
+      "entryPrice": 0.2741
+    },
+    {
+      "timestamp": 1785748114000,
+      "score": "61/100",
+      "entryPrice": 0.2752
+    },
+    {
+      "timestamp": 1785749612000,
+      "score": "83/100",
+      "entryPrice": 0.2784
+    },
+    {
+      "timestamp": 1785751711000,
+      "score": "62/100",
+      "entryPrice": 0.2887
+    },
+    {
+      "timestamp": 1785752011000,
+      "score": "81/100",
+      "entryPrice": 0.292
+    },
+    {
+      "timestamp": 1785754414000,
+      "score": "82/100",
+      "entryPrice": 0.3014
+    },
+    {
+      "timestamp": 1785755313000,
+      "score": "62/100",
+      "entryPrice": 0.3049
+    },
+    {
+      "timestamp": 1785758322000,
+      "score": "66/100",
+      "entryPrice": 0.2887
+    },
+    {
+      "timestamp": 1785776318000,
+      "score": "83/100",
+      "entryPrice": 0.2748
+    },
+    {
+      "timestamp": 1785911961000,
+      "score": "61/100",
+      "entryPrice": 0.2666
+    },
+    {
+      "timestamp": 1785912863000,
+      "score": "90/100",
+      "entryPrice": 0.2719
+    },
+    {
+      "timestamp": 1785914960000,
+      "score": "60/100",
+      "entryPrice": 0.2702
+    },
+    {
+      "timestamp": 1785915561000,
+      "score": "70/100",
+      "entryPrice": 0.2711
+    },
+    {
+      "timestamp": 1785966881000,
+      "score": "70/100",
+      "entryPrice": 0.2643
+    },
+    {
+      "timestamp": 1785970779000,
+      "score": "64/100",
+      "entryPrice": 0.2655
+    },
+    {
+      "timestamp": 1786028112000,
+      "score": "62/100",
+      "entryPrice": 0.2771
+    },
+    {
+      "timestamp": 1786029910000,
+      "score": "62/100",
+      "entryPrice": 0.2789
+    },
+    {
+      "timestamp": 1786042499000,
+      "score": "74/100",
+      "entryPrice": 0.2818
+    },
+    {
+      "timestamp": 1786052103000,
+      "score": "61/100",
+      "entryPrice": 0.2928
+    },
+    {
+      "timestamp": 1786053304000,
+      "score": "74/100",
+      "entryPrice": 0.2934
+    },
+    {
+      "timestamp": 1786056603000,
+      "score": "65/100",
+      "entryPrice": 0.2979
+    },
+    {
+      "timestamp": 1786059307000,
+      "score": "61/100",
+      "entryPrice": 0.3014
+    },
+    {
+      "timestamp": 1786125322000,
+      "score": "63/100",
+      "entryPrice": 0.3641
+    }
+  ],
+  "DGB": [
+    {
+      "timestamp": 1785169800000,
+      "score": "60/100",
+      "entryPrice": 0.00413
+    },
+    {
+      "timestamp": 1785180300000,
+      "score": "61/100",
+      "entryPrice": 0.00415
+    },
+    {
+      "timestamp": 1785194700000,
+      "score": "63/100",
+      "entryPrice": 0.00424
+    },
+    {
+      "timestamp": 1785195900000,
+      "score": "75/100",
+      "entryPrice": 0.00427
+    },
+    {
+      "timestamp": 1785197400000,
+      "score": "63/100",
+      "entryPrice": 0.00454
+    }
+  ],
+  "DODO": [
+    {
+      "timestamp": 1785174900000,
+      "score": "60/100",
+      "entryPrice": 0.01841
+    },
+    {
+      "timestamp": 1785176700000,
+      "score": "72/100",
+      "entryPrice": 0.01961
+    },
+    {
+      "timestamp": 1785178200000,
+      "score": "83/100",
+      "entryPrice": 0.01887
+    },
+    {
+      "timestamp": 1785179100000,
+      "score": "65/100",
+      "entryPrice": 0.01923
+    },
+    {
+      "timestamp": 1785180300000,
+      "score": "62/100",
+      "entryPrice": 0.01955
+    },
+    {
+      "timestamp": 1785192000000,
+      "score": "69/100",
+      "entryPrice": 0.01954
+    },
+    {
+      "timestamp": 1785214500000,
+      "score": "61/100",
+      "entryPrice": 0.01964
+    },
+    {
+      "timestamp": 1785227400000,
+      "score": "61/100",
+      "entryPrice": 0.0189
+    },
+    {
+      "timestamp": 1785359160000,
+      "score": "66/100",
+      "entryPrice": 0.01992
+    },
+    {
+      "timestamp": 1785677591000,
+      "score": "83/100",
+      "entryPrice": 0.0197
+    },
+    {
+      "timestamp": 1785958176000,
+      "score": "81/100",
+      "entryPrice": 0.02829
+    },
+    {
+      "timestamp": 1785960875000,
+      "score": "81/100",
+      "entryPrice": 0.0269
+    },
+    {
+      "timestamp": 1785962080000,
+      "score": "63/100",
+      "entryPrice": 0.02612
+    },
+    {
+      "timestamp": 1785962975000,
+      "score": "81/100",
+      "entryPrice": 0.02716
+    },
+    {
+      "timestamp": 1785966876000,
+      "score": "60/100",
+      "entryPrice": 0.02938
+    },
+    {
+      "timestamp": 1785979778000,
+      "score": "60/100",
+      "entryPrice": 0.02831
+    },
+    {
+      "timestamp": 1785981282000,
+      "score": "63/100",
+      "entryPrice": 0.02864
+    },
+    {
+      "timestamp": 1785982482000,
+      "score": "65/100",
+      "entryPrice": 0.02909
+    },
+    {
+      "timestamp": 1785991182000,
+      "score": "63/100",
+      "entryPrice": 0.02826
+    },
+    {
+      "timestamp": 1785994785000,
+      "score": "69/100",
+      "entryPrice": 0.03121
+    },
+    {
+      "timestamp": 1786169137000,
+      "score": "89/100",
+      "entryPrice": 0.02143
+    },
+    {
+      "timestamp": 1786171241000,
+      "score": "75/100",
+      "entryPrice": 0.02097
+    },
+    {
+      "timestamp": 1786172136000,
+      "score": "82/100",
+      "entryPrice": 0.0218
+    },
+    {
+      "timestamp": 1786173638000,
+      "score": "77/100",
+      "entryPrice": 0.0222
+    },
+    {
+      "timestamp": 1786173947000,
+      "score": "82/100",
+      "entryPrice": 0.02266
+    }
+  ],
+  "API3": [
+    {
+      "timestamp": 1785175500000,
+      "score": "76/100",
+      "entryPrice": 0.2474
+    }
+  ],
+  "COTI": [
+    {
+      "timestamp": 1785183300000,
+      "score": "68/100",
+      "entryPrice": 0.00971
+    },
+    {
+      "timestamp": 1785184500000,
+      "score": "80/100",
+      "entryPrice": 0.00965
+    },
+    {
+      "timestamp": 1785188100000,
+      "score": "61/100",
+      "entryPrice": 0.01295
+    },
+    {
+      "timestamp": 1785189300000,
+      "score": "62/100",
+      "entryPrice": 0.01243
+    },
+    {
+      "timestamp": 1785189900000,
+      "score": "62/100",
+      "entryPrice": 0.01265
+    },
+    {
+      "timestamp": 1785195300000,
+      "score": "61/100",
+      "entryPrice": 0.01325
+    },
+    {
+      "timestamp": 1785198600000,
+      "score": "70/100",
+      "entryPrice": 0.01143
+    },
+    {
+      "timestamp": 1785199800000,
+      "score": "76/100",
+      "entryPrice": 0.01155
+    },
+    {
+      "timestamp": 1785201300000,
+      "score": "65/100",
+      "entryPrice": 0.01175
+    },
+    {
+      "timestamp": 1785204300000,
+      "score": "64/100",
+      "entryPrice": 0.01224
+    },
+    {
+      "timestamp": 1785205500000,
+      "score": "68/100",
+      "entryPrice": 0.0144
+    },
+    {
+      "timestamp": 1785206100000,
+      "score": "76/100",
+      "entryPrice": 0.01418
+    },
+    {
+      "timestamp": 1785211500000,
+      "score": "62/100",
+      "entryPrice": 0.01377
+    },
+    {
+      "timestamp": 1785219600000,
+      "score": "64/100",
+      "entryPrice": 0.01361
+    },
+    {
+      "timestamp": 1785220500000,
+      "score": "66/100",
+      "entryPrice": 0.01333
+    },
+    {
+      "timestamp": 1785239460000,
+      "score": "65/100",
+      "entryPrice": 0.0124
+    },
+    {
+      "timestamp": 1785253860000,
+      "score": "71/100",
+      "entryPrice": 0.01198
+    },
+    {
+      "timestamp": 1785310560000,
+      "score": "73/100",
+      "entryPrice": 0.01379
+    },
+    {
+      "timestamp": 1785311760000,
+      "score": "62/100",
+      "entryPrice": 0.01292
+    },
+    {
+      "timestamp": 1785313260000,
+      "score": "70/100",
+      "entryPrice": 0.01346
+    },
+    {
+      "timestamp": 1785317160000,
+      "score": "66/100",
+      "entryPrice": 0.01391
+    },
+    {
+      "timestamp": 1785329460000,
+      "score": "70/100",
+      "entryPrice": 0.01528
+    },
+    {
+      "timestamp": 1785339960000,
+      "score": "63/100",
+      "entryPrice": 0.0179
+    },
+    {
+      "timestamp": 1785505939000,
+      "score": "66/100",
+      "entryPrice": 0.01726
+    },
+    {
+      "timestamp": 1785508940000,
+      "score": "72/100",
+      "entryPrice": 0.0177
+    },
+    {
+      "timestamp": 1785511941000,
+      "score": "73/100",
+      "entryPrice": 0.01838
+    },
+    {
+      "timestamp": 1785531445000,
+      "score": "68/100",
+      "entryPrice": 0.01719
+    },
+    {
+      "timestamp": 1785800928000,
+      "score": "61/100",
+      "entryPrice": 0.01254
+    },
+    {
+      "timestamp": 1785802428000,
+      "score": "61/100",
+      "entryPrice": 0.01307
+    },
+    {
+      "timestamp": 1785827934000,
+      "score": "67/100",
+      "entryPrice": 0.0128
+    },
+    {
+      "timestamp": 1785828534000,
+      "score": "84/100",
+      "entryPrice": 0.01335
+    },
+    {
+      "timestamp": 1785831235000,
+      "score": "68/100",
+      "entryPrice": 0.01414
+    },
+    {
+      "timestamp": 1785833335000,
+      "score": "63/100",
+      "entryPrice": 0.01417
+    },
+    {
+      "timestamp": 1785840838000,
+      "score": "62/100",
+      "entryPrice": 0.014
+    },
+    {
+      "timestamp": 1785848048000,
+      "score": "65/100",
+      "entryPrice": 0.01383
+    },
+    {
+      "timestamp": 1785848941000,
+      "score": "64/100",
+      "entryPrice": 0.01409
+    },
+    {
+      "timestamp": 1785850442000,
+      "score": "70/100",
+      "entryPrice": 0.01414
+    },
+    {
+      "timestamp": 1785851645000,
+      "score": "81/100",
+      "entryPrice": 0.01438
+    },
+    {
+      "timestamp": 1785862745000,
+      "score": "63/100",
+      "entryPrice": 0.01397
+    },
+    {
+      "timestamp": 1785864246000,
+      "score": "67/100",
+      "entryPrice": 0.01446
+    },
+    {
+      "timestamp": 1785864846000,
+      "score": "67/100",
+      "entryPrice": 0.0144
+    },
+    {
+      "timestamp": 1785866352000,
+      "score": "60/100",
+      "entryPrice": 0.01411
+    },
+    {
+      "timestamp": 1785870247000,
+      "score": "60/100",
+      "entryPrice": 0.01532
+    },
+    {
+      "timestamp": 1785872947000,
+      "score": "71/100",
+      "entryPrice": 0.01545
+    },
+    {
+      "timestamp": 1785986389000,
+      "score": "68/100",
+      "entryPrice": 0.01327
+    },
+    {
+      "timestamp": 1785986685000,
+      "score": "84/100",
+      "entryPrice": 0.01362
+    },
+    {
+      "timestamp": 1785986983000,
+      "score": "87/100",
+      "entryPrice": 0.01374
+    },
+    {
+      "timestamp": 1785988483000,
+      "score": "81/100",
+      "entryPrice": 0.01388
+    },
+    {
+      "timestamp": 1785991490000,
+      "score": "68/100",
+      "entryPrice": 0.01408
+    },
+    {
+      "timestamp": 1785991788000,
+      "score": "84/100",
+      "entryPrice": 0.0143
+    },
+    {
+      "timestamp": 1785995686000,
+      "score": "62/100",
+      "entryPrice": 0.01407
+    },
+    {
+      "timestamp": 1785997489000,
+      "score": "80/100",
+      "entryPrice": 0.01515
+    },
+    {
+      "timestamp": 1786006494000,
+      "score": "65/100",
+      "entryPrice": 0.01568
+    },
+    {
+      "timestamp": 1786012499000,
+      "score": "69/100",
+      "entryPrice": 0.01596
+    },
+    {
+      "timestamp": 1786154138000,
+      "score": "73/100",
+      "entryPrice": 0.01317
+    },
+    {
+      "timestamp": 1786155032000,
+      "score": "61/100",
+      "entryPrice": 0.01346
+    }
+  ],
+  "REZ": [
+    {
+      "timestamp": 1785186900000,
+      "score": "62/100",
+      "entryPrice": 0.00306
+    },
+    {
+      "timestamp": 1785195000000,
+      "score": "67/100",
+      "entryPrice": 0.002753
+    },
+    {
+      "timestamp": 1785206700000,
+      "score": "60/100",
+      "entryPrice": 0.002783
+    },
+    {
+      "timestamp": 1785208500000,
+      "score": "63/100",
+      "entryPrice": 0.002867
+    },
+    {
+      "timestamp": 1785209100000,
+      "score": "60/100",
+      "entryPrice": 0.002814
+    },
+    {
+      "timestamp": 1785210600000,
+      "score": "64/100",
+      "entryPrice": 0.002835
+    },
+    {
+      "timestamp": 1785258660000,
+      "score": "62/100",
+      "entryPrice": 0.002817
+    },
+    {
+      "timestamp": 1785260760000,
+      "score": "65/100",
+      "entryPrice": 0.002812
+    }
+  ],
+  "PYTH": [
+    {
+      "timestamp": 1785188700000,
+      "score": "63/100",
+      "entryPrice": 0.04558
+    }
+  ],
+  "OPN": [
+    {
+      "timestamp": 1785203100000,
+      "score": "63/100",
+      "entryPrice": 0.054
+    }
+  ],
+  "ACH": [
+    {
+      "timestamp": 1785220500000,
+      "score": "66/100",
+      "entryPrice": 0.00458
+    },
+    {
+      "timestamp": 1785274860000,
+      "score": "60/100",
+      "entryPrice": 0.00455
+    },
+    {
+      "timestamp": 1785313260000,
+      "score": "68/100",
+      "entryPrice": 0.0046
+    },
+    {
+      "timestamp": 1785316260000,
+      "score": "76/100",
+      "entryPrice": 0.00475
+    },
+    {
+      "timestamp": 1785317760000,
+      "score": "72/100",
+      "entryPrice": 0.00475
+    },
+    {
+      "timestamp": 1785320760000,
+      "score": "74/100",
+      "entryPrice": 0.00492
+    },
+    {
+      "timestamp": 1785324060000,
+      "score": "62/100",
+      "entryPrice": 0.00502
+    },
+    {
+      "timestamp": 1785364260000,
+      "score": "65/100",
+      "entryPrice": 0.005
+    },
+    {
+      "timestamp": 1785365460000,
+      "score": "63/100",
+      "entryPrice": 0.005
+    }
+  ],
+  "STORJ": [
+    {
+      "timestamp": 1785230760000,
+      "score": "60/100",
+      "entryPrice": 0.0581
+    }
+  ],
+  "SPCXB": [
+    {
+      "timestamp": 1785250260000,
+      "score": "69/100",
+      "entryPrice": 115.14
+    },
+    {
+      "timestamp": 1785768519000,
+      "score": "63/100",
+      "entryPrice": 112.2
+    },
+    {
+      "timestamp": 1785787121000,
+      "score": "63/100",
+      "entryPrice": 114.86
+    },
+    {
+      "timestamp": 1785866345000,
+      "score": "65/100",
+      "entryPrice": 125.06
+    },
+    {
+      "timestamp": 1785940167000,
+      "score": "62/100",
+      "entryPrice": 116.37
+    },
+    {
+      "timestamp": 1786026291000,
+      "score": "78/100",
+      "entryPrice": 115.41
+    },
+    {
+      "timestamp": 1786046102000,
+      "score": "63/100",
+      "entryPrice": 113.99
+    },
+    {
+      "timestamp": 1786111817000,
+      "score": "71/100",
+      "entryPrice": 122.92
+    }
+  ],
+  "XPL": [
+    {
+      "timestamp": 1785252360000,
+      "score": "64/100",
+      "entryPrice": 0.08466
+    },
+    {
+      "timestamp": 1785253860000,
+      "score": "60/100",
+      "entryPrice": 0.08433
+    }
+  ],
+  "ZIL": [
+    {
+      "timestamp": 1785259260000,
+      "score": "74/100",
+      "entryPrice": 0.002685
+    },
+    {
+      "timestamp": 1785259860000,
+      "score": "71/100",
+      "entryPrice": 0.002665
+    },
+    {
+      "timestamp": 1785261360000,
+      "score": "61/100",
+      "entryPrice": 0.002671
+    },
+    {
+      "timestamp": 1785270660000,
+      "score": "60/100",
+      "entryPrice": 0.002712
+    },
+    {
+      "timestamp": 1785271260000,
+      "score": "69/100",
+      "entryPrice": 0.003092
+    },
+    {
+      "timestamp": 1785272760000,
+      "score": "63/100",
+      "entryPrice": 0.00308
+    },
+    {
+      "timestamp": 1785278160000,
+      "score": "61/100",
+      "entryPrice": 0.003346
+    },
+    {
+      "timestamp": 1785278760000,
+      "score": "61/100",
+      "entryPrice": 0.003118
+    },
+    {
+      "timestamp": 1785279360000,
+      "score": "61/100",
+      "entryPrice": 0.003101
+    },
+    {
+      "timestamp": 1785286260000,
+      "score": "73/100",
+      "entryPrice": 0.003099
+    },
+    {
+      "timestamp": 1785287460000,
+      "score": "66/100",
+      "entryPrice": 0.003178
+    }
+  ],
+  "NBISB": [
+    {
+      "timestamp": 1785318660000,
+      "score": "61/100",
+      "entryPrice": 175.44
+    },
+    {
+      "timestamp": 1785765520000,
+      "score": "63/100",
+      "entryPrice": 202.36
+    },
+    {
+      "timestamp": 1785768529000,
+      "score": "68/100",
+      "entryPrice": 213.08
+    }
+  ],
+  "FLOW": [
+    {
+      "timestamp": 1785335160000,
+      "score": "67/100",
+      "entryPrice": 0.02881
+    },
+    {
+      "timestamp": 1785340260000,
+      "score": "66/100",
+      "entryPrice": 0.02897
+    }
+  ],
+  "SENT": [
+    {
+      "timestamp": 1785343860000,
+      "score": "63/100",
+      "entryPrice": 0.01231
+    },
+    {
+      "timestamp": 1785345660000,
+      "score": "71/100",
+      "entryPrice": 0.01252
+    },
+    {
+      "timestamp": 1785347460000,
+      "score": "73/100",
+      "entryPrice": 0.01266
+    },
+    {
+      "timestamp": 1785350160000,
+      "score": "73/100",
+      "entryPrice": 0.0128
+    },
+    {
+      "timestamp": 1785351060000,
+      "score": "83/100",
+      "entryPrice": 0.01301
+    },
+    {
+      "timestamp": 1785351960000,
+      "score": "62/100",
+      "entryPrice": 0.013
+    },
+    {
+      "timestamp": 1785353160000,
+      "score": "62/100",
+      "entryPrice": 0.01279
+    }
+  ],
+  "HOLO": [
+    {
+      "timestamp": 1785343860000,
+      "score": "61/100",
+      "entryPrice": 0.077
+    }
+  ],
+  "HOME": [
+    {
+      "timestamp": 1785350160000,
+      "score": "60/100",
+      "entryPrice": 0.0054
+    },
+    {
+      "timestamp": 1785506244000,
+      "score": "68/100",
+      "entryPrice": 0.00543
+    },
+    {
+      "timestamp": 1785577662000,
+      "score": "77/100",
+      "entryPrice": 0.0061
+    },
+    {
+      "timestamp": 1785582768000,
+      "score": "61/100",
+      "entryPrice": 0.00591
+    },
+    {
+      "timestamp": 1785609170000,
+      "score": "62/100",
+      "entryPrice": 0.00586
+    },
+    {
+      "timestamp": 1785638276000,
+      "score": "63/100",
+      "entryPrice": 0.007
+    },
+    {
+      "timestamp": 1785639478000,
+      "score": "63/100",
+      "entryPrice": 0.00709
+    },
+    {
+      "timestamp": 1785641878000,
+      "score": "70/100",
+      "entryPrice": 0.00718
+    },
+    {
+      "timestamp": 1785649380000,
+      "score": "71/100",
+      "entryPrice": 0.00764
+    },
+    {
+      "timestamp": 1785655381000,
+      "score": "66/100",
+      "entryPrice": 0.00778
+    },
+    {
+      "timestamp": 1785656283000,
+      "score": "62/100",
+      "entryPrice": 0.0079
+    },
+    {
+      "timestamp": 1785657482000,
+      "score": "63/100",
+      "entryPrice": 0.00807
+    },
+    {
+      "timestamp": 1785660183000,
+      "score": "62/100",
+      "entryPrice": 0.00848
+    },
+    {
+      "timestamp": 1785680889000,
+      "score": "60/100",
+      "entryPrice": 0.00824
+    },
+    {
+      "timestamp": 1785774518000,
+      "score": "64/100",
+      "entryPrice": 0.00779
+    },
+    {
+      "timestamp": 1785779319000,
+      "score": "71/100",
+      "entryPrice": 0.0081
+    },
+    {
+      "timestamp": 1785782024000,
+      "score": "63/100",
+      "entryPrice": 0.00827
+    },
+    {
+      "timestamp": 1785786221000,
+      "score": "64/100",
+      "entryPrice": 0.0084
+    },
+    {
+      "timestamp": 1785803626000,
+      "score": "60/100",
+      "entryPrice": 0.00816
+    },
+    {
+      "timestamp": 1785826132000,
+      "score": "73/100",
+      "entryPrice": 0.00916
+    },
+    {
+      "timestamp": 1785829133000,
+      "score": "60/100",
+      "entryPrice": 0.00983
+    },
+    {
+      "timestamp": 1785843541000,
+      "score": "63/100",
+      "entryPrice": 0.01005
+    },
+    {
+      "timestamp": 1785847738000,
+      "score": "62/100",
+      "entryPrice": 0.01091
+    },
+    {
+      "timestamp": 1785849240000,
+      "score": "66/100",
+      "entryPrice": 0.01141
+    },
+    {
+      "timestamp": 1785892752000,
+      "score": "60/100",
+      "entryPrice": 0.01029
+    },
+    {
+      "timestamp": 1785895153000,
+      "score": "68/100",
+      "entryPrice": 0.01022
+    },
+    {
+      "timestamp": 1785981279000,
+      "score": "63/100",
+      "entryPrice": 0.00936
+    },
+    {
+      "timestamp": 1786006488000,
+      "score": "72/100",
+      "entryPrice": 0.00937
+    },
+    {
+      "timestamp": 1786009487000,
+      "score": "65/100",
+      "entryPrice": 0.00955
+    },
+    {
+      "timestamp": 1786010988000,
+      "score": "60/100",
+      "entryPrice": 0.01002
+    },
+    {
+      "timestamp": 1786012488000,
+      "score": "73/100",
+      "entryPrice": 0.01005
+    },
+    {
+      "timestamp": 1786016089000,
+      "score": "72/100",
+      "entryPrice": 0.01063
+    },
+    {
+      "timestamp": 1786062904000,
+      "score": "60/100",
+      "entryPrice": 0.00954
+    }
+  ],
+  "NIGHT": [
+    {
+      "timestamp": 1785351060000,
+      "score": "68/100",
+      "entryPrice": 0.01888
+    },
+    {
+      "timestamp": 1785354660000,
+      "score": "61/100",
+      "entryPrice": 0.01893
+    }
+  ],
+  "MMT": [
+    {
+      "timestamp": 1785354960000,
+      "score": "61/100",
+      "entryPrice": 0.1883
+    },
+    {
+      "timestamp": 1785566556000,
+      "score": "61/100",
+      "entryPrice": 0.2172
+    },
+    {
+      "timestamp": 1785794025000,
+      "score": "64/100",
+      "entryPrice": 0.1666
+    },
+    {
+      "timestamp": 1785805138000,
+      "score": "71/100",
+      "entryPrice": 0.1691
+    },
+    {
+      "timestamp": 1785947671000,
+      "score": "86/100",
+      "entryPrice": 0.1648
+    },
+    {
+      "timestamp": 1785948275000,
+      "score": "93/100",
+      "entryPrice": 0.1654
+    },
+    {
+      "timestamp": 1785949173000,
+      "score": "72/100",
+      "entryPrice": 0.1635
+    },
+    {
+      "timestamp": 1785950673000,
+      "score": "79/100",
+      "entryPrice": 0.1666
+    },
+    {
+      "timestamp": 1785952179000,
+      "score": "81/100",
+      "entryPrice": 0.1663
+    },
+    {
+      "timestamp": 1785998385000,
+      "score": "61/100",
+      "entryPrice": 0.1632
+    },
+    {
+      "timestamp": 1786002888000,
+      "score": "82/100",
+      "entryPrice": 0.1669
+    },
+    {
+      "timestamp": 1786003787000,
+      "score": "60/100",
+      "entryPrice": 0.1678
+    },
+    {
+      "timestamp": 1786005291000,
+      "score": "61/100",
+      "entryPrice": 0.1655
+    },
+    {
+      "timestamp": 1786005887000,
+      "score": "62/100",
+      "entryPrice": 0.1659
+    },
+    {
+      "timestamp": 1786007088000,
+      "score": "61/100",
+      "entryPrice": 0.1696
+    },
+    {
+      "timestamp": 1786007689000,
+      "score": "86/100",
+      "entryPrice": 0.1718
+    },
+    {
+      "timestamp": 1786019391000,
+      "score": "62/100",
+      "entryPrice": 0.1661
+    },
+    {
+      "timestamp": 1786020002000,
+      "score": "66/100",
+      "entryPrice": 0.1672
+    },
+    {
+      "timestamp": 1786024199000,
+      "score": "60/100",
+      "entryPrice": 0.1703
+    },
+    {
+      "timestamp": 1786025703000,
+      "score": "61/100",
+      "entryPrice": 0.171
+    },
+    {
+      "timestamp": 1786026905000,
+      "score": "62/100",
+      "entryPrice": 0.1731
+    },
+    {
+      "timestamp": 1786028107000,
+      "score": "69/100",
+      "entryPrice": 0.1758
+    },
+    {
+      "timestamp": 1786037397000,
+      "score": "61/100",
+      "entryPrice": 0.1804
+    },
+    {
+      "timestamp": 1786038297000,
+      "score": "62/100",
+      "entryPrice": 0.1814
+    },
+    {
+      "timestamp": 1786040997000,
+      "score": "61/100",
+      "entryPrice": 0.1842
+    },
+    {
+      "timestamp": 1786119921000,
+      "score": "63/100",
+      "entryPrice": 0.1816
+    },
+    {
+      "timestamp": 1786141526000,
+      "score": "62/100",
+      "entryPrice": 0.1909
+    },
+    {
+      "timestamp": 1786142426000,
+      "score": "64/100",
+      "entryPrice": 0.1892
+    },
+    {
+      "timestamp": 1786157731000,
+      "score": "78/100",
+      "entryPrice": 0.2037
+    },
+    {
+      "timestamp": 1786161036000,
+      "score": "63/100",
+      "entryPrice": 0.2045
+    },
+    {
+      "timestamp": 1786167633000,
+      "score": "62/100",
+      "entryPrice": 0.2149
+    },
+    {
+      "timestamp": 1786169734000,
+      "score": "62/100",
+      "entryPrice": 0.2268
+    },
+    {
+      "timestamp": 1786171234000,
+      "score": "72/100",
+      "entryPrice": 0.2425
+    },
+    {
+      "timestamp": 1786173034000,
+      "score": "73/100",
+      "entryPrice": 0.2336
+    },
+    {
+      "timestamp": 1786173935000,
+      "score": "67/100",
+      "entryPrice": 0.2341
+    },
+    {
+      "timestamp": 1786176637000,
+      "score": "60/100",
+      "entryPrice": 0.2329
+    },
+    {
+      "timestamp": 1786177236000,
+      "score": "72/100",
+      "entryPrice": 0.2331
+    },
+    {
+      "timestamp": 1786178736000,
+      "score": "62/100",
+      "entryPrice": 0.2293
+    }
+  ],
+  "SOXLB": [
+    {
+      "timestamp": 1785371160000,
+      "score": "60/100",
+      "entryPrice": 95.95
+    },
+    {
+      "timestamp": 1785637080000,
+      "score": "64/100",
+      "entryPrice": 118.97
+    },
+    {
+      "timestamp": 1785638885000,
+      "score": "71/100",
+      "entryPrice": 120.2
+    },
+    {
+      "timestamp": 1785839036000,
+      "score": "61/100",
+      "entryPrice": 127.45
+    },
+    {
+      "timestamp": 1785841138000,
+      "score": "64/100",
+      "entryPrice": 128.23
+    },
+    {
+      "timestamp": 1785844137000,
+      "score": "62/100",
+      "entryPrice": 131.29
+    },
+    {
+      "timestamp": 1786025392000,
+      "score": "70/100",
+      "entryPrice": 137
+    },
+    {
+      "timestamp": 1786028092000,
+      "score": "67/100",
+      "entryPrice": 137.39
+    }
+  ],
+  "AXTIB": [
+    {
+      "timestamp": 1785501741000,
+      "score": "66/100",
+      "entryPrice": 65.58
+    },
+    {
+      "timestamp": 1785502641000,
+      "score": "63/100",
+      "entryPrice": 65.6
+    },
+    {
+      "timestamp": 1785503540000,
+      "score": "60/100",
+      "entryPrice": 68.51
+    },
+    {
+      "timestamp": 1785504441000,
+      "score": "60/100",
+      "entryPrice": 68.19
+    },
+    {
+      "timestamp": 1785768825000,
+      "score": "64/100",
+      "entryPrice": 69.63
+    },
+    {
+      "timestamp": 1785909858000,
+      "score": "66/100",
+      "entryPrice": 69.1
+    },
+    {
+      "timestamp": 1785936876000,
+      "score": "70/100",
+      "entryPrice": 70.29
+    },
+    {
+      "timestamp": 1786009791000,
+      "score": "70/100",
+      "entryPrice": 71.18
+    },
+    {
+      "timestamp": 1786016693000,
+      "score": "63/100",
+      "entryPrice": 71.33
+    },
+    {
+      "timestamp": 1786025407000,
+      "score": "70/100",
+      "entryPrice": 74.4
+    },
+    {
+      "timestamp": 1786110033000,
+      "score": "60/100",
+      "entryPrice": 84.34
+    },
+    {
+      "timestamp": 1786110626000,
+      "score": "65/100",
+      "entryPrice": 86.07
+    },
+    {
+      "timestamp": 1786111526000,
+      "score": "61/100",
+      "entryPrice": 86.16
+    },
+    {
+      "timestamp": 1786112420000,
+      "score": "62/100",
+      "entryPrice": 86.71
+    },
+    {
+      "timestamp": 1786113020000,
+      "score": "60/100",
+      "entryPrice": 85.75
+    },
+    {
+      "timestamp": 1786117222000,
+      "score": "68/100",
+      "entryPrice": 85.32
+    }
+  ],
+  "ERA": [
+    {
+      "timestamp": 1785505341000,
+      "score": "64/100",
+      "entryPrice": 0.0737
+    },
+    {
+      "timestamp": 1785510747000,
+      "score": "61/100",
+      "entryPrice": 0.0727
+    },
+    {
+      "timestamp": 1785766716000,
+      "score": "61/100",
+      "entryPrice": 0.0681
+    },
+    {
+      "timestamp": 1785767016000,
+      "score": "81/100",
+      "entryPrice": 0.0684
+    },
+    {
+      "timestamp": 1785938068000,
+      "score": "64/100",
+      "entryPrice": 0.0672
+    },
+    {
+      "timestamp": 1785965374000,
+      "score": "76/100",
+      "entryPrice": 0.0688
+    },
+    {
+      "timestamp": 1785971377000,
+      "score": "69/100",
+      "entryPrice": 0.0679
+    },
+    {
+      "timestamp": 1786027192000,
+      "score": "63/100",
+      "entryPrice": 0.07
+    },
+    {
+      "timestamp": 1786029300000,
+      "score": "60/100",
+      "entryPrice": 0.0709
+    },
+    {
+      "timestamp": 1786029894000,
+      "score": "69/100",
+      "entryPrice": 0.0713
+    },
+    {
+      "timestamp": 1786031101000,
+      "score": "64/100",
+      "entryPrice": 0.071
+    },
+    {
+      "timestamp": 1786035597000,
+      "score": "63/100",
+      "entryPrice": 0.0717
+    },
+    {
+      "timestamp": 1786036495000,
+      "score": "60/100",
+      "entryPrice": 0.0736
+    },
+    {
+      "timestamp": 1786038595000,
+      "score": "82/100",
+      "entryPrice": 0.0754
+    },
+    {
+      "timestamp": 1786040096000,
+      "score": "61/100",
+      "entryPrice": 0.0764
+    },
+    {
+      "timestamp": 1786113317000,
+      "score": "62/100",
+      "entryPrice": 0.0717
+    }
+  ],
+  "CFX": [
+    {
+      "timestamp": 1785505942000,
+      "score": "62/100",
+      "entryPrice": 0.04247
+    }
+  ],
+  "GIGGLE": [
+    {
+      "timestamp": 1785508639000,
+      "score": "63/100",
+      "entryPrice": 39.08
+    },
+    {
+      "timestamp": 1785509539000,
+      "score": "63/100",
+      "entryPrice": 39.46
+    },
+    {
+      "timestamp": 1785520642000,
+      "score": "61/100",
+      "entryPrice": 42.86
+    },
+    {
+      "timestamp": 1785526949000,
+      "score": "61/100",
+      "entryPrice": 45.78
+    },
+    {
+      "timestamp": 1785544949000,
+      "score": "61/100",
+      "entryPrice": 51.06
+    },
+    {
+      "timestamp": 1785731304000,
+      "score": "64/100",
+      "entryPrice": 43.2
+    },
+    {
+      "timestamp": 1785734005000,
+      "score": "67/100",
+      "entryPrice": 44.8
+    },
+    {
+      "timestamp": 1785736406000,
+      "score": "66/100",
+      "entryPrice": 44.39
+    },
+    {
+      "timestamp": 1785738806000,
+      "score": "65/100",
+      "entryPrice": 45.08
+    },
+    {
+      "timestamp": 1785939566000,
+      "score": "70/100",
+      "entryPrice": 35.09
+    },
+    {
+      "timestamp": 1785952172000,
+      "score": "71/100",
+      "entryPrice": 35.88
+    },
+    {
+      "timestamp": 1785953678000,
+      "score": "64/100",
+      "entryPrice": 36.23
+    },
+    {
+      "timestamp": 1785954574000,
+      "score": "75/100",
+      "entryPrice": 36.56
+    },
+    {
+      "timestamp": 1786125032000,
+      "score": "63/100",
+      "entryPrice": 34.41
+    },
+    {
+      "timestamp": 1786126224000,
+      "score": "63/100",
+      "entryPrice": 34.63
+    },
+    {
+      "timestamp": 1786127425000,
+      "score": "60/100",
+      "entryPrice": 34.56
+    },
+    {
+      "timestamp": 1786128325000,
+      "score": "64/100",
+      "entryPrice": 34.49
+    },
+    {
+      "timestamp": 1786199150000,
+      "score": "62/100",
+      "entryPrice": 34.42
+    }
+  ],
+  "BROCCOLI714": [
+    {
+      "timestamp": 1785509547000,
+      "score": "61/100",
+      "entryPrice": 0.01461
+    }
+  ],
+  "MUBARAK": [
+    {
+      "timestamp": 1785513149000,
+      "score": "64/100",
+      "entryPrice": 0.01403
+    }
+  ],
+  "NEIRO": [
+    {
+      "timestamp": 1785541951000,
+      "score": "63/100",
+      "entryPrice": 0.00006373
+    }
+  ],
+  "1000SATS": [
+    {
+      "timestamp": 1785545554000,
+      "score": "70/100",
+      "entryPrice": 0.00001238
+    },
+    {
+      "timestamp": 1785546452000,
+      "score": "73/100",
+      "entryPrice": 0.00001263
+    },
+    {
+      "timestamp": 1785547353000,
+      "score": "61/100",
+      "entryPrice": 0.00001237
+    },
+    {
+      "timestamp": 1785547655000,
+      "score": "81/100",
+      "entryPrice": 0.00001281
+    },
+    {
+      "timestamp": 1785578259000,
+      "score": "60/100",
+      "entryPrice": 0.00001128
+    },
+    {
+      "timestamp": 1785579160000,
+      "score": "71/100",
+      "entryPrice": 0.00001165
+    },
+    {
+      "timestamp": 1785581261000,
+      "score": "72/100",
+      "entryPrice": 0.00001159
+    },
+    {
+      "timestamp": 1785656583000,
+      "score": "63/100",
+      "entryPrice": 0.00001184
+    },
+    {
+      "timestamp": 1785731906000,
+      "score": "60/100",
+      "entryPrice": 0.00001065
+    }
+  ],
+  "BABY": [
+    {
+      "timestamp": 1785553956000,
+      "score": "63/100",
+      "entryPrice": 0.01305
+    },
+    {
+      "timestamp": 1785940468000,
+      "score": "63/100",
+      "entryPrice": 0.011
+    },
+    {
+      "timestamp": 1786184738000,
+      "score": "60/100",
+      "entryPrice": 0.01202
+    }
+  ],
+  "TST": [
+    {
+      "timestamp": 1785565659000,
+      "score": "62/100",
+      "entryPrice": 0.01299
+    },
+    {
+      "timestamp": 1785566259000,
+      "score": "69/100",
+      "entryPrice": 0.01316
+    },
+    {
+      "timestamp": 1786093515000,
+      "score": "64/100",
+      "entryPrice": 0.01338
+    },
+    {
+      "timestamp": 1786106418000,
+      "score": "68/100",
+      "entryPrice": 0.01317
+    },
+    {
+      "timestamp": 1786109119000,
+      "score": "67/100",
+      "entryPrice": 0.01438
+    },
+    {
+      "timestamp": 1786110026000,
+      "score": "73/100",
+      "entryPrice": 0.0146
+    },
+    {
+      "timestamp": 1786111519000,
+      "score": "65/100",
+      "entryPrice": 0.01552
+    },
+    {
+      "timestamp": 1786116019000,
+      "score": "65/100",
+      "entryPrice": 0.01433
+    },
+    {
+      "timestamp": 1786188945000,
+      "score": "63/100",
+      "entryPrice": 0.01541
+    },
+    {
+      "timestamp": 1786189541000,
+      "score": "61/100",
+      "entryPrice": 0.01535
+    }
+  ],
+  "AEVO": [
+    {
+      "timestamp": 1785581570000,
+      "score": "67/100",
+      "entryPrice": 0.02131
+    },
+    {
+      "timestamp": 1785596275000,
+      "score": "65/100",
+      "entryPrice": 0.02132
+    },
+    {
+      "timestamp": 1785597466000,
+      "score": "62/100",
+      "entryPrice": 0.02154
+    },
+    {
+      "timestamp": 1785600767000,
+      "score": "67/100",
+      "entryPrice": 0.02179
+    }
+  ],
+  "TUT": [
+    {
+      "timestamp": 1785588475000,
+      "score": "65/100",
+      "entryPrice": 0.01846
+    },
+    {
+      "timestamp": 1785758329000,
+      "score": "60/100",
+      "entryPrice": 0.02007
+    },
+    {
+      "timestamp": 1785775118000,
+      "score": "65/100",
+      "entryPrice": 0.0206
+    },
+    {
+      "timestamp": 1785776023000,
+      "score": "61/100",
+      "entryPrice": 0.02059
+    },
+    {
+      "timestamp": 1785819531000,
+      "score": "70/100",
+      "entryPrice": 0.02272
+    },
+    {
+      "timestamp": 1785822234000,
+      "score": "60/100",
+      "entryPrice": 0.02325
+    },
+    {
+      "timestamp": 1785829434000,
+      "score": "63/100",
+      "entryPrice": 0.02386
+    },
+    {
+      "timestamp": 1785893654000,
+      "score": "67/100",
+      "entryPrice": 0.02342
+    },
+    {
+      "timestamp": 1785927264000,
+      "score": "63/100",
+      "entryPrice": 0.02538
+    },
+    {
+      "timestamp": 1785945269000,
+      "score": "60/100",
+      "entryPrice": 0.02634
+    },
+    {
+      "timestamp": 1785953672000,
+      "score": "66/100",
+      "entryPrice": 0.02819
+    },
+    {
+      "timestamp": 1785956078000,
+      "score": "60/100",
+      "entryPrice": 0.02896
+    },
+    {
+      "timestamp": 1785959681000,
+      "score": "61/100",
+      "entryPrice": 0.0295
+    },
+    {
+      "timestamp": 1786073108000,
+      "score": "71/100",
+      "entryPrice": 0.02788
+    },
+    {
+      "timestamp": 1786074308000,
+      "score": "61/100",
+      "entryPrice": 0.02858
+    },
+    {
+      "timestamp": 1786076709000,
+      "score": "61/100",
+      "entryPrice": 0.02863
+    },
+    {
+      "timestamp": 1786078510000,
+      "score": "61/100",
+      "entryPrice": 0.02849
+    },
+    {
+      "timestamp": 1786102517000,
+      "score": "60/100",
+      "entryPrice": 0.03417
+    },
+    {
+      "timestamp": 1786103717000,
+      "score": "63/100",
+      "entryPrice": 0.03469
+    },
+    {
+      "timestamp": 1786124421000,
+      "score": "64/100",
+      "entryPrice": 0.03937
+    },
+    {
+      "timestamp": 1786125024000,
+      "score": "70/100",
+      "entryPrice": 0.03995
+    },
+    {
+      "timestamp": 1786160432000,
+      "score": "75/100",
+      "entryPrice": 0.04196
+    },
+    {
+      "timestamp": 1786168534000,
+      "score": "63/100",
+      "entryPrice": 0.0457
+    },
+    {
+      "timestamp": 1786173940000,
+      "score": "65/100",
+      "entryPrice": 0.04812
+    },
+    {
+      "timestamp": 1786177537000,
+      "score": "60/100",
+      "entryPrice": 0.05162
+    },
+    {
+      "timestamp": 1786178136000,
+      "score": "62/100",
+      "entryPrice": 0.05134
+    },
+    {
+      "timestamp": 1786179042000,
+      "score": "64/100",
+      "entryPrice": 0.05246
+    },
+    {
+      "timestamp": 1786181737000,
+      "score": "64/100",
+      "entryPrice": 0.05329
+    },
+    {
+      "timestamp": 1786184438000,
+      "score": "66/100",
+      "entryPrice": 0.05543
+    },
+    {
+      "timestamp": 1786188939000,
+      "score": "60/100",
+      "entryPrice": 0.05935
+    },
+    {
+      "timestamp": 1786192840000,
+      "score": "72/100",
+      "entryPrice": 0.06209
+    },
+    {
+      "timestamp": 1786195841000,
+      "score": "63/100",
+      "entryPrice": 0.06671
+    },
+    {
+      "timestamp": 1786197042000,
+      "score": "64/100",
+      "entryPrice": 0.06538
+    },
+    {
+      "timestamp": 1786199142000,
+      "score": "67/100",
+      "entryPrice": 0.06986
+    }
+  ],
+  "ROSE": [
+    {
+      "timestamp": 1785607971000,
+      "score": "68/100",
+      "entryPrice": 0.00556
+    }
+  ],
+  "HEI": [
+    {
+      "timestamp": 1785613074000,
+      "score": "66/100",
+      "entryPrice": 0.0883
+    },
+    {
+      "timestamp": 1785613673000,
+      "score": "64/100",
+      "entryPrice": 0.0958
+    },
+    {
+      "timestamp": 1785615772000,
+      "score": "66/100",
+      "entryPrice": 0.0992
+    },
+    {
+      "timestamp": 1785616673000,
+      "score": "62/100",
+      "entryPrice": 0.0993
+    },
+    {
+      "timestamp": 1785864553000,
+      "score": "72/100",
+      "entryPrice": 0.1062
+    },
+    {
+      "timestamp": 1785866949000,
+      "score": "68/100",
+      "entryPrice": 0.1142
+    },
+    {
+      "timestamp": 1785871451000,
+      "score": "60/100",
+      "entryPrice": 0.1195
+    },
+    {
+      "timestamp": 1785874749000,
+      "score": "68/100",
+      "entryPrice": 0.1264
+    },
+    {
+      "timestamp": 1785876255000,
+      "score": "61/100",
+      "entryPrice": 0.1262
+    },
+    {
+      "timestamp": 1785880751000,
+      "score": "62/100",
+      "entryPrice": 0.1275
+    },
+    {
+      "timestamp": 1785893052000,
+      "score": "66/100",
+      "entryPrice": 0.1436
+    },
+    {
+      "timestamp": 1785893953000,
+      "score": "62/100",
+      "entryPrice": 0.1507
+    },
+    {
+      "timestamp": 1785896654000,
+      "score": "66/100",
+      "entryPrice": 0.1677
+    },
+    {
+      "timestamp": 1785898454000,
+      "score": "69/100",
+      "entryPrice": 0.1749
+    },
+    {
+      "timestamp": 1785901757000,
+      "score": "69/100",
+      "entryPrice": 0.1828
+    },
+    {
+      "timestamp": 1785908357000,
+      "score": "62/100",
+      "entryPrice": 0.1913
+    },
+    {
+      "timestamp": 1785923062000,
+      "score": "64/100",
+      "entryPrice": 0.1616
+    },
+    {
+      "timestamp": 1785923662000,
+      "score": "64/100",
+      "entryPrice": 0.1622
+    },
+    {
+      "timestamp": 1785926065000,
+      "score": "63/100",
+      "entryPrice": 0.163
+    },
+    {
+      "timestamp": 1785931163000,
+      "score": "62/100",
+      "entryPrice": 0.1848
+    },
+    {
+      "timestamp": 1785934764000,
+      "score": "63/100",
+      "entryPrice": 0.2015
+    },
+    {
+      "timestamp": 1785950069000,
+      "score": "60/100",
+      "entryPrice": 0.2332
+    },
+    {
+      "timestamp": 1785954271000,
+      "score": "67/100",
+      "entryPrice": 0.2852
+    },
+    {
+      "timestamp": 1785956070000,
+      "score": "70/100",
+      "entryPrice": 0.3006
+    },
+    {
+      "timestamp": 1785962073000,
+      "score": "62/100",
+      "entryPrice": 0.2838
+    },
+    {
+      "timestamp": 1785963573000,
+      "score": "71/100",
+      "entryPrice": 0.2813
+    },
+    {
+      "timestamp": 1785989981000,
+      "score": "62/100",
+      "entryPrice": 0.3747
+    },
+    {
+      "timestamp": 1785991481000,
+      "score": "65/100",
+      "entryPrice": 0.3765
+    },
+    {
+      "timestamp": 1785993582000,
+      "score": "61/100",
+      "entryPrice": 0.3909
+    },
+    {
+      "timestamp": 1785994182000,
+      "score": "63/100",
+      "entryPrice": 0.4417
+    },
+    {
+      "timestamp": 1785998683000,
+      "score": "61/100",
+      "entryPrice": 0.4649
+    },
+    {
+      "timestamp": 1786002584000,
+      "score": "60/100",
+      "entryPrice": 0.4868
+    },
+    {
+      "timestamp": 1786077607000,
+      "score": "61/100",
+      "entryPrice": 0.2091
+    },
+    {
+      "timestamp": 1786078208000,
+      "score": "64/100",
+      "entryPrice": 0.2073
+    },
+    {
+      "timestamp": 1786080913000,
+      "score": "63/100",
+      "entryPrice": 0.2086
+    },
+    {
+      "timestamp": 1786091110000,
+      "score": "68/100",
+      "entryPrice": 0.2183
+    },
+    {
+      "timestamp": 1786092612000,
+      "score": "73/100",
+      "entryPrice": 0.2192
+    },
+    {
+      "timestamp": 1786096512000,
+      "score": "66/100",
+      "entryPrice": 0.2406
+    },
+    {
+      "timestamp": 1786118720000,
+      "score": "64/100",
+      "entryPrice": 0.2118
+    },
+    {
+      "timestamp": 1786119619000,
+      "score": "69/100",
+      "entryPrice": 0.2305
+    },
+    {
+      "timestamp": 1786126821000,
+      "score": "64/100",
+      "entryPrice": 0.2186
+    },
+    {
+      "timestamp": 1786137625000,
+      "score": "69/100",
+      "entryPrice": 0.2264
+    },
+    {
+      "timestamp": 1786138825000,
+      "score": "60/100",
+      "entryPrice": 0.2252
+    },
+    {
+      "timestamp": 1786149629000,
+      "score": "61/100",
+      "entryPrice": 0.2411
+    },
+    {
+      "timestamp": 1786151428000,
+      "score": "60/100",
+      "entryPrice": 0.2463
+    }
+  ],
+  "KSM": [
+    {
+      "timestamp": 1785616680000,
+      "score": "73/100",
+      "entryPrice": 3.22
+    },
+    {
+      "timestamp": 1785617573000,
+      "score": "68/100",
+      "entryPrice": 3.19
+    }
+  ],
+  "ACE": [
+    {
+      "timestamp": 1785619673000,
+      "score": "65/100",
+      "entryPrice": 0.0711
+    },
+    {
+      "timestamp": 1785742410000,
+      "score": "79/100",
+      "entryPrice": 0.0744
+    },
+    {
+      "timestamp": 1785760722000,
+      "score": "81/100",
+      "entryPrice": 0.0685
+    },
+    {
+      "timestamp": 1785874762000,
+      "score": "66/100",
+      "entryPrice": 0.0719
+    },
+    {
+      "timestamp": 1785875050000,
+      "score": "82/100",
+      "entryPrice": 0.0725
+    },
+    {
+      "timestamp": 1785876552000,
+      "score": "69/100",
+      "entryPrice": 0.0714
+    },
+    {
+      "timestamp": 1785877150000,
+      "score": "76/100",
+      "entryPrice": 0.0718
+    },
+    {
+      "timestamp": 1785885253000,
+      "score": "73/100",
+      "entryPrice": 0.0718
+    },
+    {
+      "timestamp": 1785887954000,
+      "score": "70/100",
+      "entryPrice": 0.0713
+    },
+    {
+      "timestamp": 1785900564000,
+      "score": "74/100",
+      "entryPrice": 0.0767
+    },
+    {
+      "timestamp": 1786016396000,
+      "score": "67/100",
+      "entryPrice": 0.0768
+    },
+    {
+      "timestamp": 1786017291000,
+      "score": "69/100",
+      "entryPrice": 0.0771
+    },
+    {
+      "timestamp": 1786022993000,
+      "score": "63/100",
+      "entryPrice": 0.0794
+    },
+    {
+      "timestamp": 1786023602000,
+      "score": "83/100",
+      "entryPrice": 0.0821
+    },
+    {
+      "timestamp": 1786026304000,
+      "score": "70/100",
+      "entryPrice": 0.0944
+    },
+    {
+      "timestamp": 1786027793000,
+      "score": "71/100",
+      "entryPrice": 0.0995
+    },
+    {
+      "timestamp": 1786028393000,
+      "score": "81/100",
+      "entryPrice": 0.0988
+    },
+    {
+      "timestamp": 1786029309000,
+      "score": "69/100",
+      "entryPrice": 0.1092
+    },
+    {
+      "timestamp": 1786030194000,
+      "score": "82/100",
+      "entryPrice": 0.116
+    },
+    {
+      "timestamp": 1786048200000,
+      "score": "71/100",
+      "entryPrice": 0.1213
+    },
+    {
+      "timestamp": 1786066804000,
+      "score": "60/100",
+      "entryPrice": 0.1232
+    },
+    {
+      "timestamp": 1786067705000,
+      "score": "61/100",
+      "entryPrice": 0.1308
+    },
+    {
+      "timestamp": 1786070405000,
+      "score": "60/100",
+      "entryPrice": 0.1346
+    },
+    {
+      "timestamp": 1786080908000,
+      "score": "63/100",
+      "entryPrice": 0.1477
+    },
+    {
+      "timestamp": 1786081508000,
+      "score": "63/100",
+      "entryPrice": 0.1472
+    },
+    {
+      "timestamp": 1786089010000,
+      "score": "62/100",
+      "entryPrice": 0.1517
+    },
+    {
+      "timestamp": 1786123822000,
+      "score": "60/100",
+      "entryPrice": 0.1306
+    },
+    {
+      "timestamp": 1786191040000,
+      "score": "75/100",
+      "entryPrice": 0.122
+    },
+    {
+      "timestamp": 1786192244000,
+      "score": "70/100",
+      "entryPrice": 0.1178
+    },
+    {
+      "timestamp": 1786192847000,
+      "score": "72/100",
+      "entryPrice": 0.119
+    },
+    {
+      "timestamp": 1786198842000,
+      "score": "73/100",
+      "entryPrice": 0.1267
+    }
+  ],
+  "HYPER": [
+    {
+      "timestamp": 1785629877000,
+      "score": "61/100",
+      "entryPrice": 0.0645
+    },
+    {
+      "timestamp": 1785637381000,
+      "score": "60/100",
+      "entryPrice": 0.0632
+    },
+    {
+      "timestamp": 1785662886000,
+      "score": "62/100",
+      "entryPrice": 0.0782
+    }
+  ],
+  "KORUB": [
+    {
+      "timestamp": 1785637377000,
+      "score": "65/100",
+      "entryPrice": 15.8
+    },
+    {
+      "timestamp": 1785638880000,
+      "score": "60/100",
+      "entryPrice": 15.8
+    },
+    {
+      "timestamp": 1785706099000,
+      "score": "65/100",
+      "entryPrice": 16.26
+    },
+    {
+      "timestamp": 1785711201000,
+      "score": "61/100",
+      "entryPrice": 16.07
+    },
+    {
+      "timestamp": 1785712405000,
+      "score": "62/100",
+      "entryPrice": 16.28
+    },
+    {
+      "timestamp": 1785844438000,
+      "score": "64/100",
+      "entryPrice": 17.83
+    },
+    {
+      "timestamp": 1786106117000,
+      "score": "69/100",
+      "entryPrice": 17.92
+    }
+  ],
+  "AVAX": [
+    {
+      "timestamp": 1785648179000,
+      "score": "67/100",
+      "entryPrice": 6.634
+    },
+    {
+      "timestamp": 1785807527000,
+      "score": "65/100",
+      "entryPrice": 6.801
+    },
+    {
+      "timestamp": 1785808429000,
+      "score": "60/100",
+      "entryPrice": 6.873
+    },
+    {
+      "timestamp": 1785811729000,
+      "score": "64/100",
+      "entryPrice": 6.975
+    }
+  ],
+  "MANTRA": [
+    {
+      "timestamp": 1785667087000,
+      "score": "60/100",
+      "entryPrice": 0.00633
+    },
+    {
+      "timestamp": 1785676690000,
+      "score": "62/100",
+      "entryPrice": 0.00664
+    },
+    {
+      "timestamp": 1785680291000,
+      "score": "71/100",
+      "entryPrice": 0.00662
+    }
+  ],
+  "PORTAL": [
+    {
+      "timestamp": 1785689596000,
+      "score": "65/100",
+      "entryPrice": 0.01114
+    },
+    {
+      "timestamp": 1785691094000,
+      "score": "68/100",
+      "entryPrice": 0.01137
+    },
+    {
+      "timestamp": 1785691696000,
+      "score": "66/100",
+      "entryPrice": 0.01147
+    },
+    {
+      "timestamp": 1785695896000,
+      "score": "65/100",
+      "entryPrice": 0.0118
+    },
+    {
+      "timestamp": 1786033497000,
+      "score": "62/100",
+      "entryPrice": 0.0122
+    },
+    {
+      "timestamp": 1786036796000,
+      "score": "63/100",
+      "entryPrice": 0.01272
+    }
+  ],
+  "EDEN": [
+    {
+      "timestamp": 1785699799000,
+      "score": "60/100",
+      "entryPrice": 0.0424
+    },
+    {
+      "timestamp": 1785701899000,
+      "score": "62/100",
+      "entryPrice": 0.04306
+    },
+    {
+      "timestamp": 1785704000000,
+      "score": "67/100",
+      "entryPrice": 0.04343
+    }
+  ],
+  "BICO": [
+    {
+      "timestamp": 1785711205000,
+      "score": "71/100",
+      "entryPrice": 0.01486
+    },
+    {
+      "timestamp": 1785712401000,
+      "score": "65/100",
+      "entryPrice": 0.01517
+    },
+    {
+      "timestamp": 1785713000000,
+      "score": "82/100",
+      "entryPrice": 0.01556
+    },
+    {
+      "timestamp": 1785719603000,
+      "score": "65/100",
+      "entryPrice": 0.01695
+    },
+    {
+      "timestamp": 1785721702000,
+      "score": "71/100",
+      "entryPrice": 0.01712
+    },
+    {
+      "timestamp": 1785722903000,
+      "score": "69/100",
+      "entryPrice": 0.01808
+    },
+    {
+      "timestamp": 1785723503000,
+      "score": "60/100",
+      "entryPrice": 0.01766
+    },
+    {
+      "timestamp": 1785724103000,
+      "score": "80/100",
+      "entryPrice": 0.01809
+    },
+    {
+      "timestamp": 1785725003000,
+      "score": "61/100",
+      "entryPrice": 0.0178
+    },
+    {
+      "timestamp": 1785753811000,
+      "score": "70/100",
+      "entryPrice": 0.01706
+    },
+    {
+      "timestamp": 1785756812000,
+      "score": "60/100",
+      "entryPrice": 0.0176
+    },
+    {
+      "timestamp": 1785757411000,
+      "score": "71/100",
+      "entryPrice": 0.01814
+    },
+    {
+      "timestamp": 1785758313000,
+      "score": "67/100",
+      "entryPrice": 0.01806
+    },
+    {
+      "timestamp": 1785833035000,
+      "score": "61/100",
+      "entryPrice": 0.01826
+    },
+    {
+      "timestamp": 1785860943000,
+      "score": "60/100",
+      "entryPrice": 0.01971
+    },
+    {
+      "timestamp": 1785862446000,
+      "score": "60/100",
+      "entryPrice": 0.02058
+    },
+    {
+      "timestamp": 1785864546000,
+      "score": "60/100",
+      "entryPrice": 0.02073
+    },
+    {
+      "timestamp": 1785873252000,
+      "score": "60/100",
+      "entryPrice": 0.02146
+    },
+    {
+      "timestamp": 1785884050000,
+      "score": "66/100",
+      "entryPrice": 0.02288
+    },
+    {
+      "timestamp": 1785908658000,
+      "score": "64/100",
+      "entryPrice": 0.02566
+    },
+    {
+      "timestamp": 1785955171000,
+      "score": "61/100",
+      "entryPrice": 0.02705
+    },
+    {
+      "timestamp": 1785986680000,
+      "score": "60/100",
+      "entryPrice": 0.03049
+    },
+    {
+      "timestamp": 1786005286000,
+      "score": "68/100",
+      "entryPrice": 0.0304
+    },
+    {
+      "timestamp": 1786020290000,
+      "score": "64/100",
+      "entryPrice": 0.03108
+    },
+    {
+      "timestamp": 1786023592000,
+      "score": "61/100",
+      "entryPrice": 0.03418
+    },
+    {
+      "timestamp": 1786029592000,
+      "score": "64/100",
+      "entryPrice": 0.03818
+    },
+    {
+      "timestamp": 1786033194000,
+      "score": "60/100",
+      "entryPrice": 0.04313
+    },
+    {
+      "timestamp": 1786035295000,
+      "score": "60/100",
+      "entryPrice": 0.04119
+    },
+    {
+      "timestamp": 1786052399000,
+      "score": "60/100",
+      "entryPrice": 0.04057
+    },
+    {
+      "timestamp": 1786082708000,
+      "score": "64/100",
+      "entryPrice": 0.04206
+    },
+    {
+      "timestamp": 1786083613000,
+      "score": "64/100",
+      "entryPrice": 0.04336
+    },
+    {
+      "timestamp": 1786085709000,
+      "score": "62/100",
+      "entryPrice": 0.04217
+    },
+    {
+      "timestamp": 1786089310000,
+      "score": "68/100",
+      "entryPrice": 0.04311
+    },
+    {
+      "timestamp": 1786092617000,
+      "score": "63/100",
+      "entryPrice": 0.0474
+    },
+    {
+      "timestamp": 1786100113000,
+      "score": "61/100",
+      "entryPrice": 0.05099
+    },
+    {
+      "timestamp": 1786110617000,
+      "score": "64/100",
+      "entryPrice": 0.05068
+    },
+    {
+      "timestamp": 1786118120000,
+      "score": "61/100",
+      "entryPrice": 0.05299
+    },
+    {
+      "timestamp": 1786121420000,
+      "score": "60/100",
+      "entryPrice": 0.0566
+    },
+    {
+      "timestamp": 1786161031000,
+      "score": "74/100",
+      "entryPrice": 0.05946
+    }
+  ],
+  "SNXXB": [
+    {
+      "timestamp": 1785718702000,
+      "score": "71/100",
+      "entryPrice": 9.98
+    },
+    {
+      "timestamp": 1785765516000,
+      "score": "60/100",
+      "entryPrice": 9.28
+    },
+    {
+      "timestamp": 1785767022000,
+      "score": "63/100",
+      "entryPrice": 9.62
+    },
+    {
+      "timestamp": 1785768525000,
+      "score": "72/100",
+      "entryPrice": 9.92
+    },
+    {
+      "timestamp": 1785774218000,
+      "score": "62/100",
+      "entryPrice": 10.3
+    },
+    {
+      "timestamp": 1785779020000,
+      "score": "60/100",
+      "entryPrice": 10.6
+    },
+    {
+      "timestamp": 1785779921000,
+      "score": "61/100",
+      "entryPrice": 10.79
+    },
+    {
+      "timestamp": 1785850446000,
+      "score": "67/100",
+      "entryPrice": 12.08
+    },
+    {
+      "timestamp": 1785851041000,
+      "score": "65/100",
+      "entryPrice": 12.08
+    },
+    {
+      "timestamp": 1785851651000,
+      "score": "65/100",
+      "entryPrice": 12.37
+    },
+    {
+      "timestamp": 1786024192000,
+      "score": "69/100",
+      "entryPrice": 9.79
+    },
+    {
+      "timestamp": 1786024799000,
+      "score": "79/100",
+      "entryPrice": 10.1
+    },
+    {
+      "timestamp": 1786025396000,
+      "score": "66/100",
+      "entryPrice": 10.32
+    },
+    {
+      "timestamp": 1786028692000,
+      "score": "61/100",
+      "entryPrice": 10.28
+    },
+    {
+      "timestamp": 1786029292000,
+      "score": "70/100",
+      "entryPrice": 10.73
+    },
+    {
+      "timestamp": 1786031093000,
+      "score": "68/100",
+      "entryPrice": 10.39
+    },
+    {
+      "timestamp": 1786091116000,
+      "score": "66/100",
+      "entryPrice": 10.54
+    },
+    {
+      "timestamp": 1786092012000,
+      "score": "61/100",
+      "entryPrice": 10.55
+    },
+    {
+      "timestamp": 1786106120000,
+      "score": "64/100",
+      "entryPrice": 10.64
+    }
+  ],
+  "WAXP": [
+    {
+      "timestamp": 1785741815000,
+      "score": "65/100",
+      "entryPrice": 0.00431
+    },
+    {
+      "timestamp": 1785743311000,
+      "score": "63/100",
+      "entryPrice": 0.00426
+    },
+    {
+      "timestamp": 1785743912000,
+      "score": "64/100",
+      "entryPrice": 0.00423
+    },
+    {
+      "timestamp": 1785744810000,
+      "score": "74/100",
+      "entryPrice": 0.00446
+    },
+    {
+      "timestamp": 1785745414000,
+      "score": "67/100",
+      "entryPrice": 0.00443
+    },
+    {
+      "timestamp": 1785753513000,
+      "score": "62/100",
+      "entryPrice": 0.00462
+    },
+    {
+      "timestamp": 1785757115000,
+      "score": "64/100",
+      "entryPrice": 0.00472
+    }
+  ],
+  "VIC": [
+    {
+      "timestamp": 1785748110000,
+      "score": "63/100",
+      "entryPrice": 0.0312
+    },
+    {
+      "timestamp": 1785761616000,
+      "score": "60/100",
+      "entryPrice": 0.0337
+    },
+    {
+      "timestamp": 1785764316000,
+      "score": "67/100",
+      "entryPrice": 0.0475
+    },
+    {
+      "timestamp": 1785766116000,
+      "score": "68/100",
+      "entryPrice": 0.0483
+    },
+    {
+      "timestamp": 1785772416000,
+      "score": "63/100",
+      "entryPrice": 0.0501
+    },
+    {
+      "timestamp": 1785789223000,
+      "score": "69/100",
+      "entryPrice": 0.047
+    },
+    {
+      "timestamp": 1785790122000,
+      "score": "62/100",
+      "entryPrice": 0.0459
+    },
+    {
+      "timestamp": 1785795824000,
+      "score": "63/100",
+      "entryPrice": 0.0521
+    },
+    {
+      "timestamp": 1785805126000,
+      "score": "70/100",
+      "entryPrice": 0.0553
+    },
+    {
+      "timestamp": 1785806026000,
+      "score": "61/100",
+      "entryPrice": 0.0574
+    },
+    {
+      "timestamp": 1785806927000,
+      "score": "63/100",
+      "entryPrice": 0.062
+    },
+    {
+      "timestamp": 1785807826000,
+      "score": "64/100",
+      "entryPrice": 0.0662
+    },
+    {
+      "timestamp": 1785916159000,
+      "score": "68/100",
+      "entryPrice": 0.0401
+    },
+    {
+      "timestamp": 1785921561000,
+      "score": "65/100",
+      "entryPrice": 0.0411
+    },
+    {
+      "timestamp": 1785923363000,
+      "score": "80/100",
+      "entryPrice": 0.0424
+    },
+    {
+      "timestamp": 1785925466000,
+      "score": "62/100",
+      "entryPrice": 0.0422
+    },
+    {
+      "timestamp": 1785977678000,
+      "score": "67/100",
+      "entryPrice": 0.039
+    },
+    {
+      "timestamp": 1785978880000,
+      "score": "74/100",
+      "entryPrice": 0.0391
+    },
+    {
+      "timestamp": 1785991782000,
+      "score": "66/100",
+      "entryPrice": 0.037
+    },
+    {
+      "timestamp": 1785993890000,
+      "score": "62/100",
+      "entryPrice": 0.0412
+    },
+    {
+      "timestamp": 1785995983000,
+      "score": "63/100",
+      "entryPrice": 0.042
+    },
+    {
+      "timestamp": 1785998986000,
+      "score": "62/100",
+      "entryPrice": 0.0417
+    },
+    {
+      "timestamp": 1786132226000,
+      "score": "68/100",
+      "entryPrice": 0.0325
+    },
+    {
+      "timestamp": 1786133127000,
+      "score": "88/100",
+      "entryPrice": 0.0348
+    },
+    {
+      "timestamp": 1786139729000,
+      "score": "68/100",
+      "entryPrice": 0.04
+    },
+    {
+      "timestamp": 1786153531000,
+      "score": "70/100",
+      "entryPrice": 0.0346
+    },
+    {
+      "timestamp": 1786165535000,
+      "score": "67/100",
+      "entryPrice": 0.0346
+    },
+    {
+      "timestamp": 1786183540000,
+      "score": "62/100",
+      "entryPrice": 0.0345
+    },
+    {
+      "timestamp": 1786184445000,
+      "score": "86/100",
+      "entryPrice": 0.0346
+    },
+    {
+      "timestamp": 1786185640000,
+      "score": "85/100",
+      "entryPrice": 0.0354
+    },
+    {
+      "timestamp": 1786187142000,
+      "score": "72/100",
+      "entryPrice": 0.034
+    },
+    {
+      "timestamp": 1786187741000,
+      "score": "61/100",
+      "entryPrice": 0.0345
+    },
+    {
+      "timestamp": 1786195244000,
+      "score": "76/100",
+      "entryPrice": 0.0348
+    },
+    {
+      "timestamp": 1786196443000,
+      "score": "69/100",
+      "entryPrice": 0.0341
+    },
+    {
+      "timestamp": 1786197344000,
+      "score": "83/100",
+      "entryPrice": 0.0343
+    }
+  ],
+  "HFT": [
+    {
+      "timestamp": 1785762824000,
+      "score": "60/100",
+      "entryPrice": 0.007903
+    },
+    {
+      "timestamp": 1785763416000,
+      "score": "60/100",
+      "entryPrice": 0.008104
+    },
+    {
+      "timestamp": 1785764620000,
+      "score": "63/100",
+      "entryPrice": 0.008474
+    },
+    {
+      "timestamp": 1785766721000,
+      "score": "61/100",
+      "entryPrice": 0.009162
+    },
+    {
+      "timestamp": 1785810230000,
+      "score": "63/100",
+      "entryPrice": 0.012323
+    },
+    {
+      "timestamp": 1785833637000,
+      "score": "63/100",
+      "entryPrice": 0.009857
+    },
+    {
+      "timestamp": 1785861544000,
+      "score": "61/100",
+      "entryPrice": 0.010395
+    },
+    {
+      "timestamp": 1785862146000,
+      "score": "62/100",
+      "entryPrice": 0.010474
+    },
+    {
+      "timestamp": 1785874752000,
+      "score": "61/100",
+      "entryPrice": 0.011426
+    },
+    {
+      "timestamp": 1785875353000,
+      "score": "62/100",
+      "entryPrice": 0.01135
+    },
+    {
+      "timestamp": 1785876248000,
+      "score": "65/100",
+      "entryPrice": 0.011575
+    },
+    {
+      "timestamp": 1785876857000,
+      "score": "63/100",
+      "entryPrice": 0.011313
+    },
+    {
+      "timestamp": 1785877749000,
+      "score": "65/100",
+      "entryPrice": 0.01183
+    },
+    {
+      "timestamp": 1785880152000,
+      "score": "63/100",
+      "entryPrice": 0.011365
+    },
+    {
+      "timestamp": 1785881350000,
+      "score": "60/100",
+      "entryPrice": 0.011743
+    },
+    {
+      "timestamp": 1785884057000,
+      "score": "60/100",
+      "entryPrice": 0.011796
+    },
+    {
+      "timestamp": 1785903256000,
+      "score": "67/100",
+      "entryPrice": 0.013129
+    },
+    {
+      "timestamp": 1785904758000,
+      "score": "64/100",
+      "entryPrice": 0.013631
+    },
+    {
+      "timestamp": 1785907157000,
+      "score": "70/100",
+      "entryPrice": 0.015637
+    },
+    {
+      "timestamp": 1785910758000,
+      "score": "62/100",
+      "entryPrice": 0.01625
+    },
+    {
+      "timestamp": 1785911358000,
+      "score": "68/100",
+      "entryPrice": 0.016407
+    },
+    {
+      "timestamp": 1785912258000,
+      "score": "60/100",
+      "entryPrice": 0.016224
+    },
+    {
+      "timestamp": 1785915260000,
+      "score": "60/100",
+      "entryPrice": 0.017038
+    },
+    {
+      "timestamp": 1785916163000,
+      "score": "65/100",
+      "entryPrice": 0.016962
+    },
+    {
+      "timestamp": 1785921261000,
+      "score": "64/100",
+      "entryPrice": 0.018307
+    },
+    {
+      "timestamp": 1785922462000,
+      "score": "61/100",
+      "entryPrice": 0.017922
+    },
+    {
+      "timestamp": 1785928464000,
+      "score": "64/100",
+      "entryPrice": 0.01795
+    },
+    {
+      "timestamp": 1785930564000,
+      "score": "63/100",
+      "entryPrice": 0.018143
+    },
+    {
+      "timestamp": 1785934772000,
+      "score": "63/100",
+      "entryPrice": 0.019459
+    },
+    {
+      "timestamp": 1785952771000,
+      "score": "67/100",
+      "entryPrice": 0.019038
+    },
+    {
+      "timestamp": 1785993885000,
+      "score": "66/100",
+      "entryPrice": 0.021792
+    },
+    {
+      "timestamp": 1786015789000,
+      "score": "61/100",
+      "entryPrice": 0.028285
+    },
+    {
+      "timestamp": 1786016391000,
+      "score": "62/100",
+      "entryPrice": 0.028853
+    },
+    {
+      "timestamp": 1786019989000,
+      "score": "70/100",
+      "entryPrice": 0.02835
+    },
+    {
+      "timestamp": 1786023891000,
+      "score": "62/100",
+      "entryPrice": 0.031021
+    },
+    {
+      "timestamp": 1786031692000,
+      "score": "63/100",
+      "entryPrice": 0.032293
+    },
+    {
+      "timestamp": 1786034694000,
+      "score": "62/100",
+      "entryPrice": 0.035129
+    },
+    {
+      "timestamp": 1786035594000,
+      "score": "68/100",
+      "entryPrice": 0.035654
+    },
+    {
+      "timestamp": 1786042196000,
+      "score": "73/100",
+      "entryPrice": 0.034033
+    },
+    {
+      "timestamp": 1786043696000,
+      "score": "62/100",
+      "entryPrice": 0.034319
+    },
+    {
+      "timestamp": 1786046097000,
+      "score": "64/100",
+      "entryPrice": 0.033905
+    },
+    {
+      "timestamp": 1786083609000,
+      "score": "69/100",
+      "entryPrice": 0.034804
+    },
+    {
+      "timestamp": 1786088410000,
+      "score": "67/100",
+      "entryPrice": 0.03328
+    },
+    {
+      "timestamp": 1786089015000,
+      "score": "60/100",
+      "entryPrice": 0.033531
+    },
+    {
+      "timestamp": 1786178436000,
+      "score": "78/100",
+      "entryPrice": 0.01374
+    },
+    {
+      "timestamp": 1786179038000,
+      "score": "86/100",
+      "entryPrice": 0.013972
+    },
+    {
+      "timestamp": 1786179337000,
+      "score": "90/100",
+      "entryPrice": 0.01391
+    },
+    {
+      "timestamp": 1786180237000,
+      "score": "70/100",
+      "entryPrice": 0.013864
+    },
+    {
+      "timestamp": 1786182638000,
+      "score": "61/100",
+      "entryPrice": 0.01338
+    }
+  ],
+  "ACX": [
+    {
+      "timestamp": 1785765216000,
+      "score": "67/100",
+      "entryPrice": 0.04217
+    },
+    {
+      "timestamp": 1785914968000,
+      "score": "84/100",
+      "entryPrice": 0.04193
+    },
+    {
+      "timestamp": 1785915268000,
+      "score": "85/100",
+      "entryPrice": 0.04285
+    },
+    {
+      "timestamp": 1785917961000,
+      "score": "70/100",
+      "entryPrice": 0.04309
+    },
+    {
+      "timestamp": 1785918261000,
+      "score": "80/100",
+      "entryPrice": 0.044
+    },
+    {
+      "timestamp": 1785942869000,
+      "score": "62/100",
+      "entryPrice": 0.03998
+    },
+    {
+      "timestamp": 1785992382000,
+      "score": "63/100",
+      "entryPrice": 0.04119
+    },
+    {
+      "timestamp": 1785994483000,
+      "score": "69/100",
+      "entryPrice": 0.04171
+    }
+  ],
+  "SNDKB": [
+    {
+      "timestamp": 1785767314000,
+      "score": "62/100",
+      "entryPrice": 1242.34
+    },
+    {
+      "timestamp": 1785768515000,
+      "score": "64/100",
+      "entryPrice": 1254.23
+    },
+    {
+      "timestamp": 1785857943000,
+      "score": "64/100",
+      "entryPrice": 1424.8
+    },
+    {
+      "timestamp": 1786024791000,
+      "score": "68/100",
+      "entryPrice": 1277.67
+    },
+    {
+      "timestamp": 1786028992000,
+      "score": "63/100",
+      "entryPrice": 1314.99
+    }
+  ],
+  "ATOM": [
+    {
+      "timestamp": 1785770619000,
+      "score": "75/100",
+      "entryPrice": 1.347
+    },
+    {
+      "timestamp": 1785772122000,
+      "score": "67/100",
+      "entryPrice": 1.349
+    },
+    {
+      "timestamp": 1785785023000,
+      "score": "73/100",
+      "entryPrice": 1.384
+    }
+  ],
+  "CRCLB": [
+    {
+      "timestamp": 1785850450000,
+      "score": "61/100",
+      "entryPrice": 63.03
+    },
+    {
+      "timestamp": 1785925463000,
+      "score": "76/100",
+      "entryPrice": 67
+    },
+    {
+      "timestamp": 1785926362000,
+      "score": "65/100",
+      "entryPrice": 69.13
+    },
+    {
+      "timestamp": 1786026899000,
+      "score": "66/100",
+      "entryPrice": 63.89
+    },
+    {
+      "timestamp": 1786027499000,
+      "score": "69/100",
+      "entryPrice": 64.3
+    },
+    {
+      "timestamp": 1786028401000,
+      "score": "70/100",
+      "entryPrice": 65.25
+    },
+    {
+      "timestamp": 1786029313000,
+      "score": "61/100",
+      "entryPrice": 65.38
+    },
+    {
+      "timestamp": 1786029901000,
+      "score": "64/100",
+      "entryPrice": 65.34
+    },
+    {
+      "timestamp": 1786031114000,
+      "score": "60/100",
+      "entryPrice": 65.5
+    },
+    {
+      "timestamp": 1786110017000,
+      "score": "66/100",
+      "entryPrice": 67.32
+    },
+    {
+      "timestamp": 1786112719000,
+      "score": "69/100",
+      "entryPrice": 67.77
+    },
+    {
+      "timestamp": 1786113918000,
+      "score": "65/100",
+      "entryPrice": 68.1
+    }
+  ],
+  "PLTRB": [
+    {
+      "timestamp": 1785853151000,
+      "score": "64/100",
+      "entryPrice": 156.29
+    },
+    {
+      "timestamp": 1785854345000,
+      "score": "60/100",
+      "entryPrice": 158.43
+    },
+    {
+      "timestamp": 1785854947000,
+      "score": "62/100",
+      "entryPrice": 159.45
+    }
+  ],
+  "STO": [
+    {
+      "timestamp": 1785855244000,
+      "score": "74/100",
+      "entryPrice": 0.0404
+    },
+    {
+      "timestamp": 1785856147000,
+      "score": "65/100",
+      "entryPrice": 0.0426
+    }
+  ],
+  "MUB": [
+    {
+      "timestamp": 1785857344000,
+      "score": "65/100",
+      "entryPrice": 894.95
+    },
+    {
+      "timestamp": 1785937775000,
+      "score": "63/100",
+      "entryPrice": 922.76
+    },
+    {
+      "timestamp": 1786025692000,
+      "score": "67/100",
+      "entryPrice": 896.51
+    },
+    {
+      "timestamp": 1786026295000,
+      "score": "68/100",
+      "entryPrice": 901.04
+    },
+    {
+      "timestamp": 1786026893000,
+      "score": "60/100",
+      "entryPrice": 897.56
+    },
+    {
+      "timestamp": 1786028100000,
+      "score": "63/100",
+      "entryPrice": 899
+    }
+  ],
+  "BIO": [
+    {
+      "timestamp": 1785902358000,
+      "score": "60/100",
+      "entryPrice": 0.0247
+    },
+    {
+      "timestamp": 1785941668000,
+      "score": "67/100",
+      "entryPrice": 0.02517
+    }
+  ],
+  "FIDA": [
+    {
+      "timestamp": 1785911372000,
+      "score": "77/100",
+      "entryPrice": 0.02139
+    },
+    {
+      "timestamp": 1785917063000,
+      "score": "72/100",
+      "entryPrice": 0.02066
+    },
+    {
+      "timestamp": 1785918562000,
+      "score": "64/100",
+      "entryPrice": 0.02038
+    },
+    {
+      "timestamp": 1785923071000,
+      "score": "73/100",
+      "entryPrice": 0.02133
+    },
+    {
+      "timestamp": 1785928469000,
+      "score": "60/100",
+      "entryPrice": 0.02196
+    },
+    {
+      "timestamp": 1785929065000,
+      "score": "62/100",
+      "entryPrice": 0.02233
+    },
+    {
+      "timestamp": 1785932365000,
+      "score": "63/100",
+      "entryPrice": 0.02228
+    },
+    {
+      "timestamp": 1785956371000,
+      "score": "60/100",
+      "entryPrice": 0.02166
+    }
+  ],
+  "KITE": [
+    {
+      "timestamp": 1785915863000,
+      "score": "65/100",
+      "entryPrice": 0.1019
+    },
+    {
+      "timestamp": 1785934474000,
+      "score": "60/100",
+      "entryPrice": 0.1047
+    },
+    {
+      "timestamp": 1785981288000,
+      "score": "60/100",
+      "entryPrice": 0.1049
+    },
+    {
+      "timestamp": 1786150237000,
+      "score": "60/100",
+      "entryPrice": 0.1057
+    }
+  ],
+  "AMDB": [
+    {
+      "timestamp": 1785936868000,
+      "score": "72/100",
+      "entryPrice": 494.45
+    },
+    {
+      "timestamp": 1785937785000,
+      "score": "83/100",
+      "entryPrice": 501.74
+    }
+  ],
+  "MUUB": [
+    {
+      "timestamp": 1785936881000,
+      "score": "60/100",
+      "entryPrice": 28.06
+    },
+    {
+      "timestamp": 1785937471000,
+      "score": "61/100",
+      "entryPrice": 28.78
+    },
+    {
+      "timestamp": 1785938377000,
+      "score": "61/100",
+      "entryPrice": 29.2
+    },
+    {
+      "timestamp": 1786024208000,
+      "score": "66/100",
+      "entryPrice": 26.4
+    },
+    {
+      "timestamp": 1786025714000,
+      "score": "61/100",
+      "entryPrice": 28
+    },
+    {
+      "timestamp": 1786026310000,
+      "score": "62/100",
+      "entryPrice": 27.94
+    },
+    {
+      "timestamp": 1786028411000,
+      "score": "61/100",
+      "entryPrice": 28.1
+    }
+  ],
+  "ACT": [
+    {
+      "timestamp": 1785954581000,
+      "score": "76/100",
+      "entryPrice": 0.01021
+    },
+    {
+      "timestamp": 1785955775000,
+      "score": "69/100",
+      "entryPrice": 0.01014
+    },
+    {
+      "timestamp": 1785998991000,
+      "score": "64/100",
+      "entryPrice": 0.00994
+    },
+    {
+      "timestamp": 1786008590000,
+      "score": "73/100",
+      "entryPrice": 0.01045
+    },
+    {
+      "timestamp": 1786035305000,
+      "score": "66/100",
+      "entryPrice": 0.01063
+    },
+    {
+      "timestamp": 1786037403000,
+      "score": "64/100",
+      "entryPrice": 0.01089
+    },
+    {
+      "timestamp": 1786038302000,
+      "score": "60/100",
+      "entryPrice": 0.01094
+    },
+    {
+      "timestamp": 1786038900000,
+      "score": "64/100",
+      "entryPrice": 0.01113
+    }
+  ],
+  "NOM": [
+    {
+      "timestamp": 1785956086000,
+      "score": "66/100",
+      "entryPrice": 0.00164
+    },
+    {
+      "timestamp": 1785974079000,
+      "score": "60/100",
+      "entryPrice": 0.00168
+    },
+    {
+      "timestamp": 1785991793000,
+      "score": "62/100",
+      "entryPrice": 0.00173
+    },
+    {
+      "timestamp": 1785993898000,
+      "score": "63/100",
+      "entryPrice": 0.00181
+    },
+    {
+      "timestamp": 1785996585000,
+      "score": "63/100",
+      "entryPrice": 0.0019
+    },
+    {
+      "timestamp": 1785997186000,
+      "score": "71/100",
+      "entryPrice": 0.00195
+    },
+    {
+      "timestamp": 1785998086000,
+      "score": "70/100",
+      "entryPrice": 0.00189
+    },
+    {
+      "timestamp": 1786001987000,
+      "score": "61/100",
+      "entryPrice": 0.00192
+    }
+  ],
+  "HMSTR": [
+    {
+      "timestamp": 1785958180000,
+      "score": "68/100",
+      "entryPrice": 0.0001913
+    },
+    {
+      "timestamp": 1785967180000,
+      "score": "60/100",
+      "entryPrice": 0.0001989
+    }
+  ],
+  "ZBT": [
+    {
+      "timestamp": 1785960275000,
+      "score": "69/100",
+      "entryPrice": 0.1193
+    },
+    {
+      "timestamp": 1785961476000,
+      "score": "87/100",
+      "entryPrice": 0.1224
+    },
+    {
+      "timestamp": 1785969279000,
+      "score": "67/100",
+      "entryPrice": 0.1328
+    },
+    {
+      "timestamp": 1785970178000,
+      "score": "70/100",
+      "entryPrice": 0.1292
+    },
+    {
+      "timestamp": 1786008287000,
+      "score": "66/100",
+      "entryPrice": 0.1412
+    },
+    {
+      "timestamp": 1786009191000,
+      "score": "63/100",
+      "entryPrice": 0.1422
+    },
+    {
+      "timestamp": 1786010088000,
+      "score": "65/100",
+      "entryPrice": 0.1444
+    },
+    {
+      "timestamp": 1786013090000,
+      "score": "61/100",
+      "entryPrice": 0.1489
+    },
+    {
+      "timestamp": 1786019690000,
+      "score": "66/100",
+      "entryPrice": 0.1522
+    },
+    {
+      "timestamp": 1786025092000,
+      "score": "62/100",
+      "entryPrice": 0.1558
+    },
+    {
+      "timestamp": 1786025695000,
+      "score": "64/100",
+      "entryPrice": 0.1732
+    },
+    {
+      "timestamp": 1786028095000,
+      "score": "66/100",
+      "entryPrice": 0.1744
+    },
+    {
+      "timestamp": 1786037994000,
+      "score": "62/100",
+      "entryPrice": 0.1732
+    },
+    {
+      "timestamp": 1786041896000,
+      "score": "67/100",
+      "entryPrice": 0.182
+    }
+  ],
+  "CTSI": [
+    {
+      "timestamp": 1786005299000,
+      "score": "68/100",
+      "entryPrice": 0.03197
+    },
+    {
+      "timestamp": 1786011589000,
+      "score": "69/100",
+      "entryPrice": 0.03323
+    },
+    {
+      "timestamp": 1786014889000,
+      "score": "60/100",
+      "entryPrice": 0.033
+    },
+    {
+      "timestamp": 1786015490000,
+      "score": "73/100",
+      "entryPrice": 0.03412
+    },
+    {
+      "timestamp": 1786016990000,
+      "score": "73/100",
+      "entryPrice": 0.03312
+    },
+    {
+      "timestamp": 1786018492000,
+      "score": "69/100",
+      "entryPrice": 0.03819
+    },
+    {
+      "timestamp": 1786019998000,
+      "score": "67/100",
+      "entryPrice": 0.0369
+    },
+    {
+      "timestamp": 1786024196000,
+      "score": "62/100",
+      "entryPrice": 0.037
+    },
+    {
+      "timestamp": 1786025707000,
+      "score": "60/100",
+      "entryPrice": 0.03687
+    },
+    {
+      "timestamp": 1786026299000,
+      "score": "63/100",
+      "entryPrice": 0.03756
+    }
+  ],
+  "OGN": [
+    {
+      "timestamp": 1786007388000,
+      "score": "62/100",
+      "entryPrice": 0.01789
+    },
+    {
+      "timestamp": 1786018794000,
+      "score": "65/100",
+      "entryPrice": 0.01699
+    },
+    {
+      "timestamp": 1786020300000,
+      "score": "62/100",
+      "entryPrice": 0.01689
+    }
+  ],
+  "RESOLV": [
+    {
+      "timestamp": 1786012191000,
+      "score": "61/100",
+      "entryPrice": 0.01923
+    },
+    {
+      "timestamp": 1786013099000,
+      "score": "64/100",
+      "entryPrice": 0.0191
+    },
+    {
+      "timestamp": 1786013690000,
+      "score": "66/100",
+      "entryPrice": 0.0194
+    },
+    {
+      "timestamp": 1786015190000,
+      "score": "62/100",
+      "entryPrice": 0.01983
+    },
+    {
+      "timestamp": 1786016994000,
+      "score": "65/100",
+      "entryPrice": 0.01989
+    },
+    {
+      "timestamp": 1786042503000,
+      "score": "62/100",
+      "entryPrice": 0.02149
+    }
+  ],
+  "ADA": [
+    {
+      "timestamp": 1786027493000,
+      "score": "75/100",
+      "entryPrice": 0.2021
+    },
+    {
+      "timestamp": 1786030492000,
+      "score": "69/100",
+      "entryPrice": 0.2085
+    }
+  ],
+  "PLUME": [
+    {
+      "timestamp": 1786031396000,
+      "score": "60/100",
+      "entryPrice": 0.01255
+    }
+  ],
+  "FIL": [
+    {
+      "timestamp": 1786034700000,
+      "score": "65/100",
+      "entryPrice": 0.7314
+    },
+    {
+      "timestamp": 1786186544000,
+      "score": "62/100",
+      "entryPrice": 0.7248
+    }
+  ],
+  "COOKIE": [
+    {
+      "timestamp": 1786038003000,
+      "score": "60/100",
+      "entryPrice": 0.0108
+    },
+    {
+      "timestamp": 1786040398000,
+      "score": "66/100",
+      "entryPrice": 0.0112
+    },
+    {
+      "timestamp": 1786043999000,
+      "score": "61/100",
+      "entryPrice": 0.0109
+    },
+    {
+      "timestamp": 1786044900000,
+      "score": "62/100",
+      "entryPrice": 0.0111
+    },
+    {
+      "timestamp": 1786049403000,
+      "score": "60/100",
+      "entryPrice": 0.012
+    }
+  ],
+  "STG": [
+    {
+      "timestamp": 1786071008000,
+      "score": "65/100",
+      "entryPrice": 0.1699
+    },
+    {
+      "timestamp": 1786072812000,
+      "score": "72/100",
+      "entryPrice": 0.1765
+    },
+    {
+      "timestamp": 1786076714000,
+      "score": "61/100",
+      "entryPrice": 0.1784
+    }
+  ],
+  "KMNO": [
+    {
+      "timestamp": 1786071016000,
+      "score": "61/100",
+      "entryPrice": 0.0219
+    },
+    {
+      "timestamp": 1786099222000,
+      "score": "70/100",
+      "entryPrice": 0.02159
+    }
+  ],
+  "XAI": [
+    {
+      "timestamp": 1786082716000,
+      "score": "67/100",
+      "entryPrice": 0.00914
+    },
+    {
+      "timestamp": 1786088711000,
+      "score": "63/100",
+      "entryPrice": 0.00775
+    },
+    {
+      "timestamp": 1786090814000,
+      "score": "77/100",
+      "entryPrice": 0.00822
+    },
+    {
+      "timestamp": 1786099216000,
+      "score": "60/100",
+      "entryPrice": 0.008
+    },
+    {
+      "timestamp": 1786100119000,
+      "score": "64/100",
+      "entryPrice": 0.008
+    }
+  ],
+  "ALICE": [
+    {
+      "timestamp": 1786089318000,
+      "score": "71/100",
+      "entryPrice": 0.1316
+    }
+  ],
+  "C98": [
+    {
+      "timestamp": 1786097716000,
+      "score": "64/100",
+      "entryPrice": 0.01743
+    },
+    {
+      "timestamp": 1786098316000,
+      "score": "73/100",
+      "entryPrice": 0.01771
+    },
+    {
+      "timestamp": 1786106424000,
+      "score": "68/100",
+      "entryPrice": 0.01772
+    },
+    {
+      "timestamp": 1786121727000,
+      "score": "67/100",
+      "entryPrice": 0.01775
+    }
+  ],
+  "ZKP": [
+    {
+      "timestamp": 1786156533000,
+      "score": "68/100",
+      "entryPrice": 0.0475
+    },
+    {
+      "timestamp": 1786158635000,
+      "score": "69/100",
+      "entryPrice": 0.0478
+    }
+  ]
+}
