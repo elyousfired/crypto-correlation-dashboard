@@ -2683,7 +2683,7 @@ export function MonthlyHigherHighRadarChart({
   const [isDraggingHeight, setIsDraggingHeight] = useState(false);
   const [highlightedToken, setHighlightedToken] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [filterMode, setFilterMode] = useState('TRUE_RETEST'); // 'TRUE_RETEST' (Base saine + Sommet mature), 'BREAKOUT' (>= 0%), 'ATTACK' (<= -3.5%), 'FOMO_RUNNERS' (Pompe active), 'TOP15'
+  const [filterMode, setFilterMode] = useState('HITTING'); // 'HITTING' (Walla kay-dreb l-HH <= -3.5%), 'BREAKOUT' (>= 0%), 'APPROACH' (<= -7%), 'ALL_DIP'
   const [viewMode, setViewMode] = useState('DISTANCE'); // 'DISTANCE' (0% = Sommet) ou 'POINTS_30D' (Points réels)
 
   const dragStartYRef = useRef(0);
@@ -2691,8 +2691,10 @@ export function MonthlyHigherHighRadarChart({
   const hasFittedRef = useRef(false);
   const prevSymbolsRef = useRef('');
 
-  // 1. Détection et extraction des tokens du Top 50 qui testent ou dépassent leur HH des 30 jours
-  // 1. Détection et extraction de l'ensemble des candidats HH des 30 jours
+  // 1. Détection et extraction de l'ensemble des candidats HH des 30 jours selon la règle exacte :
+  // - Akbar niveau wsal lih token (prix le plus haut)
+  // - Hbat 3la la9al b -2%
+  // - Rje3 l dak l-higher niveau (kay-dreb l-HH)
   const allHhCandidates = useMemo(() => {
     const list = (chartUniverse === 'MONTH_PEAK' ? tripleAnalysis?.listMaxPointsMonth : tripleAnalysis?.listMonth) || [];
     const tokenMonthCurvesMap = chartProcessedData?.tokenMonthCurvesMap || {};
@@ -2705,21 +2707,24 @@ export function MonthlyHigherHighRadarChart({
       return curve && curve.length > 0;
     }).map((t, idx) => {
       const sym = t.cleanSymbol;
-      const targetHH = (t.isTrueRetest && t.histHigh30d > 0) ? t.histHigh30d : (t.high30d > 0 ? t.high30d : t.price);
+      const hhLevel = t.hhLevel > 0 ? t.hhLevel : t.high30d;
+      const hhPullbackPct = t.hhPullbackPct || 0;
+      const hasValidDip = hhPullbackPct <= -2.0 && hhLevel > 0;
       const livePrice = livePricesRef?.current?.[sym] || t.price;
-      const liveDistToHH = targetHH > 0 ? parseFloat((((livePrice - targetHH) / targetHH) * 100).toFixed(2)) : (t.pullbackFromPeak || 0);
+      const liveDistToHH = hhLevel > 0 ? parseFloat((((livePrice - hhLevel) / hhLevel) * 100).toFixed(2)) : -999;
 
-      const isBreakout = liveDistToHH >= 0.0;
-      const isAttacking = liveDistToHH >= -3.5;
-      const isApproaching = liveDistToHH >= -7.0;
+      // "Walla yadrab l-HH" : Hbat b -2% o rje3 kay-dreb l-HH (proche de 0%)
+      const isHittingHH = hasValidDip && liveDistToHH >= -3.5;
+      const isBreakout = hasValidDip && liveDistToHH >= 0.0;
+      const isApproaching = hasValidDip && liveDistToHH >= -7.0;
 
       const curveMonth = tokenMonthCurvesMap[sym] || [];
       const basePriceMonth = tokenMonthBasePricesMap[sym] || t.price;
 
-      // Courbe normalisée en distance par rapport au HH cible (0% = Résistance Sommet)
+      // Courbe normalisée en distance par rapport au HH cible (0% = Akbar Niveau)
       const distCurve = curveMonth.map(pt => {
-        const pAtTime = basePriceMonth > 0 ? basePriceMonth * (1 + pt.value / 100) : targetHH;
-        const dist = targetHH > 0 ? ((pAtTime - targetHH) / targetHH) * 100 : 0;
+        const pAtTime = basePriceMonth > 0 ? basePriceMonth * (1 + pt.value / 100) : hhLevel;
+        const dist = hhLevel > 0 ? ((pAtTime - hhLevel) / hhLevel) * 100 : 0;
         return {
           time: pt.time,
           value: parseFloat(dist.toFixed(2))
@@ -2730,11 +2735,13 @@ export function MonthlyHigherHighRadarChart({
         ...t,
         sym,
         rankMonth: t.rankMonth || idx + 1,
-        targetHH,
+        hhLevel,
+        hhPullbackPct,
+        hasValidDip,
         livePrice,
         liveDistToHH,
+        isHittingHH,
         isBreakout,
-        isAttacking,
         isApproaching,
         distCurve,
         curveMonth,
@@ -2745,36 +2752,30 @@ export function MonthlyHigherHighRadarChart({
 
   // Filtrage selon le mode sélectionné
   const hhTokens = useMemo(() => {
-    if (filterMode === 'TRUE_RETEST') {
-      // 🛡️ Filtre Anti-FOMO : Uniquement les vrais retests avec base saine
-      const f = allHhCandidates.filter(t => t.isTrueRetest || (!t.isFomoRunner && t.hasHealthyBase && t.isAttacking));
-      return f.length > 0 ? f : allHhCandidates.filter(t => !t.isFomoRunner).slice(0, 5);
+    if (filterMode === 'HITTING') {
+      // 🎯 Tokens qui ont fait au moins -2% de repli et sont maintenant en train de frapper le HH (≤ -3.5%)
+      const f = allHhCandidates.filter(t => t.isHittingHH);
+      return f.length > 0 ? f : allHhCandidates.filter(t => t.hasValidDip).slice(0, 5);
     }
     if (filterMode === 'BREAKOUT') {
-      // 🚀 Breakouts propres ayant une base saine
-      const f = allHhCandidates.filter(t => t.isBreakout && !t.isFomoRunner);
-      return f.length > 0 ? f : allHhCandidates.filter(t => t.isBreakout).slice(0, 3);
-    }
-    if (filterMode === 'FOMO_RUNNERS') {
-      // ⚠️ Pompes paraboliques sans repli (signalées pour vigilance)
-      const f = allHhCandidates.filter(t => t.isFomoRunner);
-      return f.length > 0 ? f : allHhCandidates.slice(0, 3);
-    }
-    if (filterMode === 'ATTACK') {
-      const f = allHhCandidates.filter(t => t.isAttacking);
-      return f.length > 0 ? f : allHhCandidates.slice(0, 5);
+      // 🚀 Breakouts : ont dépassé le sommet après un repli d'au moins -2%
+      const f = allHhCandidates.filter(t => t.isBreakout);
+      return f.length > 0 ? f : allHhCandidates.filter(t => t.hasValidDip).slice(0, 3);
     }
     if (filterMode === 'APPROACH') {
+      // ⚡ En approche : à moins de -7% du HH
       const f = allHhCandidates.filter(t => t.isApproaching);
-      return f.length > 0 ? f : allHhCandidates.slice(0, 8);
+      return f.length > 0 ? f : allHhCandidates.filter(t => t.hasValidDip).slice(0, 8);
     }
-    return allHhCandidates.slice(0, 15);
+    // Tous les tokens ayant un sommet valide avec repli >= -2%
+    const allWithDip = allHhCandidates.filter(t => t.hasValidDip);
+    return allWithDip.length > 0 ? allWithDip.slice(0, 15) : allHhCandidates.slice(0, 15);
   }, [allHhCandidates, filterMode]);
 
-  const trueRetestCount = allHhCandidates.filter(t => t.isTrueRetest || (!t.isFomoRunner && t.hasHealthyBase && t.isAttacking)).length;
-  const breakoutsCount = allHhCandidates.filter(t => t.isBreakout && !t.isFomoRunner).length;
-  const fomoRunnersCount = allHhCandidates.filter(t => t.isFomoRunner).length;
-  const attackingCount = allHhCandidates.filter(t => t.isAttacking).length;
+  const hittingCount = allHhCandidates.filter(t => t.isHittingHH).length;
+  const breakoutsCount = allHhCandidates.filter(t => t.isBreakout).length;
+  const approachingCount = allHhCandidates.filter(t => t.isApproaching).length;
+  const allValidCount = allHhCandidates.filter(t => t.hasValidDip).length;
 
   // Helper zoom avec marge droite native
   const applyComfortableZoom = (targetChart, offset = 35) => {
@@ -3025,7 +3026,7 @@ export function MonthlyHigherHighRadarChart({
         if (livePrice && livePrice > 0) {
           const lineSeries = seriesMapRef.current[sym];
           if (lineSeries) {
-            const targetHH = item.targetHH || item.high30d;
+            const targetHH = item.hhLevel || item.high30d;
             let val = 0;
             if (viewMode === 'DISTANCE') {
               val = targetHH > 0 ? parseFloat((((livePrice - targetHH) / targetHH) * 100).toFixed(2)) : 0;
@@ -3121,27 +3122,21 @@ export function MonthlyHigherHighRadarChart({
             fontSize: '0.72rem',
             color: '#94a3b8'
           }}>
-            <span>Sommet Ref: <strong style={{ color: '#facc15' }}>0.00% (HH)</strong></span>
+            <span>Akbar Niveau: <strong style={{ color: '#facc15' }}>0.00% (HH)</strong></span>
             <span style={{ color: '#475569' }}>•</span>
-            <span style={{ color: trueRetestCount > 0 ? '#4ade80' : '#94a3b8' }}>
-              <strong>{trueRetestCount}</strong> Vrais Retests 🛡️
+            <span style={{ color: '#94a3b8' }}>Repli min: <strong style={{ color: '#fbbf24' }}>-2.0%</strong></span>
+            <span style={{ color: '#475569' }}>•</span>
+            <span style={{ color: hittingCount > 0 ? '#4ade80' : '#94a3b8' }}>
+              <strong>{hittingCount}</strong> kay-darbo l-HH 🎯
             </span>
             <span style={{ color: '#475569' }}>•</span>
             <span style={{ color: breakoutsCount > 0 ? '#38bdf8' : '#94a3b8' }}>
               <strong>{breakoutsCount}</strong> Breakouts 🚀
             </span>
             <span style={{ color: '#475569' }}>•</span>
-            <span style={{ color: '#e2e8f0' }}>
-              <strong>{attackingCount}</strong> en Attaque 🔥
+            <span style={{ color: '#cbd5e1' }}>
+              <strong>{allValidCount}</strong> avec repli ≥ -2%
             </span>
-            {fomoRunnersCount > 0 && (
-              <>
-                <span style={{ color: '#475569' }}>•</span>
-                <span style={{ color: '#f87171' }}>
-                  <strong>{fomoRunnersCount}</strong> Pompes FOMO ⚠️
-                </span>
-              </>
-            )}
           </div>
         </div>
 
@@ -3157,20 +3152,20 @@ export function MonthlyHigherHighRadarChart({
             border: '1px solid rgba(255, 255, 255, 0.08)'
           }}>
             <button
-              onClick={() => setFilterMode('TRUE_RETEST')}
+              onClick={() => setFilterMode('HITTING')}
               style={{
-                background: filterMode === 'TRUE_RETEST' ? 'rgba(74, 222, 128, 0.2)' : 'transparent',
-                color: filterMode === 'TRUE_RETEST' ? '#4ade80' : '#64748b',
-                border: filterMode === 'TRUE_RETEST' ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid transparent',
+                background: filterMode === 'HITTING' ? 'rgba(74, 222, 128, 0.2)' : 'transparent',
+                color: filterMode === 'HITTING' ? '#4ade80' : '#64748b',
+                border: filterMode === 'HITTING' ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid transparent',
                 padding: '3px 8px',
                 borderRadius: '4px',
                 fontSize: '0.68rem',
                 fontWeight: '800',
                 cursor: 'pointer'
               }}
-              title="Filtre Anti-FOMO : Uniquement les vrais retests avec résistance mature (>18h) et base de repli consolidée (-4% min)"
+              title="Tokens li hbtat 3la la9al b -2% o rj3at kat-dreb l-HH (≤ -3.5%)"
             >
-              🛡️ VRAI RETEST ({trueRetestCount})
+              🎯 YADRAB L-HH ({hittingCount})
             </button>
             <button
               onClick={() => setFilterMode('BREAKOUT')}
@@ -3184,57 +3179,41 @@ export function MonthlyHigherHighRadarChart({
                 fontWeight: '800',
                 cursor: 'pointer'
               }}
-              title="Breakouts confirmés au-dessus de la résistance historique"
+              title="Tokens li fatat l-HH (≥ 0%) b3d ma hbtat b -2%"
             >
               🚀 BREAKOUT ({breakoutsCount})
             </button>
             <button
-              onClick={() => setFilterMode('ATTACK')}
+              onClick={() => setFilterMode('APPROACH')}
               style={{
-                background: filterMode === 'ATTACK' ? 'rgba(250, 204, 21, 0.2)' : 'transparent',
-                color: filterMode === 'ATTACK' ? '#facc15' : '#64748b',
-                border: filterMode === 'ATTACK' ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid transparent',
+                background: filterMode === 'APPROACH' ? 'rgba(250, 204, 21, 0.2)' : 'transparent',
+                color: filterMode === 'APPROACH' ? '#facc15' : '#64748b',
+                border: filterMode === 'APPROACH' ? '1px solid rgba(250, 204, 21, 0.4)' : '1px solid transparent',
                 padding: '3px 8px',
                 borderRadius: '4px',
                 fontSize: '0.68rem',
                 fontWeight: '800',
                 cursor: 'pointer'
               }}
+              title="Tokens li hbtat b -2% o 9riba trje3 l-HH (≤ -7%)"
             >
-              🔥 ATTAQUE (≤ -3.5%)
+              ⚡ EN APPROCHE ({approachingCount})
             </button>
-            {fomoRunnersCount > 0 && (
-              <button
-                onClick={() => setFilterMode('FOMO_RUNNERS')}
-                style={{
-                  background: filterMode === 'FOMO_RUNNERS' ? 'rgba(239, 68, 68, 0.2)' : 'transparent',
-                  color: filterMode === 'FOMO_RUNNERS' ? '#f87171' : '#64748b',
-                  border: filterMode === 'FOMO_RUNNERS' ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid transparent',
-                  padding: '3px 8px',
-                  borderRadius: '4px',
-                  fontSize: '0.68rem',
-                  fontWeight: '800',
-                  cursor: 'pointer'
-                }}
-                title="Tokens en pompe verticale active / climax (HH imprimé à la minute, 0 base de repli)"
-              >
-                ⚠️ POMPES FOMO ({fomoRunnersCount})
-              </button>
-            )}
             <button
-              onClick={() => setFilterMode('TOP15')}
+              onClick={() => setFilterMode('ALL_DIP')}
               style={{
-                background: filterMode === 'TOP15' ? 'rgba(168, 85, 247, 0.2)' : 'transparent',
-                color: filterMode === 'TOP15' ? '#c084fc' : '#64748b',
-                border: filterMode === 'TOP15' ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid transparent',
+                background: filterMode === 'ALL_DIP' ? 'rgba(168, 85, 247, 0.2)' : 'transparent',
+                color: filterMode === 'ALL_DIP' ? '#c084fc' : '#64748b',
+                border: filterMode === 'ALL_DIP' ? '1px solid rgba(168, 85, 247, 0.4)' : '1px solid transparent',
                 padding: '3px 8px',
                 borderRadius: '4px',
                 fontSize: '0.68rem',
                 fontWeight: '800',
                 cursor: 'pointer'
               }}
+              title="Tous les tokens li 3ndhom akbar niveau o hbtat mnno b -2%"
             >
-              🌟 TOP 15
+              🌟 TOUS ({allValidCount})
             </button>
           </div>
 
@@ -3373,7 +3352,7 @@ export function MonthlyHigherHighRadarChart({
               style={{
                 background: isSelected ? 'rgba(250, 204, 21, 0.18)' : 'rgba(255, 255, 255, 0.02)',
                 color: isSelected ? '#ffffff' : '#94a3b8',
-                border: isSelected ? `1.5px solid ${color}` : (t.isTrueRetest ? '1px solid rgba(74, 222, 128, 0.45)' : t.isFomoRunner ? '1px solid rgba(239, 68, 68, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)'),
+                border: isSelected ? `1.5px solid ${color}` : (t.isHittingHH ? '1px solid rgba(74, 222, 128, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)'),
                 padding: '3px 8px',
                 borderRadius: '5px',
                 fontSize: '0.68rem',
@@ -3385,7 +3364,7 @@ export function MonthlyHigherHighRadarChart({
                 whiteSpace: 'nowrap',
                 transition: 'all 0.12s ease'
               }}
-              title={`Prix: $${t.livePrice} | Résistance HH: $${t.targetHH || t.high30d} | Écart: ${t.liveDistToHH}% | Âge sommet: ${t.histPeakAgeHours || t.peakAgeHours}h | Base repli: ${t.histPullbackPct}% | 24h: ${t.p1d}%`}
+              title={`Prix actuel: $${t.livePrice} | Akbar niveau (HH): $${t.hhLevel} | Hbat mnno b: ${t.hhPullbackPct}% | Écart daba: ${t.liveDistToHH}%`}
             >
               <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: color }} />
               <span style={{ color: isSelected ? '#ffffff' : '#cbd5e1' }}>#{t.rankMonth} {t.cleanSymbol}</span>
@@ -3394,38 +3373,21 @@ export function MonthlyHigherHighRadarChart({
                 fontWeight: '900',
                 fontSize: '0.65rem'
               }}>
-                {isPos ? `+${t.liveDistToHH}% 🚀` : `${t.liveDistToHH}% ${isNear ? '🔥' : '⚡'}`}
+                {isPos ? `+${t.liveDistToHH}% 🚀` : `${t.liveDistToHH}% ${isNear ? '🎯' : '⚡'}`}
               </span>
 
-              {/* Badge Vrai Retest SÉCURISÉ */}
-              {t.isTrueRetest && (
-                <span style={{
-                  background: 'rgba(74, 222, 128, 0.15)',
-                  color: '#4ade80',
-                  border: '1px solid rgba(74, 222, 128, 0.35)',
-                  padding: '1px 4px',
-                  borderRadius: '3px',
-                  fontSize: '0.60rem',
-                  fontWeight: '800'
-                }}>
-                  🛡️ BASE {t.histPullbackPct}% ({t.histPeakAgeHours > 24 ? `${Math.round(t.histPeakAgeHours / 24)}j` : `${Math.round(t.histPeakAgeHours)}h`})
-                </span>
-              )}
-
-              {/* Badge Alerte Pompe FOMO */}
-              {t.isFomoRunner && (
-                <span style={{
-                  background: 'rgba(239, 68, 68, 0.15)',
-                  color: '#f87171',
-                  border: '1px solid rgba(239, 68, 68, 0.35)',
-                  padding: '1px 4px',
-                  borderRadius: '3px',
-                  fontSize: '0.60rem',
-                  fontWeight: '800'
-                }}>
-                  ⚠️ POMPE FOMO
-                </span>
-              )}
+              {/* Badge Repli -2% & Rje3 */}
+              <span style={{
+                background: isNear ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                color: isNear ? '#4ade80' : '#94a3b8',
+                border: isNear ? '1px solid rgba(74, 222, 128, 0.35)' : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '1px 4px',
+                borderRadius: '3px',
+                fontSize: '0.60rem',
+                fontWeight: '800'
+              }}>
+                Hbat {t.hhPullbackPct}% ⮌
+              </span>
             </button>
           );
         })}
@@ -6289,14 +6251,6 @@ export default function MonthlyTop50BenchmarkComparator() {
           const klines4h = [];
           let high30d = -Infinity;
           let low30d = Infinity;
-          let high30dIdx = -1;
-          let high30dTime = 0;
-
-          // Seuil de séparation pour isoler le Sommet Historique (Ancien) vs la pompe récente (dernières 24h = 96 bougies 15m)
-          const recentCutoffIdx = Math.max(0, len - 96);
-          let histHigh30d = -Infinity;
-          let histHigh30dIdx = -1;
-          let histHigh30dTime = 0;
 
           for (let b = 0; b < len; b += 16) {
             const chunkEnd = Math.min(len - 1, b + 15);
@@ -6306,69 +6260,46 @@ export default function MonthlyTop50BenchmarkComparator() {
             for (let c = b; c <= chunkEnd; c++) {
               const h = parseFloat(klines[c][2]);
               const l = parseFloat(klines[c][3]);
-              const tMs = parseInt(klines[c][0]);
               if (h > highP) highP = h;
               if (l < lowP) lowP = l;
-              if (h > high30d) {
-                high30d = h;
-                high30dIdx = c;
-                high30dTime = tMs;
-              }
+              if (h > high30d) high30d = h;
               if (l < low30d) low30d = l;
-
-              // Sommet Historique (antérieur aux dernières 24h)
-              if (c < recentCutoffIdx && h > histHigh30d) {
-                histHigh30d = h;
-                histHigh30dIdx = c;
-                histHigh30dTime = tMs;
-              }
             }
             klines4h.push({ open: openP, high: highP, low: lowP, close: closeP, time: parseInt(klines[b][0]) });
           }
 
-          // 🛡️ ANALYSE QUANTITATIVE ANTI-FOMO : Âge du sommet et profondeur de la base de repli
-          const nowMs = parseInt(klines[len - 1][0]);
-          const peakAgeHours = high30dTime > 0 ? Math.max(0, parseFloat(((nowMs - high30dTime) / (3600 * 1000)).toFixed(1))) : 0;
-          const histPeakAgeHours = histHigh30dTime > 0 ? Math.max(0, parseFloat(((nowMs - histHigh30dTime) / (3600 * 1000)).toFixed(1))) : 0;
+          // 👑 LOGIQUE HIGHER HIGH 30D (RÈGLE DU RETEST HH) :
+          // 1. Akbar niveau wsal lih token (prix le plus haut)
+          // 2. Token khasso ikoun hbat 3la l-aqal b -2% (minLow <= high * 0.98)
+          // 3. Mnin kay-wlli l dak l-higher niveau (curPrice ~ hhLevel), tamma kay-dreb l-HH !
+          const suffixMinLow = new Float64Array(len);
+          suffixMinLow[len - 1] = parseFloat(klines[len - 1][3]);
+          for (let i = len - 2; i >= 0; i--) {
+            const l = parseFloat(klines[i][3]);
+            suffixMinLow[i] = l < suffixMinLow[i + 1] ? l : suffixMinLow[i + 1];
+          }
 
-          // Creux le plus bas enregistré depuis le sommet historique (Vraie base de repli / consolidation)
-          let histLowSincePeak = Infinity;
-          if (histHigh30dIdx >= 0) {
-            for (let c = histHigh30dIdx + 1; c < len; c++) {
-              const l = parseFloat(klines[c][3]);
-              if (l < histLowSincePeak) histLowSincePeak = l;
+          let hhLevel = 0;
+          let hhLevelTime = 0;
+          let hhMinLow = 0;
+          let hhPullbackPct = 0;
+
+          for (let i = 0; i < len - 1; i++) {
+            const h = parseFloat(klines[i][2]);
+            const minAfter = suffixMinLow[i + 1];
+            // Khasso ikoun hbat 3la l-aqal b -2%
+            if (minAfter <= h * 0.98) {
+              if (h > hhLevel) {
+                hhLevel = h;
+                hhLevelTime = parseInt(klines[i][0]);
+                hhMinLow = minAfter;
+                hhPullbackPct = parseFloat((((minAfter - h) / h) * 100).toFixed(2));
+              }
             }
           }
-          if (histLowSincePeak === Infinity) histLowSincePeak = curPrice;
 
-          // Creux après le pic absolu
-          let absLowSincePeak = Infinity;
-          if (high30dIdx >= 0) {
-            for (let c = high30dIdx + 1; c < len; c++) {
-              const l = parseFloat(klines[c][3]);
-              if (l < absLowSincePeak) absLowSincePeak = l;
-            }
-          }
-          if (absLowSincePeak === Infinity) absLowSincePeak = curPrice;
-
-          const histPullbackPct = (histHigh30d > 0 && histLowSincePeak < histHigh30d)
-            ? parseFloat((((histLowSincePeak - histHigh30d) / histHigh30d) * 100).toFixed(1))
-            : 0;
-          const absPullbackPct = (high30d > 0 && absLowSincePeak < high30d)
-            ? parseFloat((((absLowSincePeak - high30d) / high30d) * 100).toFixed(1))
-            : 0;
-
-          const hasHealthyBase = histPullbackPct <= -4.0;
-          const hasMaturePeak = histPeakAgeHours >= 18;
-          const targetResistance = (hasMaturePeak && histHigh30d > 0) ? histHigh30d : high30d;
-          const distToTargetHH = targetResistance > 0 ? parseFloat((((curPrice - targetResistance) / targetResistance) * 100).toFixed(2)) : 0;
-
-          // Classification Vrai Retest SÉCURISÉ (Cup & Handle / Résistance historique avec base saine)
-          const isTrueRetest = hasMaturePeak && hasHealthyBase && distToTargetHH >= -4.5 && distToTargetHH <= 3.5 && p1d <= 25;
-
-          // Détection Pompe FOMO / Parabolique active en cours (Sommet imprimé à la minute, 0 base de repli)
-          const isFomoRunner = (peakAgeHours < 6 && absPullbackPct > -2.5 && (p1d >= 12 || p4h >= 8)) ||
-                               (p1d >= 25 && absPullbackPct > -3.5);
+          const distToHH = hhLevel > 0 ? parseFloat((((curPrice - hhLevel) / hhLevel) * 100).toFixed(2)) : -999;
+          const isHittingHH = hhLevel > 0 && distToHH >= -3.5;
 
           const alpha20_4h = 2 / (20 + 1);
           const alpha50_4h = 2 / (50 + 1);
@@ -6486,19 +6417,13 @@ export default function MonthlyTop50BenchmarkComparator() {
             sellPct: sellPct24h,
             netDelta24h: parseFloat(netDelta24h.toFixed(2)),
             maxPointsMonth,
-            high30d: high30d > -Infinity ? parseFloat(high30d.toFixed(4)) : curPrice,
-            high30dTime,
-            peakAgeHours,
-            pullbackDepth: absPullbackPct,
-            histHigh30d: (histHigh30d > -Infinity && histHigh30d > 0) ? parseFloat(histHigh30d.toFixed(4)) : (high30d > -Infinity ? parseFloat(high30d.toFixed(4)) : curPrice),
-            histHigh30dTime,
-            histPeakAgeHours,
-            histPullbackPct,
-            hasHealthyBase,
-            isTrueRetest,
-            isFomoRunner,
-            targetResistance: targetResistance > 0 ? parseFloat(targetResistance.toFixed(4)) : curPrice,
-            distToTargetHH,
+            high30d: hhLevel > 0 ? parseFloat(hhLevel.toFixed(4)) : (high30d > -Infinity ? parseFloat(high30d.toFixed(4)) : curPrice),
+            hhLevel: hhLevel > 0 ? parseFloat(hhLevel.toFixed(4)) : curPrice,
+            hhLevelTime,
+            hhPullbackPct,
+            hhMinLow: hhMinLow > 0 ? parseFloat(hhMinLow.toFixed(4)) : curPrice,
+            distToHH,
+            isHittingHH,
             pullbackFromPeak,
             confMonth: parseFloat(confMonth.toFixed(1)),
             scoreMonth,
