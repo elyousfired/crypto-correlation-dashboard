@@ -3456,6 +3456,980 @@ export function MonthlyHigherHighRadarChart({
 
 
 // ========================================================================================
+// 👑 COMPOSANT DÉDIÉ (STANDALONE) : TOP 5 DU MOIS — VUE DUO CÔTE À CÔTE (24H vs 30 JOURS)
+// ========================================================================================
+export function MonthlyTop5DualChart({
+  tokensData = [],
+  tripleAnalysis = {},
+  chartProcessedData = {},
+  chartUniverse = 'MONTH_SCORE',
+  selectedSoloToken,
+  setSelectedSoloToken,
+  onClose,
+  livePricesRef
+}) {
+  const container24hRef = useRef(null);
+  const container30dRef = useRef(null);
+  const splitContainerRef = useRef(null);
+
+  const chart24hRef = useRef(null);
+  const chart30dRef = useRef(null);
+
+  const series24hMapRef = useRef({});
+  const series30dMapRef = useRef({});
+  const zeroLine24hRef = useRef(null);
+  const zeroLine30dRef = useRef(null);
+
+  const [dualChartHeight, setDualChartHeight] = useState(420);
+  const [isDraggingHeight, setIsDraggingHeight] = useState(false);
+  const [splitRatio, setSplitRatio] = useState(50); // % pour la charte 24H (gauche)
+  const [isDraggingSplit, setIsDraggingSplit] = useState(false);
+  const [highlightedToken, setHighlightedToken] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const dragStartYRef = useRef(0);
+  const dragStartHeightRef = useRef(420);
+  const dragStartXRef = useRef(0);
+  const dragStartSplitRef = useRef(50);
+  const hasFitted24hRef = useRef(false);
+  const hasFitted30dRef = useRef(false);
+
+  // 1. Extraction stricte du Top 5 du mois (sans BTC et sans ETH)
+  const top5Tokens = useMemo(() => {
+    const list = (chartUniverse === 'MONTH_PEAK' ? tripleAnalysis?.listMaxPointsMonth : tripleAnalysis?.listMonth) || tokensData || [];
+    const valid = list.filter(t => {
+      const sym = t.cleanSymbol;
+      return sym && sym !== 'BTC' && sym !== 'ETH';
+    });
+
+    return valid.slice(0, 5).map((t, idx) => {
+      const sym = t.cleanSymbol;
+      const livePrice = (livePricesRef?.current?.[sym]) || t.price;
+      const p24 = typeof t.p1d === 'number' ? t.p1d : 0;
+      const p30 = typeof t.p30d === 'number' ? t.p30d : 0;
+      const color = getTokenFixedColor(sym);
+      const scoreMonth = t.scoreMonth || 0;
+      const rankMonth = t.rankMonth || idx + 1;
+
+      return {
+        ...t,
+        sym,
+        rankMonth,
+        livePrice,
+        p24,
+        p30,
+        scoreMonth,
+        fixedColor: color
+      };
+    });
+  }, [tripleAnalysis, tokensData, chartUniverse, livePricesRef]);
+
+  // Synchronisation avec selectedSoloToken externe
+  useEffect(() => {
+    if (selectedSoloToken && selectedSoloToken.cleanSymbol) {
+      const existsInTop5 = top5Tokens.some(t => t.cleanSymbol === selectedSoloToken.cleanSymbol);
+      if (existsInTop5) {
+        setHighlightedToken(selectedSoloToken.cleanSymbol);
+      }
+    }
+  }, [selectedSoloToken, top5Tokens]);
+
+  const effectiveHeight = isFullscreen ? (typeof window !== 'undefined' ? window.innerHeight - 155 : 620) : dualChartHeight;
+
+  // Zoom confortable avec marge droite native
+  const applyComfortableZoom = (targetChart, offset = 35) => {
+    if (!targetChart) return;
+    try {
+      targetChart.timeScale().applyOptions({
+        rightOffset: offset,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      });
+      targetChart.timeScale().fitContent();
+    } catch (_) {}
+  };
+
+  const handleResetZoom = () => {
+    applyComfortableZoom(chart24hRef.current, 35);
+    applyComfortableZoom(chart30dRef.current, 35);
+  };
+
+  // Fermer le plein écran avec la touche Échap
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
+  // ↕️ Redimensionnement interactif de la hauteur
+  const handleMouseDownHeight = (e) => {
+    setIsDraggingHeight(true);
+    dragStartYRef.current = e.clientY;
+    dragStartHeightRef.current = dualChartHeight;
+    document.body.style.cursor = 'row-resize';
+    document.body.style.userSelect = 'none';
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingHeight) return;
+      const delta = e.clientY - dragStartYRef.current;
+      const newH = Math.max(300, Math.min(850, dragStartHeightRef.current + delta));
+      setDualChartHeight(newH);
+      if (chart24hRef.current) chart24hRef.current.applyOptions({ height: newH });
+      if (chart30dRef.current) chart30dRef.current.applyOptions({ height: newH });
+    };
+
+    const handleMouseUp = () => {
+      if (isDraggingHeight) {
+        setIsDraggingHeight(false);
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = 'auto';
+      }
+    };
+
+    if (isDraggingHeight) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDraggingHeight]);
+
+  // ↔️ Redimensionnement interactif du séparateur de largeur Split Ratio
+  const handleMouseDownSplit = (e) => {
+    setIsDraggingSplit(true);
+    dragStartXRef.current = e.clientX;
+    dragStartSplitRef.current = splitRatio;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingSplit) return;
+      if (!splitContainerRef.current) return;
+      const containerWidth = splitContainerRef.current.clientWidth;
+      if (containerWidth <= 0) return;
+      const deltaX = e.clientX - dragStartXRef.current;
+      const deltaRatio = (deltaX / containerWidth) * 100;
+      const newRatio = Math.max(20, Math.min(80, Math.round(dragStartSplitRef.current + deltaRatio)));
+      setSplitRatio(newRatio);
+    };
+
+    const handleMouseUp = () => {
+      if (isDraggingSplit) {
+        setIsDraggingSplit(false);
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = 'auto';
+      }
+    };
+
+    if (isDraggingSplit) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDraggingSplit]);
+
+  // 🔄 Redimensionnement automatique des 2 canvas
+  useEffect(() => {
+    const handleResize = () => {
+      if (container24hRef.current && chart24hRef.current) {
+        chart24hRef.current.applyOptions({
+          width: container24hRef.current.clientWidth,
+          height: effectiveHeight
+        });
+        applyComfortableZoom(chart24hRef.current, 35);
+      }
+      if (container30dRef.current && chart30dRef.current) {
+        chart30dRef.current.applyOptions({
+          width: container30dRef.current.clientWidth,
+          height: effectiveHeight
+        });
+        applyComfortableZoom(chart30dRef.current, 35);
+      }
+    };
+
+    handleResize();
+    const t = setTimeout(handleResize, 60);
+
+    let ro = null;
+    if (typeof ResizeObserver !== 'undefined' && splitContainerRef.current) {
+      ro = new ResizeObserver(() => {
+        handleResize();
+      });
+      ro.observe(splitContainerRef.current);
+    }
+
+    return () => {
+      clearTimeout(t);
+      if (ro) ro.disconnect();
+    };
+  }, [splitRatio, isFullscreen, effectiveHeight]);
+
+  // ========================================================================
+  // ⚡ 2. INITIALISATION CHARTE GAUCHE (24 HEURES)
+  // ========================================================================
+  useEffect(() => {
+    if (!container24hRef.current) return;
+    if (chart24hRef.current) {
+      try { chart24hRef.current.remove(); } catch (_) {}
+      chart24hRef.current = null;
+      series24hMapRef.current = {};
+    }
+
+    const container = container24hRef.current;
+    const chart = createChart(container, {
+      width: container.clientWidth || 500,
+      height: effectiveHeight,
+      layout: {
+        background: { color: '#040711' },
+        textColor: '#64748b',
+        fontSize: 11,
+        fontFamily: 'JetBrains Mono, monospace'
+      },
+      grid: {
+        vertLines: { color: 'rgba(255, 255, 255, 0.03)' },
+        horzLines: { color: 'rgba(255, 255, 255, 0.03)' }
+      },
+      rightPriceScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        scaleMargins: { top: 0.12, bottom: 0.10 },
+        autoScale: true,
+      },
+      timeScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        timeVisible: true,
+        secondsVisible: false,
+        rightOffset: 35,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      },
+      handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+      handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: { time: true, price: true }, mouseWheel: true, pinch: true },
+      crosshair: {
+        mode: 0,
+        vertLine: { color: 'rgba(250, 204, 21, 0.25)', width: 1, style: 2 },
+        horzLine: { color: 'rgba(250, 204, 21, 0.25)', width: 1, style: 2 },
+      }
+    });
+
+    zeroLine24hRef.current = chart.addLineSeries({
+      color: 'rgba(148, 163, 184, 0.40)',
+      lineWidth: 1,
+      lineStyle: 2, // Tirets
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '0% (24H)'
+    });
+
+    chart24hRef.current = chart;
+
+    return () => {
+      if (chart24hRef.current) {
+        try { chart24hRef.current.remove(); } catch (_) {}
+        chart24hRef.current = null;
+        series24hMapRef.current = {};
+      }
+    };
+  }, []);
+
+  // ========================================================================
+  // 🏛️ 3. INITIALISATION CHARTE DROITE (30 JOURS)
+  // ========================================================================
+  useEffect(() => {
+    if (!container30dRef.current) return;
+    if (chart30dRef.current) {
+      try { chart30dRef.current.remove(); } catch (_) {}
+      chart30dRef.current = null;
+      series30dMapRef.current = {};
+    }
+
+    const container = container30dRef.current;
+    const chart = createChart(container, {
+      width: container.clientWidth || 500,
+      height: effectiveHeight,
+      layout: {
+        background: { color: '#040711' },
+        textColor: '#64748b',
+        fontSize: 11,
+        fontFamily: 'JetBrains Mono, monospace'
+      },
+      grid: {
+        vertLines: { color: 'rgba(255, 255, 255, 0.03)' },
+        horzLines: { color: 'rgba(255, 255, 255, 0.03)' }
+      },
+      rightPriceScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        scaleMargins: { top: 0.12, bottom: 0.10 },
+        autoScale: true,
+      },
+      timeScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        timeVisible: true,
+        secondsVisible: false,
+        rightOffset: 35,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      },
+      handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+      handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: { time: true, price: true }, mouseWheel: true, pinch: true },
+      crosshair: {
+        mode: 0,
+        vertLine: { color: 'rgba(168, 85, 247, 0.25)', width: 1, style: 2 },
+        horzLine: { color: 'rgba(168, 85, 247, 0.25)', width: 1, style: 2 },
+      }
+    });
+
+    zeroLine30dRef.current = chart.addLineSeries({
+      color: 'rgba(148, 163, 184, 0.40)',
+      lineWidth: 1,
+      lineStyle: 2, // Tirets
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '0% (30J)'
+    });
+
+    chart30dRef.current = chart;
+
+    return () => {
+      if (chart30dRef.current) {
+        try { chart30dRef.current.remove(); } catch (_) {}
+        chart30dRef.current = null;
+        series30dMapRef.current = {};
+      }
+    };
+  }, []);
+
+  // ========================================================================
+  // 📈 4. MISE À JOUR SYNCHRONISÉE DES COURBES DU TOP 5 SUR LES 2 GRAPHES
+  // ========================================================================
+  useEffect(() => {
+    const c24 = chart24hRef.current;
+    const c30 = chart30dRef.current;
+    if (!c24 || !c30 || !top5Tokens || top5Tokens.length === 0) return;
+
+    const currentSyms = new Set(top5Tokens.map(t => t.cleanSymbol));
+
+    // Nettoyage séries orphelines
+    Object.keys(series24hMapRef.current).forEach(sym => {
+      if (!currentSyms.has(sym)) {
+        try {
+          c24.removeSeries(series24hMapRef.current[sym]);
+          delete series24hMapRef.current[sym];
+        } catch (_) {}
+      }
+    });
+    Object.keys(series30dMapRef.current).forEach(sym => {
+      if (!currentSyms.has(sym)) {
+        try {
+          c30.removeSeries(series30dMapRef.current[sym]);
+          delete series30dMapRef.current[sym];
+        } catch (_) {}
+      }
+    });
+
+    let all24hTimestamps = [];
+    let all30dTimestamps = [];
+
+    top5Tokens.forEach((item, idx) => {
+      const sym = item.cleanSymbol;
+      const fixedColor = item.fixedColor;
+      const isSolo = highlightedToken === sym || selectedSoloToken?.cleanSymbol === sym;
+      const rankNum = item.rankMonth || idx + 1;
+
+      // Styling Focus Solo : le token isolé ressort net et épais (3.8px), les 4 autres s'estompent
+      let lineColor = fixedColor;
+      let lineWidth = 2.5;
+      let lastValVisible = true;
+
+      if (highlightedToken) {
+        if (isSolo) {
+          lineColor = fixedColor;
+          lineWidth = 4.2;
+          lastValVisible = true;
+        } else {
+          lineColor = 'rgba(148, 163, 184, 0.14)';
+          lineWidth = 1.0;
+          lastValVisible = false;
+        }
+      }
+
+      // --- A. MISE À JOUR SÉRIE 24 HEURES (GAUCHE) ---
+      const title24 = `#${rankNum} ${sym} (${item.p24 >= 0 ? '+' : ''}${item.p24?.toFixed(1)}%)`;
+      let s24 = series24hMapRef.current[sym];
+      if (!s24) {
+        s24 = c24.addLineSeries({
+          color: lineColor,
+          lineWidth: lineWidth,
+          lineStyle: 0,
+          title: isSolo || !highlightedToken ? title24 : '',
+          priceLineVisible: false,
+          lastValueVisible: lastValVisible,
+        });
+        series24hMapRef.current[sym] = s24;
+      } else {
+        s24.applyOptions({
+          color: lineColor,
+          lineWidth: lineWidth,
+          title: isSolo || !highlightedToken ? title24 : '',
+          lastValueVisible: lastValVisible
+        });
+      }
+
+      // Récupération de la courbe 24h
+      let curve24 = item.chartCurve24h || [];
+      if (!curve24 || curve24.length === 0) {
+        // Fallback depuis klines
+        const klines = item.rawKlines || [];
+        const tLen = klines.length;
+        const offset = Math.min(95, tLen - 1);
+        const baseP = tLen > 0 ? parseFloat(klines[tLen - 1 - offset][4]) : 0;
+        if (baseP > 0) {
+          curve24 = [];
+          for (let b = tLen - 1 - offset; b < tLen; b++) {
+            const tTime = Math.floor(parseInt(klines[b][0]) / 1000);
+            const closeP = parseFloat(klines[b][4]);
+            const val = ((closeP - baseP) / baseP) * 100;
+            curve24.push({ time: tTime, value: parseFloat(val.toFixed(2)) });
+          }
+        }
+      }
+
+      if (curve24 && curve24.length > 0) {
+        s24.setData(curve24);
+        if (curve24.length > all24hTimestamps.length) {
+          all24hTimestamps = curve24.map(pt => pt.time);
+        }
+      }
+
+      // --- B. MISE À JOUR SÉRIE 30 JOURS (DROITE) ---
+      const title30 = `#${rankNum} ${sym} (${item.p30 >= 0 ? '+' : ''}${item.p30?.toFixed(1)}%)`;
+      let s30 = series30dMapRef.current[sym];
+      if (!s30) {
+        s30 = c30.addLineSeries({
+          color: lineColor,
+          lineWidth: lineWidth,
+          lineStyle: 0,
+          title: isSolo || !highlightedToken ? title30 : '',
+          priceLineVisible: false,
+          lastValueVisible: lastValVisible,
+        });
+        series30dMapRef.current[sym] = s30;
+      } else {
+        s30.applyOptions({
+          color: lineColor,
+          lineWidth: lineWidth,
+          title: isSolo || !highlightedToken ? title30 : '',
+          lastValueVisible: lastValVisible
+        });
+      }
+
+      // Récupération de la courbe 30 jours
+      const curve30 = chartProcessedData?.tokenMonthCurvesMap?.[sym] || [];
+      if (curve30 && curve30.length > 0) {
+        s30.setData(curve30);
+        if (curve30.length > all30dTimestamps.length) {
+          all30dTimestamps = curve30.map(pt => pt.time);
+        }
+      }
+    });
+
+    // Tracer les lignes neutres zéro (0.00%)
+    if (zeroLine24hRef.current && all24hTimestamps.length > 0) {
+      zeroLine24hRef.current.setData(all24hTimestamps.map(t => ({ time: t, value: 0 })));
+    }
+    if (zeroLine30dRef.current && all30dTimestamps.length > 0) {
+      zeroLine30dRef.current.setData(all30dTimestamps.map(t => ({ time: t, value: 0 })));
+    }
+
+    // Ajustement de zoom initial
+    if (!hasFitted24hRef.current && all24hTimestamps.length > 0) {
+      applyComfortableZoom(c24, 35);
+      hasFitted24hRef.current = true;
+    }
+    if (!hasFitted30dRef.current && all30dTimestamps.length > 0) {
+      applyComfortableZoom(c30, 35);
+      hasFitted30dRef.current = true;
+    }
+  }, [top5Tokens, highlightedToken, selectedSoloToken, chartProcessedData]);
+
+  // ========================================================================
+  // ⚡ 5. MOTEUR LIVE 500MS HAUTE FRÉQUENCE (Ticks temps réel sur les 2 graphes)
+  // ========================================================================
+  useEffect(() => {
+    const c24 = chart24hRef.current;
+    const c30 = chart30dRef.current;
+    if (!c24 || !c30 || !top5Tokens || top5Tokens.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      const nowSec = Math.floor(Date.now() / 1000);
+      const activeCandleTime = Math.floor(nowSec / 900) * 900;
+
+      top5Tokens.forEach(item => {
+        const sym = item.cleanSymbol;
+        const livePrice = livePricesRef?.current?.[sym];
+        if (!livePrice || livePrice <= 0) return;
+
+        // Mise à jour point 24H
+        const s24 = series24hMapRef.current[sym];
+        if (s24) {
+          const klines = item.rawKlines || [];
+          const tLen = klines.length;
+          const offset = Math.min(95, tLen - 1);
+          const baseP24 = tLen > 0 ? parseFloat(klines[tLen - 1 - offset][4]) : 0;
+          if (baseP24 > 0) {
+            const val24 = parseFloat((((livePrice - baseP24) / baseP24) * 100).toFixed(2));
+            const curve24 = item.chartCurve24h;
+            const lastT = (curve24 && curve24.length > 0) ? curve24[curve24.length - 1].time : activeCandleTime;
+            try {
+              s24.update({ time: Math.max(lastT, activeCandleTime), value: val24 });
+            } catch (_) {}
+          }
+        }
+
+        // Mise à jour point 30J
+        const s30 = series30dMapRef.current[sym];
+        if (s30) {
+          const baseP30 = chartProcessedData?.tokenMonthBasePricesMap?.[sym];
+          if (baseP30 > 0) {
+            const val30 = parseFloat((((livePrice - baseP30) / baseP30) * 100).toFixed(2));
+            const curve30 = chartProcessedData?.tokenMonthCurvesMap?.[sym];
+            const lastT = (curve30 && curve30.length > 0) ? curve30[curve30.length - 1].time : activeCandleTime;
+            try {
+              s30.update({ time: Math.max(lastT, activeCandleTime), value: val30 });
+            } catch (_) {}
+          }
+        }
+      });
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, [top5Tokens, chartProcessedData, livePricesRef]);
+
+  // Handler clic pilule token
+  const handleToggleSolo = (sym) => {
+    if (highlightedToken === sym) {
+      setHighlightedToken(null);
+      if (setSelectedSoloToken) setSelectedSoloToken(null);
+    } else {
+      setHighlightedToken(sym);
+      const fullToken = top5Tokens.find(t => t.cleanSymbol === sym);
+      if (setSelectedSoloToken && fullToken) setSelectedSoloToken(fullToken);
+    }
+  };
+
+  return (
+    <div style={{
+      background: '#040711',
+      border: '1px solid rgba(168, 85, 247, 0.35)',
+      borderRadius: '12px',
+      padding: isFullscreen ? '16px' : '14px',
+      marginBottom: '20px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.55)',
+      position: isFullscreen ? 'fixed' : 'relative',
+      top: isFullscreen ? 0 : 'auto',
+      left: isFullscreen ? 0 : 'auto',
+      right: isFullscreen ? 0 : 'auto',
+      bottom: isFullscreen ? 0 : 'auto',
+      width: isFullscreen ? '100vw' : '100%',
+      height: isFullscreen ? '100vh' : 'auto',
+      zIndex: isFullscreen ? 9999 : 20,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px',
+      boxSizing: 'border-box'
+    }}>
+      {/* 👑 HEADER PRINCIPAL DU MODULE TOP 5 */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '10px',
+        borderBottom: '1px solid rgba(168, 85, 247, 0.20)',
+        paddingBottom: '10px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(250, 204, 21, 0.2))',
+            border: '1px solid rgba(168, 85, 247, 0.5)',
+            borderRadius: '8px',
+            padding: '6px 8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Crown size={18} style={{ color: '#c084fc' }} />
+          </div>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                color: '#f8fafc',
+                fontWeight: '900',
+                fontSize: '0.92rem',
+                letterSpacing: '0.5px'
+              }}>
+                👑 TOP 5 DU MOIS — 24H & 30 JOURS CÔTE À CÔTE
+              </span>
+              <span style={{
+                background: 'rgba(168, 85, 247, 0.18)',
+                color: '#c084fc',
+                border: '1px solid rgba(168, 85, 247, 0.45)',
+                padding: '2px 7px',
+                borderRadius: '5px',
+                fontSize: '0.64rem',
+                fontWeight: '800'
+              }}>
+                LEADERS DU MARCHÉ
+              </span>
+            </div>
+            <div style={{ color: '#94a3b8', fontSize: '0.70rem', marginTop: '2px' }}>
+              Comparaison simultanée des 5 tokens dominants du mois : <strong>Intra-day (dernières 24h)</strong> à gauche et <strong>Macro Structure (30 jours)</strong> à droite.
+            </div>
+          </div>
+        </div>
+
+        {/* 🛠️ CONTRÔLES : PRÉSÉLECTIONS RATIO, PLEIN ÉCRAN, ZOOM & FERMETURE */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Presets Split Ratio */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '2px 5px',
+            borderRadius: '6px'
+          }}>
+            <span style={{ fontSize: '0.62rem', color: '#64748b', fontWeight: '700', paddingRight: '3px' }}>
+              LARGEUR ({splitRatio}% / {100 - splitRatio}%) :
+            </span>
+            {[
+              { label: '35/65', ratio: 35 },
+              { label: '50/50', ratio: 50 },
+              { label: '65/35', ratio: 65 }
+            ].map(p => (
+              <button
+                key={p.ratio}
+                onClick={() => setSplitRatio(p.ratio)}
+                style={{
+                  background: splitRatio === p.ratio ? 'rgba(168, 85, 247, 0.25)' : 'transparent',
+                  color: splitRatio === p.ratio ? '#c084fc' : '#94a3b8',
+                  border: splitRatio === p.ratio ? '1px solid #c084fc' : '1px solid transparent',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  fontSize: '0.62rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleResetZoom}
+            style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              color: '#94a3b8',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 9px',
+              borderRadius: '5px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title="Réinitialiser le zoom des 2 graphes"
+          >
+            <RotateCcw size={11} /> FIT ZOOM
+          </button>
+
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            style={{
+              background: isFullscreen ? 'rgba(250, 204, 21, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+              color: isFullscreen ? '#facc15' : '#94a3b8',
+              border: isFullscreen ? '1px solid #facc15' : '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 9px',
+              borderRadius: '5px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title={isFullscreen ? "Quitter le plein écran (Échap)" : "Afficher en plein écran"}
+          >
+            {isFullscreen ? <Minimize2 size={11} /> : <Maximize2 size={11} />}
+            {isFullscreen ? 'QUITTER' : 'PLEIN ÉCRAN'}
+          </button>
+
+          {onClose && (
+            <button
+              onClick={onClose}
+              style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                color: '#64748b',
+                border: '1px solid rgba(255, 255, 255, 0.07)',
+                padding: '4px 8px',
+                borderRadius: '5px',
+                fontSize: '0.68rem',
+                cursor: 'pointer'
+              }}
+              title="Masquer le module Top 5"
+            >
+              <X size={12} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 🏷️ BANDEAU DE SÉLECTION / FOCUS SOLO DES TOKENS DU TOP 5 */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        flexWrap: 'wrap',
+        background: 'rgba(0, 0, 0, 0.35)',
+        padding: '6px 10px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <span style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: '800' }}>
+          FOCUS SOLO :
+        </span>
+
+        {/* Bouton reset focus */}
+        <button
+          onClick={() => {
+            setHighlightedToken(null);
+            if (setSelectedSoloToken) setSelectedSoloToken(null);
+          }}
+          style={{
+            background: !highlightedToken ? 'rgba(168, 85, 247, 0.22)' : 'rgba(255, 255, 255, 0.03)',
+            color: !highlightedToken ? '#c084fc' : '#94a3b8',
+            border: !highlightedToken ? '1px solid #c084fc' : '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '3px 8px',
+            borderRadius: '5px',
+            fontSize: '0.68rem',
+            fontWeight: '700',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          🌟 TOUS LES 5
+        </button>
+
+        {top5Tokens.map((t, idx) => {
+          const isSelected = highlightedToken === t.cleanSymbol;
+          return (
+            <button
+              key={t.cleanSymbol}
+              onClick={() => handleToggleSolo(t.cleanSymbol)}
+              style={{
+                background: isSelected ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+                color: isSelected ? '#ffffff' : '#cbd5e1',
+                border: isSelected ? `1.5px solid ${t.fixedColor}` : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '3px 9px',
+                borderRadius: '5px',
+                fontSize: '0.68rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease',
+                opacity: (highlightedToken && !isSelected) ? 0.40 : 1
+              }}
+              title={`Cliquer pour isoler #${idx + 1} ${t.cleanSymbol} sur les 2 graphiques`}
+            >
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: t.fixedColor,
+                boxShadow: isSelected ? `0 0 6px ${t.fixedColor}` : 'none'
+              }} />
+              <span>#{idx + 1} {t.cleanSymbol}</span>
+              <span style={{ color: t.p24 >= 0 ? '#34d399' : '#f87171', fontSize: '0.64rem' }}>
+                24h: {t.p24 >= 0 ? '+' : ''}{t.p24?.toFixed(1)}%
+              </span>
+              <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>
+                | 30j: {t.p30 >= 0 ? '+' : ''}{t.p30?.toFixed(1)}%
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 📊 DOUBLE CONTENEUR CÔTE À CÔTE AVEC SÉPARATEUR AJUSTABLE */}
+      <div
+        ref={splitContainerRef}
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          width: '100%',
+          position: 'relative'
+        }}
+      >
+        {/* CHARTE GAUCHE : 24 HEURES */}
+        <div style={{
+          width: `${splitRatio}%`,
+          minWidth: '240px',
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#040711',
+          borderRadius: '8px 0 0 8px',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          overflow: 'hidden',
+          transition: isDraggingSplit ? 'none' : 'width 0.1s ease'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '6px 12px',
+            background: 'linear-gradient(90deg, #0a1124, #080d1a)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            fontSize: '0.70rem',
+            fontWeight: '700'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#facc15' }}>
+              <span>⚡</span>
+              <span style={{ color: '#e2e8f0', letterSpacing: '0.3px' }}>COURBES 24 HEURES (INTRA-DAY)</span>
+            </div>
+            <div style={{ color: '#64748b', fontSize: '0.64rem' }}>
+              Baseline 0% = Prix il y a 24H
+            </div>
+          </div>
+          <div
+            ref={container24hRef}
+            style={{
+              width: '100%',
+              height: `${effectiveHeight}px`,
+              background: '#040711'
+            }}
+          />
+        </div>
+
+        {/* ↔️ SÉPARATEUR INTERACTIF GLISSANT POUR LA LARGEUR */}
+        <div
+          onMouseDown={handleMouseDownSplit}
+          style={{
+            width: '12px',
+            cursor: 'col-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: isDraggingSplit ? 'rgba(168, 85, 247, 0.35)' : 'rgba(255, 255, 255, 0.02)',
+            borderLeft: isDraggingSplit ? '1px solid #c084fc' : '1px solid rgba(255, 255, 255, 0.06)',
+            borderRight: isDraggingSplit ? '1px solid #c084fc' : '1px solid rgba(255, 255, 255, 0.06)',
+            userSelect: 'none',
+            zIndex: 10,
+            transition: 'background 0.15s ease'
+          }}
+          title="↔️ Cliquez et glissez pour ajuster la proportion 24H / 30J"
+        >
+          <div style={{
+            width: '2px',
+            height: '32px',
+            borderRadius: '1px',
+            background: isDraggingSplit ? '#c084fc' : 'rgba(255, 255, 255, 0.25)'
+          }} />
+        </div>
+
+        {/* CHARTE DROITE : 30 JOURS */}
+        <div style={{
+          width: `calc(${100 - splitRatio}% - 12px)`,
+          minWidth: '240px',
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#040711',
+          borderRadius: '0 8px 8px 0',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          overflow: 'hidden',
+          transition: isDraggingSplit ? 'none' : 'width 0.1s ease'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '6px 12px',
+            background: 'linear-gradient(90deg, #080d1a, #0d0a24)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            fontSize: '0.70rem',
+            fontWeight: '700'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#c084fc' }}>
+              <span>🏛️</span>
+              <span style={{ color: '#e2e8f0', letterSpacing: '0.3px' }}>STRUCTURE 30 JOURS (TENDANCE MENSUELLE)</span>
+            </div>
+            <div style={{ color: '#64748b', fontSize: '0.64rem' }}>
+              Baseline 0% = Prix il y a 30 Jours
+            </div>
+          </div>
+          <div
+            ref={container30dRef}
+            style={{
+              width: '100%',
+              height: `${effectiveHeight}px`,
+              background: '#040711'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* ↕️ POIGNÉE DE REDIMENSIONNEMENT DE LA HAUTEUR */}
+      {!isFullscreen && (
+        <div
+          onMouseDown={handleMouseDownHeight}
+          style={{
+            height: '14px',
+            cursor: 'row-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: isDraggingHeight ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.02)',
+            borderRadius: '4px',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            gap: '8px',
+            userSelect: 'none',
+            transition: 'background 0.15s ease'
+          }}
+          title="Glisser vers le haut ou le bas pour ajuster la hauteur des 2 graphiques"
+        >
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#c084fc' : '#475569', borderRadius: '1px' }} />
+          <span style={{ color: isDraggingHeight ? '#c084fc' : '#64748b', fontSize: '0.64rem', fontWeight: '700' }}>
+            ↕ HAUTEUR ({dualChartHeight}px)
+          </span>
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#c084fc' : '#475569', borderRadius: '1px' }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ========================================================================================
 // 🔬 COMPOSANT DÉDIÉ (STANDALONE) : RADAR DIAGNOSTIC BREAKOUT & SUPPLY (AIR POCKETS & VOL/MC)
 // ========================================================================================
 export function CorridorSupplyDiagnosticPanel({
@@ -5710,6 +6684,7 @@ export default function MonthlyTop50BenchmarkComparator() {
   const [activeMainChartMode, setActiveMainChartMode] = useState('CURVES');
   const [showCorridorSniperChart, setShowCorridorSniperChart] = useState(true);
   const [showHhRadarChart, setShowHhRadarChart] = useState(true);
+  const [showTop5DualChart, setShowTop5DualChart] = useState(true);
   const [showBreakoutDiagnostics, setShowBreakoutDiagnostics] = useState(true);
   const [showVolMcapChart, setShowVolMcapChart] = useState(false); // Désactivé par défaut
   const [showMainChart, setShowMainChart] = useState(true); // Afficher / Masquer la charte principale benchmark Top 50
@@ -8590,6 +9565,28 @@ export default function MonthlyTop50BenchmarkComparator() {
               {showHhRadarChart ? 'RADAR HH 30D (ON)' : 'RADAR HH 30D (OFF)'}
             </button>
 
+            {/* BOUTON TOP 5 DU MOIS (24H vs 30D) */}
+            <button
+              onClick={() => setShowTop5DualChart(!showTop5DualChart)}
+              style={{
+                background: showTop5DualChart ? 'rgba(168, 85, 247, 0.18)' : 'rgba(255, 255, 255, 0.03)',
+                color: showTop5DualChart ? '#c084fc' : '#64748b',
+                border: showTop5DualChart ? '1px solid rgba(168, 85, 247, 0.45)' : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '0.72rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Crown size={13} style={{ color: showTop5DualChart ? '#c084fc' : '#64748b' }} />
+              {showTop5DualChart ? '👑 TOP 5 24H/30D (ON)' : '👑 TOP 5 24H/30D (OFF)'}
+            </button>
+
             {/* BOUTON DIAGNOSTIC BREAKOUT */}
             <button
               onClick={() => setShowBreakoutDiagnostics(!showBreakoutDiagnostics)}
@@ -8690,6 +9687,20 @@ export default function MonthlyTop50BenchmarkComparator() {
             onClose={() => setShowHhRadarChart(false)}
             dailyCgData={dailyCgData}
             dailyMarketCaps={dailyMarketCaps}
+            livePricesRef={livePricesRef}
+          />
+        )}
+
+        {/* 👑 1.58 CHARTE DÉDIÉE : TOP 5 DU MOIS EN DOUBLE VUE SYNCHRONISÉE (24H & 30D CÔTE À CÔTE) */}
+        {showTop5DualChart && (
+          <MonthlyTop5DualChart
+            tokensData={tokensData}
+            tripleAnalysis={tripleAnalysis}
+            chartProcessedData={chartProcessedData}
+            chartUniverse={chartUniverse}
+            selectedSoloToken={selectedSoloToken}
+            setSelectedSoloToken={setSelectedSoloToken}
+            onClose={() => setShowTop5DualChart(false)}
             livePricesRef={livePricesRef}
           />
         )}
