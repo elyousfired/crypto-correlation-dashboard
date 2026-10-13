@@ -4430,6 +4430,1421 @@ export function MonthlyTop5DualChart({
 
 
 // ========================================================================================
+// 💎 1. COMPOSANT DÉDIÉ : TOKENS TRIPLE ALIGNÉS (TOP 50 MOIS ∩ TOP 50 SEMAINE ∩ TOP 50 JOUR)
+// ========================================================================================
+export function MonthlyTripleAlignedChart({
+  tokensData = [],
+  tripleAnalysis = {},
+  chartProcessedData = {},
+  chartUniverse = 'MONTH_SCORE',
+  selectedSoloToken,
+  setSelectedSoloToken,
+  onClose,
+  livePricesRef
+}) {
+  const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const seriesMapRef = useRef({});
+  const zeroLineRef = useRef(null);
+  const refEmaMonthRef = useRef(null);
+  const refEmaWeekRef = useRef(null);
+  const refEmaDayRef = useRef(null);
+
+  const [chartHeight, setChartHeight] = useState(420);
+  const [isDraggingHeight, setIsDraggingHeight] = useState(false);
+  const [highlightedToken, setHighlightedToken] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [horizonMode, setHorizonMode] = useState('30d'); // '30d' (Mois) | '7d' (Semaine) | '24h' (Jour)
+
+  const dragStartYRef = useRef(0);
+  const dragStartHeightRef = useRef(420);
+  const hasFittedRef = useRef(false);
+  const prevSymbolsRef = useRef('');
+
+  // 1. Détection stricte de l'intersection : Top 50 Mois ∩ Top 50 Semaine ∩ Top 50 Jour
+  // "ya3ni matalan ila kan token f top 50 nta3 chhar omakynch f top 50 nta3 24h matbaynoch"
+  const tripleAlignedTokens = useMemo(() => {
+    const listMonth = (chartUniverse === 'MONTH_PEAK' ? tripleAnalysis?.listMaxPointsMonth : tripleAnalysis?.listMonth) || [];
+    const listWeek = tripleAnalysis?.listWeek || [];
+    const listDay = tripleAnalysis?.listDay || [];
+
+    const weekMap = new Map();
+    listWeek.slice(0, 50).forEach((t, i) => weekMap.set(t.cleanSymbol, i + 1));
+
+    const dayMap = new Map();
+    listDay.slice(0, 50).forEach((t, i) => dayMap.set(t.cleanSymbol, i + 1));
+
+    return listMonth.slice(0, 50).filter(t => {
+      const sym = t.cleanSymbol;
+      if (!sym || sym === 'BTC' || sym === 'ETH') return false;
+      return weekMap.has(sym) && dayMap.has(sym);
+    }).map((t, idx) => {
+      const sym = t.cleanSymbol;
+      const rankMonth = t.rankMonth || idx + 1;
+      const rankWeek = weekMap.get(sym);
+      const rankDay = dayMap.get(sym);
+      const livePrice = (livePricesRef?.current?.[sym]) || t.price;
+      const p24 = typeof t.p1d === 'number' ? t.p1d : 0;
+      const p1w = typeof t.p1w === 'number' ? t.p1w : 0;
+      const p30d = typeof t.p30d === 'number' ? t.p30d : 0;
+      const fixedColor = getTokenFixedColor(sym);
+
+      return {
+        ...t,
+        sym,
+        rankMonth,
+        rankWeek,
+        rankDay,
+        livePrice,
+        p24,
+        p1w,
+        p30d,
+        fixedColor
+      };
+    });
+  }, [tripleAnalysis, chartUniverse, livePricesRef]);
+
+  // Synchronisation avec le token sélectionné en externe
+  useEffect(() => {
+    if (selectedSoloToken && selectedSoloToken.cleanSymbol) {
+      const exists = tripleAlignedTokens.some(t => t.cleanSymbol === selectedSoloToken.cleanSymbol);
+      if (exists) {
+        setHighlightedToken(selectedSoloToken.cleanSymbol);
+      }
+    }
+  }, [selectedSoloToken, tripleAlignedTokens]);
+
+  const effectiveHeight = isFullscreen ? (typeof window !== 'undefined' ? window.innerHeight - 150 : 620) : chartHeight;
+
+  // Zoom confortable avec marge droite native
+  const applyComfortableZoom = (targetChart, offset = 35) => {
+    if (!targetChart) return;
+    try {
+      targetChart.timeScale().applyOptions({
+        rightOffset: offset,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      });
+      targetChart.timeScale().fitContent();
+    } catch (_) {}
+  };
+
+  const handleResetZoom = () => {
+    applyComfortableZoom(chartRef.current, 35);
+  };
+
+  // Fermer le plein écran avec la touche Échap
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isFullscreen) setIsFullscreen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
+  // ↕️ Redimensionnement interactif de la hauteur
+  const handleMouseDownHeight = (e) => {
+    setIsDraggingHeight(true);
+    dragStartYRef.current = e.clientY;
+    dragStartHeightRef.current = chartHeight;
+    document.body.style.cursor = 'row-resize';
+    document.body.style.userSelect = 'none';
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingHeight) return;
+      const delta = e.clientY - dragStartYRef.current;
+      const newH = Math.max(300, Math.min(850, dragStartHeightRef.current + delta));
+      setChartHeight(newH);
+      if (chartRef.current) chartRef.current.applyOptions({ height: newH });
+    };
+
+    const handleMouseUp = () => {
+      if (isDraggingHeight) {
+        setIsDraggingHeight(false);
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = 'auto';
+      }
+    };
+
+    if (isDraggingHeight) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDraggingHeight]);
+
+  // Initialisation du canvas Lightweight Charts
+  useEffect(() => {
+    if (!containerRef.current) return;
+    if (chartRef.current) {
+      try { chartRef.current.remove(); } catch (_) {}
+      chartRef.current = null;
+      seriesMapRef.current = {};
+    }
+
+    const container = containerRef.current;
+    const chart = createChart(container, {
+      width: container.clientWidth || 800,
+      height: effectiveHeight,
+      layout: {
+        background: { color: '#040711' },
+        textColor: '#64748b',
+        fontSize: 11,
+        fontFamily: 'JetBrains Mono, monospace'
+      },
+      grid: {
+        vertLines: { color: 'rgba(255, 255, 255, 0.03)' },
+        horzLines: { color: 'rgba(255, 255, 255, 0.03)' }
+      },
+      rightPriceScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        scaleMargins: { top: 0.12, bottom: 0.10 },
+        autoScale: true,
+      },
+      timeScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        timeVisible: true,
+        secondsVisible: false,
+        rightOffset: 35,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      },
+      handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+      handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: { time: true, price: true }, mouseWheel: true, pinch: true },
+      crosshair: {
+        mode: 0,
+        vertLine: { color: 'rgba(16, 185, 129, 0.25)', width: 1, style: 2 },
+        horzLine: { color: 'rgba(16, 185, 129, 0.25)', width: 1, style: 2 },
+      }
+    });
+
+    zeroLineRef.current = chart.addLineSeries({
+      color: 'rgba(148, 163, 184, 0.40)',
+      lineWidth: 1,
+      lineStyle: 2,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '0.00% (BASELINE)'
+    });
+
+    // EMA 20 Mois
+    refEmaMonthRef.current = chart.addLineSeries({
+      color: '#ec4899',
+      lineWidth: 2.5,
+      lineStyle: 0,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '👑 EMA 20 MOIS'
+    });
+
+    // EMA 20 Semaine
+    refEmaWeekRef.current = chart.addLineSeries({
+      color: '#6366f1',
+      lineWidth: 2,
+      lineStyle: 0,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '🌐 EMA 20 SEMAINE'
+    });
+
+    // EMA 20 Jour
+    refEmaDayRef.current = chart.addLineSeries({
+      color: '#00ffff',
+      lineWidth: 2,
+      lineStyle: 0,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '🔵 EMA 20 JOUR'
+    });
+
+    chartRef.current = chart;
+
+    const handleResize = () => {
+      if (containerRef.current && chartRef.current) {
+        chartRef.current.applyOptions({
+          width: containerRef.current.clientWidth,
+          height: effectiveHeight
+        });
+      }
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (chartRef.current) {
+        try { chartRef.current.remove(); } catch (_) {}
+        chartRef.current = null;
+        seriesMapRef.current = {};
+      }
+    };
+  }, [effectiveHeight]);
+
+  // Mise à jour des séries et des courbes
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart) return;
+
+    const currentSyms = new Set(tripleAlignedTokens.map(t => t.cleanSymbol));
+    Object.keys(seriesMapRef.current).forEach(sym => {
+      if (!currentSyms.has(sym)) {
+        try {
+          chart.removeSeries(seriesMapRef.current[sym]);
+          delete seriesMapRef.current[sym];
+        } catch (_) {}
+      }
+    });
+
+    let allTimestamps = [];
+
+    tripleAlignedTokens.forEach((item, idx) => {
+      const sym = item.cleanSymbol;
+      const fixedColor = item.fixedColor;
+      const isSolo = highlightedToken === sym || selectedSoloToken?.cleanSymbol === sym;
+
+      let lineColor = fixedColor;
+      let lineWidth = 2.5;
+      let lastValVisible = true;
+
+      if (highlightedToken) {
+        if (isSolo) {
+          lineColor = fixedColor;
+          lineWidth = 4.2;
+          lastValVisible = true;
+        } else {
+          lineColor = 'rgba(148, 163, 184, 0.14)';
+          lineWidth = 1.0;
+          lastValVisible = false;
+        }
+      }
+
+      const perfTag = horizonMode === '24h' 
+        ? `${item.p24 >= 0 ? '+' : ''}${item.p24?.toFixed(1)}%` 
+        : horizonMode === '7d' 
+          ? `${item.p1w >= 0 ? '+' : ''}${item.p1w?.toFixed(1)}%` 
+          : `${item.p30d >= 0 ? '+' : ''}${item.p30d?.toFixed(1)}%`;
+
+      const title = `#M${item.rankMonth} #W${item.rankWeek} #D${item.rankDay} ${sym} (${perfTag})`;
+
+      let s = seriesMapRef.current[sym];
+      if (!s) {
+        s = chart.addLineSeries({
+          color: lineColor,
+          lineWidth: lineWidth,
+          lineStyle: 0,
+          title: isSolo || !highlightedToken ? title : '',
+          priceLineVisible: false,
+          lastValueVisible: lastValVisible,
+        });
+        seriesMapRef.current[sym] = s;
+      } else {
+        s.applyOptions({
+          color: lineColor,
+          lineWidth: lineWidth,
+          title: isSolo || !highlightedToken ? title : '',
+          lastValueVisible: lastValVisible
+        });
+      }
+
+      // Extraction de la courbe selon l'horizon choisi
+      let curve = [];
+      if (horizonMode === '24h') {
+        curve = item.chartCurve24h || chartProcessedData?.tokenCurvesMap?.[sym] || [];
+      } else if (horizonMode === '7d') {
+        // Fallback 7d klines
+        const klines = item.rawKlines || [];
+        const tLen = klines.length;
+        const offset = Math.min(671, tLen - 1);
+        const baseP = tLen > 0 ? parseFloat(klines[tLen - 1 - offset][4]) : 0;
+        if (baseP > 0) {
+          curve = [];
+          for (let b = tLen - 1 - offset; b < tLen; b += 4) {
+            const tTime = Math.floor(parseInt(klines[b][0]) / 1000);
+            const closeP = parseFloat(klines[b][4]);
+            const val = ((closeP - baseP) / baseP) * 100;
+            curve.push({ time: tTime, value: parseFloat(val.toFixed(2)) });
+          }
+        }
+      } else {
+        // 30d (Mois)
+        curve = chartProcessedData?.tokenMonthCurvesMap?.[sym] || [];
+      }
+
+      if (curve && curve.length > 0) {
+        s.setData(curve);
+        if (curve.length > allTimestamps.length) {
+          allTimestamps = curve.map(pt => pt.time);
+        }
+      }
+    });
+
+    // Baseline 0%
+    if (zeroLineRef.current && allTimestamps.length > 0) {
+      zeroLineRef.current.setData(allTimestamps.map(t => ({ time: t, value: 0 })));
+    }
+
+    // Affichage des EMAs correspondantes
+    if (refEmaMonthRef.current) {
+      const dataM = chartProcessedData?.dynamicEma20MonthData || [];
+      if (dataM.length > 0 && horizonMode === '30d') {
+        refEmaMonthRef.current.setData(dataM);
+      } else {
+        refEmaMonthRef.current.setData([]);
+      }
+    }
+    if (refEmaWeekRef.current) {
+      const dataW = chartProcessedData?.dynamicEma20WeekData || [];
+      if (dataW.length > 0 && (horizonMode === '7d' || horizonMode === '30d')) {
+        refEmaWeekRef.current.setData(dataW);
+      } else {
+        refEmaWeekRef.current.setData([]);
+      }
+    }
+    if (refEmaDayRef.current) {
+      const dataD = chartProcessedData?.dynamicEma20DayData || [];
+      if (dataD.length > 0 && (horizonMode === '24h' || horizonMode === '30d')) {
+        refEmaDayRef.current.setData(dataD);
+      } else {
+        refEmaDayRef.current.setData([]);
+      }
+    }
+
+    const currentKey = tripleAlignedTokens.map(t => t.cleanSymbol).sort().join(',') + '_' + horizonMode;
+    const shouldFit = !hasFittedRef.current || (prevSymbolsRef.current !== '' && prevSymbolsRef.current !== currentKey);
+    if (shouldFit && allTimestamps.length > 0) {
+      applyComfortableZoom(chart, 35);
+      hasFittedRef.current = true;
+    }
+    prevSymbolsRef.current = currentKey;
+  }, [tripleAlignedTokens, horizonMode, highlightedToken, selectedSoloToken, chartProcessedData]);
+
+  // Moteur Live 500ms
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || !tripleAlignedTokens || tripleAlignedTokens.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      const nowSec = Math.floor(Date.now() / 1000);
+      const activeCandleTime = Math.floor(nowSec / 900) * 900;
+
+      tripleAlignedTokens.forEach(item => {
+        const sym = item.cleanSymbol;
+        const livePrice = livePricesRef?.current?.[sym];
+        if (!livePrice || livePrice <= 0) return;
+
+        const s = seriesMapRef.current[sym];
+        if (!s) return;
+
+        let basePrice = 0;
+        let lastT = activeCandleTime;
+
+        if (horizonMode === '24h') {
+          const klines = item.rawKlines || [];
+          const tLen = klines.length;
+          const offset = Math.min(95, tLen - 1);
+          basePrice = tLen > 0 ? parseFloat(klines[tLen - 1 - offset][4]) : 0;
+          const c24 = item.chartCurve24h;
+          if (c24 && c24.length > 0) lastT = c24[c24.length - 1].time;
+        } else {
+          basePrice = chartProcessedData?.tokenMonthBasePricesMap?.[sym] || item.price;
+          const c30 = chartProcessedData?.tokenMonthCurvesMap?.[sym];
+          if (c30 && c30.length > 0) lastT = c30[c30.length - 1].time;
+        }
+
+        if (basePrice > 0) {
+          const liveVal = parseFloat((((livePrice - basePrice) / basePrice) * 100).toFixed(2));
+          try {
+            s.update({ time: Math.max(lastT, activeCandleTime), value: liveVal });
+          } catch (_) {}
+        }
+      });
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, [tripleAlignedTokens, horizonMode, chartProcessedData, livePricesRef]);
+
+  const handleToggleSolo = (sym) => {
+    if (highlightedToken === sym) {
+      setHighlightedToken(null);
+      if (setSelectedSoloToken) setSelectedSoloToken(null);
+    } else {
+      setHighlightedToken(sym);
+      const full = tripleAlignedTokens.find(t => t.cleanSymbol === sym);
+      if (setSelectedSoloToken && full) setSelectedSoloToken(full);
+    }
+  };
+
+  return (
+    <div style={{
+      background: '#040711',
+      border: '1px solid rgba(16, 185, 129, 0.35)',
+      borderRadius: '12px',
+      padding: isFullscreen ? '16px' : '14px',
+      marginBottom: '20px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.55)',
+      position: isFullscreen ? 'fixed' : 'relative',
+      top: isFullscreen ? 0 : 'auto',
+      left: isFullscreen ? 0 : 'auto',
+      right: isFullscreen ? 0 : 'auto',
+      bottom: isFullscreen ? 0 : 'auto',
+      width: isFullscreen ? '100vw' : '100%',
+      height: isFullscreen ? '100vh' : 'auto',
+      zIndex: isFullscreen ? 9999 : 20,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px',
+      boxSizing: 'border-box'
+    }}>
+      {/* 👑 HEADER PRINCIPAL DU MODULE TRIPLE ALIGNÉ */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '10px',
+        borderBottom: '1px solid rgba(16, 185, 129, 0.20)',
+        paddingBottom: '10px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.2))',
+            border: '1px solid rgba(16, 185, 129, 0.5)',
+            borderRadius: '8px',
+            padding: '6px 8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Zap size={18} style={{ color: '#10b981' }} />
+          </div>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                color: '#f8fafc',
+                fontWeight: '900',
+                fontSize: '0.92rem',
+                letterSpacing: '0.5px'
+              }}>
+                💎 TOKENS TRIPLE ALIGNÉS — TOP 50 MOIS ∩ SEMAINE ∩ JOUR
+              </span>
+              <span style={{
+                background: 'rgba(16, 185, 129, 0.18)',
+                color: '#34d399',
+                border: '1px solid rgba(16, 185, 129, 0.45)',
+                padding: '2px 7px',
+                borderRadius: '5px',
+                fontSize: '0.64rem',
+                fontWeight: '800'
+              }}>
+                {tripleAlignedTokens.length} QUALIFIÉS
+              </span>
+            </div>
+            <div style={{ color: '#94a3b8', fontSize: '0.70rem', marginTop: '2px' }}>
+              Seuls les tokens simultanément présents dans le <strong>Top 50 du Mois</strong>, le <strong>Top 50 de la Semaine</strong> et le <strong>Top 50 des 24H</strong>.
+            </div>
+          </div>
+        </div>
+
+        {/* CONTRÔLES HORIZON, ZOOM, PLEIN ÉCRAN */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Horizon Switcher */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '2px 4px',
+            borderRadius: '6px'
+          }}>
+            {[
+              { id: '30d', label: '📅 30J (MOIS)' },
+              { id: '7d', label: '🌐 7J (SEMAINE)' },
+              { id: '24h', label: '⚡ 24H (JOUR)' }
+            ].map(m => (
+              <button
+                key={m.id}
+                onClick={() => setHorizonMode(m.id)}
+                style={{
+                  background: horizonMode === m.id ? 'rgba(16, 185, 129, 0.25)' : 'transparent',
+                  color: horizonMode === m.id ? '#34d399' : '#94a3b8',
+                  border: horizonMode === m.id ? '1px solid #10b981' : '1px solid transparent',
+                  padding: '3px 7px',
+                  borderRadius: '4px',
+                  fontSize: '0.64rem',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleResetZoom}
+            style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              color: '#94a3b8',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 9px',
+              borderRadius: '5px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            <RotateCcw size={11} /> FIT ZOOM
+          </button>
+
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            style={{
+              background: isFullscreen ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+              color: isFullscreen ? '#34d399' : '#94a3b8',
+              border: isFullscreen ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 9px',
+              borderRadius: '5px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={11} /> : <Maximize2 size={11} />}
+            {isFullscreen ? 'QUITTER' : 'PLEIN ÉCRAN'}
+          </button>
+
+          {onClose && (
+            <button
+              onClick={onClose}
+              style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                color: '#64748b',
+                border: '1px solid rgba(255, 255, 255, 0.07)',
+                padding: '4px 8px',
+                borderRadius: '5px',
+                fontSize: '0.68rem',
+                cursor: 'pointer'
+              }}
+            >
+              <X size={12} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 🏷️ BANDEAU DES PILULES TOKENS QUALIFIÉS */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        flexWrap: 'wrap',
+        background: 'rgba(0, 0, 0, 0.35)',
+        padding: '6px 10px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <span style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: '800' }}>
+          FOCUS SOLO :
+        </span>
+
+        <button
+          onClick={() => {
+            setHighlightedToken(null);
+            if (setSelectedSoloToken) setSelectedSoloToken(null);
+          }}
+          style={{
+            background: !highlightedToken ? 'rgba(16, 185, 129, 0.22)' : 'rgba(255, 255, 255, 0.03)',
+            color: !highlightedToken ? '#34d399' : '#94a3b8',
+            border: !highlightedToken ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '3px 8px',
+            borderRadius: '5px',
+            fontSize: '0.68rem',
+            fontWeight: '700',
+            cursor: 'pointer'
+          }}
+        >
+          🌟 TOUS ({tripleAlignedTokens.length})
+        </button>
+
+        {tripleAlignedTokens.map(t => {
+          const isSelected = highlightedToken === t.cleanSymbol;
+          return (
+            <button
+              key={t.cleanSymbol}
+              onClick={() => handleToggleSolo(t.cleanSymbol)}
+              style={{
+                background: isSelected ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+                color: isSelected ? '#ffffff' : '#cbd5e1',
+                border: isSelected ? `1.5px solid ${t.fixedColor}` : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '3px 9px',
+                borderRadius: '5px',
+                fontSize: '0.68rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease',
+                opacity: (highlightedToken && !isSelected) ? 0.35 : 1
+              }}
+              title={`Rang Mois: #${t.rankMonth} | Rang Semaine: #${t.rankWeek} | Rang Jour: #${t.rankDay}`}
+            >
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: t.fixedColor,
+                boxShadow: isSelected ? `0 0 6px ${t.fixedColor}` : 'none'
+              }} />
+              <span>{t.cleanSymbol}</span>
+              <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>
+                (#M{t.rankMonth} #W{t.rankWeek} #D{t.rankDay})
+              </span>
+              <span style={{ color: t.p30d >= 0 ? '#34d399' : '#f87171', fontSize: '0.64rem' }}>
+                30j: {t.p30d >= 0 ? '+' : ''}{t.p30d?.toFixed(1)}%
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* CANVAS LIGHTWEIGHT CHARTS */}
+      <div
+        ref={containerRef}
+        style={{
+          width: '100%',
+          height: `${effectiveHeight}px`,
+          background: '#040711',
+          borderRadius: '8px',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          overflow: 'hidden'
+        }}
+      />
+
+      {/* ↕️ POIGNÉE HAUTEUR */}
+      {!isFullscreen && (
+        <div
+          onMouseDown={handleMouseDownHeight}
+          style={{
+            height: '14px',
+            cursor: 'row-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: isDraggingHeight ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.02)',
+            borderRadius: '4px',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            gap: '8px',
+            userSelect: 'none'
+          }}
+          title="Glisser vers le haut ou le bas pour ajuster la hauteur"
+        >
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#10b981' : '#475569', borderRadius: '1px' }} />
+          <span style={{ color: isDraggingHeight ? '#10b981' : '#64748b', fontSize: '0.64rem', fontWeight: '700' }}>
+            ↕ HAUTEUR ({chartHeight}px)
+          </span>
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#10b981' : '#475569', borderRadius: '1px' }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ========================================================================================
+// 🛡️ 2. COMPOSANT DÉDIÉ : TOP 50 DU MOIS — TOKENS SOUS LE MUR DE REJET (JAMAIS FRANCHI)
+// ========================================================================================
+export function MonthlyTop50UnderRejectionWallChart({
+  tokensData = [],
+  tripleAnalysis = {},
+  chartProcessedData = {},
+  chartUniverse = 'MONTH_SCORE',
+  selectedSoloToken,
+  setSelectedSoloToken,
+  onClose,
+  livePricesRef
+}) {
+  const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const seriesMapRef = useRef({});
+  const zeroLineRef = useRef(null);
+  const rejectionWallSeriesRef = useRef(null);
+
+  const [chartHeight, setChartHeight] = useState(420);
+  const [isDraggingHeight, setIsDraggingHeight] = useState(false);
+  const [highlightedToken, setHighlightedToken] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [wallMode, setWallMode] = useState('MACRO'); // 'MACRO' (Résistance Macro) | 'P75' (Percentile 75 Sommets)
+
+  const dragStartYRef = useRef(0);
+  const dragStartHeightRef = useRef(420);
+  const hasFittedRef = useRef(false);
+  const prevSymbolsRef = useRef('');
+
+  // 1. Détermination précise du Mur de Rejet du mois
+  const macroResLvl = useMemo(() => {
+    return tripleAnalysis?.dynamicMonthlyRefLevel != null ? tripleAnalysis.dynamicMonthlyRefLevel : 18.5;
+  }, [tripleAnalysis]);
+
+  const listMonth = useMemo(() => {
+    return (chartUniverse === 'MONTH_PEAK' ? tripleAnalysis?.listMaxPointsMonth : tripleAnalysis?.listMonth) || [];
+  }, [chartUniverse, tripleAnalysis]);
+
+  const tokenMonthCurvesMap = useMemo(() => {
+    return chartProcessedData?.tokenMonthCurvesMap || {};
+  }, [chartProcessedData]);
+
+  // Calcul statistique du P75 des sommets atteints au cours du mois
+  const p75WallLvl = useMemo(() => {
+    const peaks = listMonth.map(t => {
+      const curve = tokenMonthCurvesMap[t.cleanSymbol] || [];
+      let m = -Infinity;
+      curve.forEach(pt => { if (pt.value > m) m = pt.value; });
+      if (m === -Infinity) m = t.maxPointsMonth || t.p30d || 0;
+      return m;
+    }).filter(v => v > 0).sort((a, b) => a - b);
+
+    if (peaks.length === 0) return macroResLvl;
+    const idx = Math.floor(peaks.length * 0.75);
+    return parseFloat(peaks[Math.min(peaks.length - 1, idx)].toFixed(2));
+  }, [listMonth, tokenMonthCurvesMap, macroResLvl]);
+
+  const effectiveWallLvl = wallMode === 'P75' ? p75WallLvl : macroResLvl;
+
+  // 2. RÈGLE STRICTE UTILISATEUR :
+  // "chart kaywari lina les tokens li kayniiin f top 50 nta3 chhar , walakin ma3amrhom ma fato le mure de rejet nta3 chhar"
+  // Ne conserver QUE les tokens dont AUCUN point sur les 30 jours n'a dépassé le mur de rejet
+  const underWallTokens = useMemo(() => {
+    return listMonth.slice(0, 50).filter(t => {
+      const sym = t.cleanSymbol;
+      if (!sym || sym === 'BTC' || sym === 'ETH') return false;
+      const curve = tokenMonthCurvesMap[sym] || [];
+      if (curve.length === 0) return false;
+
+      // Vérification stricte : aucun point ne dépasse le mur
+      let hasExceeded = false;
+      for (let i = 0; i < curve.length; i++) {
+        if (curve[i].value > effectiveWallLvl) {
+          hasExceeded = true;
+          break;
+        }
+      }
+      return !hasExceeded;
+    }).map((t, idx) => {
+      const sym = t.cleanSymbol;
+      const curve = tokenMonthCurvesMap[sym] || [];
+      let maxPast = -Infinity;
+      curve.forEach(pt => { if (pt.value > maxPast) maxPast = pt.value; });
+
+      const livePrice = (livePricesRef?.current?.[sym]) || t.price;
+      const basePrice = chartProcessedData?.tokenMonthBasePricesMap?.[sym] || t.price;
+      const liveVal = basePrice > 0 ? parseFloat((((livePrice - basePrice) / basePrice) * 100).toFixed(2)) : (t.p30d || 0);
+      const distToWall = parseFloat((effectiveWallLvl - liveVal).toFixed(2));
+      const fixedColor = getTokenFixedColor(sym);
+
+      return {
+        ...t,
+        sym,
+        rankMonth: t.rankMonth || idx + 1,
+        curve,
+        maxPast: maxPast > -Infinity ? parseFloat(maxPast.toFixed(2)) : liveVal,
+        liveVal,
+        distToWall,
+        fixedColor
+      };
+    }).sort((a, b) => b.liveVal - a.liveVal);
+  }, [listMonth, tokenMonthCurvesMap, effectiveWallLvl, livePricesRef, chartProcessedData]);
+
+  // Synchronisation avec selectedSoloToken externe
+  useEffect(() => {
+    if (selectedSoloToken && selectedSoloToken.cleanSymbol) {
+      const exists = underWallTokens.some(t => t.cleanSymbol === selectedSoloToken.cleanSymbol);
+      if (exists) {
+        setHighlightedToken(selectedSoloToken.cleanSymbol);
+      }
+    }
+  }, [selectedSoloToken, underWallTokens]);
+
+  const effectiveHeight = isFullscreen ? (typeof window !== 'undefined' ? window.innerHeight - 150 : 620) : chartHeight;
+
+  const applyComfortableZoom = (targetChart, offset = 35) => {
+    if (!targetChart) return;
+    try {
+      targetChart.timeScale().applyOptions({
+        rightOffset: offset,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      });
+      targetChart.timeScale().fitContent();
+    } catch (_) {}
+  };
+
+  const handleResetZoom = () => {
+    applyComfortableZoom(chartRef.current, 35);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isFullscreen) setIsFullscreen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
+  // ↕️ Redimensionnement hauteur
+  const handleMouseDownHeight = (e) => {
+    setIsDraggingHeight(true);
+    dragStartYRef.current = e.clientY;
+    dragStartHeightRef.current = chartHeight;
+    document.body.style.cursor = 'row-resize';
+    document.body.style.userSelect = 'none';
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingHeight) return;
+      const delta = e.clientY - dragStartYRef.current;
+      const newH = Math.max(300, Math.min(850, dragStartHeightRef.current + delta));
+      setChartHeight(newH);
+      if (chartRef.current) chartRef.current.applyOptions({ height: newH });
+    };
+
+    const handleMouseUp = () => {
+      if (isDraggingHeight) {
+        setIsDraggingHeight(false);
+        document.body.style.cursor = 'default';
+        document.body.style.userSelect = 'auto';
+      }
+    };
+
+    if (isDraggingHeight) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDraggingHeight]);
+
+  // Initialisation du canvas Lightweight Charts
+  useEffect(() => {
+    if (!containerRef.current) return;
+    if (chartRef.current) {
+      try { chartRef.current.remove(); } catch (_) {}
+      chartRef.current = null;
+      seriesMapRef.current = {};
+    }
+
+    const container = containerRef.current;
+    const chart = createChart(container, {
+      width: container.clientWidth || 800,
+      height: effectiveHeight,
+      layout: {
+        background: { color: '#040711' },
+        textColor: '#64748b',
+        fontSize: 11,
+        fontFamily: 'JetBrains Mono, monospace'
+      },
+      grid: {
+        vertLines: { color: 'rgba(255, 255, 255, 0.03)' },
+        horzLines: { color: 'rgba(255, 255, 255, 0.03)' }
+      },
+      rightPriceScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        scaleMargins: { top: 0.12, bottom: 0.10 },
+        autoScale: true,
+      },
+      timeScale: {
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        timeVisible: true,
+        secondsVisible: false,
+        rightOffset: 35,
+        fixRightEdge: false,
+        fixLeftEdge: false
+      },
+      handleScroll: { mouseWheel: true, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: true },
+      handleScale: { axisPressedMouseMove: { time: true, price: true }, axisDoubleClickReset: { time: true, price: true }, mouseWheel: true, pinch: true },
+      crosshair: {
+        mode: 0,
+        vertLine: { color: 'rgba(244, 63, 94, 0.25)', width: 1, style: 2 },
+        horzLine: { color: 'rgba(244, 63, 94, 0.25)', width: 1, style: 2 },
+      }
+    });
+
+    zeroLineRef.current = chart.addLineSeries({
+      color: 'rgba(148, 163, 184, 0.40)',
+      lineWidth: 1,
+      lineStyle: 2,
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: '0.00% (BASELINE)'
+    });
+
+    // ⛔ MUR DE REJET DU MOIS (Ligne en pointillés rouge/rose fluo)
+    rejectionWallSeriesRef.current = chart.addLineSeries({
+      color: '#ff0055',
+      lineWidth: 3.5,
+      lineStyle: 2, // Dashed
+      priceLineVisible: false,
+      lastValueVisible: true,
+      title: `⛔ MUR DE REJET (+${effectiveWallLvl} pts)`
+    });
+
+    chartRef.current = chart;
+
+    const handleResize = () => {
+      if (containerRef.current && chartRef.current) {
+        chartRef.current.applyOptions({
+          width: containerRef.current.clientWidth,
+          height: effectiveHeight
+        });
+      }
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (chartRef.current) {
+        try { chartRef.current.remove(); } catch (_) {}
+        chartRef.current = null;
+        seriesMapRef.current = {};
+      }
+    };
+  }, [effectiveHeight]);
+
+  // Mise à jour des séries et des courbes
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart) return;
+
+    const currentSyms = new Set(underWallTokens.map(t => t.cleanSymbol));
+    Object.keys(seriesMapRef.current).forEach(sym => {
+      if (!currentSyms.has(sym)) {
+        try {
+          chart.removeSeries(seriesMapRef.current[sym]);
+          delete seriesMapRef.current[sym];
+        } catch (_) {}
+      }
+    });
+
+    let allTimestamps = [];
+
+    underWallTokens.forEach((item, idx) => {
+      const sym = item.cleanSymbol;
+      const fixedColor = item.fixedColor;
+      const isSolo = highlightedToken === sym || selectedSoloToken?.cleanSymbol === sym;
+
+      let lineColor = fixedColor;
+      let lineWidth = 2.5;
+      let lastValVisible = true;
+
+      if (highlightedToken) {
+        if (isSolo) {
+          lineColor = fixedColor;
+          lineWidth = 4.2;
+          lastValVisible = true;
+        } else {
+          lineColor = 'rgba(148, 163, 184, 0.14)';
+          lineWidth = 1.0;
+          lastValVisible = false;
+        }
+      }
+
+      const title = `#${item.rankMonth} ${sym} (Actuel: +${item.liveVal}% | Marge: +${item.distToWall} pts)`;
+
+      let s = seriesMapRef.current[sym];
+      if (!s) {
+        s = chart.addLineSeries({
+          color: lineColor,
+          lineWidth: lineWidth,
+          lineStyle: 0,
+          title: isSolo || !highlightedToken ? title : '',
+          priceLineVisible: false,
+          lastValueVisible: lastValVisible,
+        });
+        seriesMapRef.current[sym] = s;
+      } else {
+        s.applyOptions({
+          color: lineColor,
+          lineWidth: lineWidth,
+          title: isSolo || !highlightedToken ? title : '',
+          lastValueVisible: lastValVisible
+        });
+      }
+
+      const curve = item.curve || [];
+      if (curve && curve.length > 0) {
+        s.setData(curve);
+        if (curve.length > allTimestamps.length) {
+          allTimestamps = curve.map(pt => pt.time);
+        }
+      }
+    });
+
+    // Baseline 0% et Mur de Rejet
+    if (zeroLineRef.current && allTimestamps.length > 0) {
+      zeroLineRef.current.setData(allTimestamps.map(t => ({ time: t, value: 0 })));
+    }
+    if (rejectionWallSeriesRef.current && allTimestamps.length > 0) {
+      rejectionWallSeriesRef.current.applyOptions({
+        title: `⛔ MUR DE REJET (+${effectiveWallLvl} pts)`
+      });
+      rejectionWallSeriesRef.current.setData(allTimestamps.map(t => ({ time: t, value: effectiveWallLvl })));
+    }
+
+    const currentKey = underWallTokens.map(t => t.cleanSymbol).sort().join(',') + '_' + effectiveWallLvl;
+    const shouldFit = !hasFittedRef.current || (prevSymbolsRef.current !== '' && prevSymbolsRef.current !== currentKey);
+    if (shouldFit && allTimestamps.length > 0) {
+      applyComfortableZoom(chart, 35);
+      hasFittedRef.current = true;
+    }
+    prevSymbolsRef.current = currentKey;
+  }, [underWallTokens, effectiveWallLvl, highlightedToken, selectedSoloToken]);
+
+  // Moteur Live 500ms
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || !underWallTokens || underWallTokens.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      const nowSec = Math.floor(Date.now() / 1000);
+      const activeCandleTime = Math.floor(nowSec / 900) * 900;
+
+      underWallTokens.forEach(item => {
+        const sym = item.cleanSymbol;
+        const livePrice = livePricesRef?.current?.[sym];
+        if (!livePrice || livePrice <= 0) return;
+
+        const s = seriesMapRef.current[sym];
+        if (!s) return;
+
+        const basePrice = chartProcessedData?.tokenMonthBasePricesMap?.[sym] || item.price;
+        if (basePrice > 0) {
+          const liveVal = parseFloat((((livePrice - basePrice) / basePrice) * 100).toFixed(2));
+          const c30 = item.curve;
+          const lastT = (c30 && c30.length > 0) ? c30[c30.length - 1].time : activeCandleTime;
+          try {
+            s.update({ time: Math.max(lastT, activeCandleTime), value: liveVal });
+          } catch (_) {}
+        }
+      });
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, [underWallTokens, chartProcessedData, livePricesRef]);
+
+  const handleToggleSolo = (sym) => {
+    if (highlightedToken === sym) {
+      setHighlightedToken(null);
+      if (setSelectedSoloToken) setSelectedSoloToken(null);
+    } else {
+      setHighlightedToken(sym);
+      const full = underWallTokens.find(t => t.cleanSymbol === sym);
+      if (setSelectedSoloToken && full) setSelectedSoloToken(full);
+    }
+  };
+
+  return (
+    <div style={{
+      background: '#040711',
+      border: '1px solid rgba(244, 63, 94, 0.35)',
+      borderRadius: '12px',
+      padding: isFullscreen ? '16px' : '14px',
+      marginBottom: '20px',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.55)',
+      position: isFullscreen ? 'fixed' : 'relative',
+      top: isFullscreen ? 0 : 'auto',
+      left: isFullscreen ? 0 : 'auto',
+      right: isFullscreen ? 0 : 'auto',
+      bottom: isFullscreen ? 0 : 'auto',
+      width: isFullscreen ? '100vw' : '100%',
+      height: isFullscreen ? '100vh' : 'auto',
+      zIndex: isFullscreen ? 9999 : 20,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px',
+      boxSizing: 'border-box'
+    }}>
+      {/* 👑 HEADER PRINCIPAL DU MODULE SOUS LE MUR DE REJET */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '10px',
+        borderBottom: '1px solid rgba(244, 63, 94, 0.20)',
+        paddingBottom: '10px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(244, 63, 94, 0.3), rgba(239, 68, 68, 0.2))',
+            border: '1px solid rgba(244, 63, 94, 0.5)',
+            borderRadius: '8px',
+            padding: '6px 8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <ShieldAlert size={18} style={{ color: '#f43f5e' }} />
+          </div>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                color: '#f8fafc',
+                fontWeight: '900',
+                fontSize: '0.92rem',
+                letterSpacing: '0.5px'
+              }}>
+                🛡️ TOP 50 MOIS — COMPRESSION SOUS LE MUR DE REJET
+              </span>
+              <span style={{
+                background: 'rgba(244, 63, 94, 0.18)',
+                color: '#fb7185',
+                border: '1px solid rgba(244, 63, 94, 0.45)',
+                padding: '2px 7px',
+                borderRadius: '5px',
+                fontSize: '0.64rem',
+                fontWeight: '800'
+              }}>
+                {underWallTokens.length} TOKENS SOUS LE PLAFOND (+{effectiveWallLvl} pts)
+              </span>
+            </div>
+            <div style={{ color: '#94a3b8', fontSize: '0.70rem', marginTop: '2px' }}>
+              Tokens du <strong>Top 50 du Mois</strong> n'ayant <strong>JAMAIS dépassé le Mur de Rejet</strong> au cours des 30 jours (accumulation / réserve d'explosion sous le plafond).
+            </div>
+          </div>
+        </div>
+
+        {/* CONTRÔLES : SÉLECTEUR DE MUR, ZOOM, PLEIN ÉCRAN */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Niveau du Mur de Rejet Switcher */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '2px 4px',
+            borderRadius: '6px'
+          }}>
+            <span style={{ fontSize: '0.62rem', color: '#64748b', fontWeight: '700', paddingRight: '2px' }}>
+              MUR :
+            </span>
+            {[
+              { id: 'MACRO', label: `⚡ RÉSISTANCE MACRO (+${macroResLvl}%)` },
+              { id: 'P75', label: `⛔ STATISTIQUE P75 (+${p75WallLvl}%)` }
+            ].map(m => (
+              <button
+                key={m.id}
+                onClick={() => setWallMode(m.id)}
+                style={{
+                  background: wallMode === m.id ? 'rgba(244, 63, 94, 0.25)' : 'transparent',
+                  color: wallMode === m.id ? '#fb7185' : '#94a3b8',
+                  border: wallMode === m.id ? '1px solid #f43f5e' : '1px solid transparent',
+                  padding: '3px 7px',
+                  borderRadius: '4px',
+                  fontSize: '0.64rem',
+                  fontWeight: '700',
+                  cursor: 'pointer'
+                }}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleResetZoom}
+            style={{
+              background: 'rgba(255, 255, 255, 0.03)',
+              color: '#94a3b8',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 9px',
+              borderRadius: '5px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            <RotateCcw size={11} /> FIT ZOOM
+          </button>
+
+          <button
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            style={{
+              background: isFullscreen ? 'rgba(244, 63, 94, 0.2)' : 'rgba(255, 255, 255, 0.03)',
+              color: isFullscreen ? '#fb7185' : '#94a3b8',
+              border: isFullscreen ? '1px solid #f43f5e' : '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '4px 9px',
+              borderRadius: '5px',
+              fontSize: '0.68rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            {isFullscreen ? <Minimize2 size={11} /> : <Maximize2 size={11} />}
+            {isFullscreen ? 'QUITTER' : 'PLEIN ÉCRAN'}
+          </button>
+
+          {onClose && (
+            <button
+              onClick={onClose}
+              style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                color: '#64748b',
+                border: '1px solid rgba(255, 255, 255, 0.07)',
+                padding: '4px 8px',
+                borderRadius: '5px',
+                fontSize: '0.68rem',
+                cursor: 'pointer'
+              }}
+            >
+              <X size={12} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 🏷️ BANDEAU DES PILULES TOKENS SOUS LE MUR */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        flexWrap: 'wrap',
+        background: 'rgba(0, 0, 0, 0.35)',
+        padding: '6px 10px',
+        borderRadius: '8px',
+        border: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <span style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: '800' }}>
+          FOCUS SOLO :
+        </span>
+
+        <button
+          onClick={() => {
+            setHighlightedToken(null);
+            if (setSelectedSoloToken) setSelectedSoloToken(null);
+          }}
+          style={{
+            background: !highlightedToken ? 'rgba(244, 63, 94, 0.22)' : 'rgba(255, 255, 255, 0.03)',
+            color: !highlightedToken ? '#fb7185' : '#94a3b8',
+            border: !highlightedToken ? '1px solid #f43f5e' : '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '3px 8px',
+            borderRadius: '5px',
+            fontSize: '0.68rem',
+            fontWeight: '700',
+            cursor: 'pointer'
+          }}
+        >
+          🌟 TOUS ({underWallTokens.length})
+        </button>
+
+        {underWallTokens.map(t => {
+          const isSelected = highlightedToken === t.cleanSymbol;
+          return (
+            <button
+              key={t.cleanSymbol}
+              onClick={() => handleToggleSolo(t.cleanSymbol)}
+              style={{
+                background: isSelected ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+                color: isSelected ? '#ffffff' : '#cbd5e1',
+                border: isSelected ? `1.5px solid ${t.fixedColor}` : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '3px 9px',
+                borderRadius: '5px',
+                fontSize: '0.68rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease',
+                opacity: (highlightedToken && !isSelected) ? 0.35 : 1
+              }}
+              title={`Rang: #${t.rankMonth} | Sommet Max: +${t.maxPast}% | Marge restante au Mur: +${t.distToWall} pts`}
+            >
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: t.fixedColor,
+                boxShadow: isSelected ? `0 0 6px ${t.fixedColor}` : 'none'
+              }} />
+              <span>#{t.rankMonth} {t.cleanSymbol}</span>
+              <span style={{ color: t.liveVal >= 0 ? '#34d399' : '#f87171', fontSize: '0.64rem' }}>
+                +{t.liveVal}%
+              </span>
+              <span style={{ color: '#f43f5e', fontSize: '0.62rem' }}>
+                (Marge: +{t.distToWall} pts)
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* CANVAS LIGHTWEIGHT CHARTS */}
+      <div
+        ref={containerRef}
+        style={{
+          width: '100%',
+          height: `${effectiveHeight}px`,
+          background: '#040711',
+          borderRadius: '8px',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          overflow: 'hidden'
+        }}
+      />
+
+      {/* ↕️ POIGNÉE HAUTEUR */}
+      {!isFullscreen && (
+        <div
+          onMouseDown={handleMouseDownHeight}
+          style={{
+            height: '14px',
+            cursor: 'row-resize',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: isDraggingHeight ? 'rgba(244, 63, 94, 0.2)' : 'rgba(255, 255, 255, 0.02)',
+            borderRadius: '4px',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            gap: '8px',
+            userSelect: 'none'
+          }}
+          title="Glisser vers le haut ou le bas pour ajuster la hauteur"
+        >
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#f43f5e' : '#475569', borderRadius: '1px' }} />
+          <span style={{ color: isDraggingHeight ? '#f43f5e' : '#64748b', fontSize: '0.64rem', fontWeight: '700' }}>
+            ↕ HAUTEUR ({chartHeight}px)
+          </span>
+          <div style={{ width: '28px', height: '2px', background: isDraggingHeight ? '#f43f5e' : '#475569', borderRadius: '1px' }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ========================================================================================
 // 🔬 COMPOSANT DÉDIÉ (STANDALONE) : RADAR DIAGNOSTIC BREAKOUT & SUPPLY (AIR POCKETS & VOL/MC)
 // ========================================================================================
 export function CorridorSupplyDiagnosticPanel({
@@ -6685,6 +8100,8 @@ export default function MonthlyTop50BenchmarkComparator() {
   const [showCorridorSniperChart, setShowCorridorSniperChart] = useState(true);
   const [showHhRadarChart, setShowHhRadarChart] = useState(true);
   const [showTop5DualChart, setShowTop5DualChart] = useState(true);
+  const [showTripleAlignedChart, setShowTripleAlignedChart] = useState(true);
+  const [showUnderRejectionChart, setShowUnderRejectionChart] = useState(true);
   const [showBreakoutDiagnostics, setShowBreakoutDiagnostics] = useState(true);
   const [showVolMcapChart, setShowVolMcapChart] = useState(false); // Désactivé par défaut
   const [showMainChart, setShowMainChart] = useState(true); // Afficher / Masquer la charte principale benchmark Top 50
@@ -9587,6 +11004,50 @@ export default function MonthlyTop50BenchmarkComparator() {
               {showTop5DualChart ? '👑 TOP 5 24H/30D (ON)' : '👑 TOP 5 24H/30D (OFF)'}
             </button>
 
+            {/* BOUTON TRIPLE ALIGNÉ TOP 50 (MOIS ∩ SEMAINE ∩ JOUR) */}
+            <button
+              onClick={() => setShowTripleAlignedChart(!showTripleAlignedChart)}
+              style={{
+                background: showTripleAlignedChart ? 'rgba(16, 185, 129, 0.18)' : 'rgba(255, 255, 255, 0.03)',
+                color: showTripleAlignedChart ? '#10b981' : '#64748b',
+                border: showTripleAlignedChart ? '1px solid rgba(16, 185, 129, 0.45)' : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '0.72rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Zap size={13} style={{ color: showTripleAlignedChart ? '#10b981' : '#64748b' }} />
+              {showTripleAlignedChart ? '💎 TRIPLE ALIGNÉ (ON)' : '💎 TRIPLE ALIGNÉ (OFF)'}
+            </button>
+
+            {/* BOUTON TOP 50 SOUS LE MUR DE REJET */}
+            <button
+              onClick={() => setShowUnderRejectionChart(!showUnderRejectionChart)}
+              style={{
+                background: showUnderRejectionChart ? 'rgba(244, 63, 94, 0.18)' : 'rgba(255, 255, 255, 0.03)',
+                color: showUnderRejectionChart ? '#f43f5e' : '#64748b',
+                border: showUnderRejectionChart ? '1px solid rgba(244, 63, 94, 0.45)' : '1px solid rgba(255, 255, 255, 0.08)',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '0.72rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <ShieldAlert size={13} style={{ color: showUnderRejectionChart ? '#f43f5e' : '#64748b' }} />
+              {showUnderRejectionChart ? '🛡️ SOUS MUR REJET (ON)' : '🛡️ SOUS MUR REJET (OFF)'}
+            </button>
+
             {/* BOUTON DIAGNOSTIC BREAKOUT */}
             <button
               onClick={() => setShowBreakoutDiagnostics(!showBreakoutDiagnostics)}
@@ -9701,6 +11162,34 @@ export default function MonthlyTop50BenchmarkComparator() {
             selectedSoloToken={selectedSoloToken}
             setSelectedSoloToken={setSelectedSoloToken}
             onClose={() => setShowTop5DualChart(false)}
+            livePricesRef={livePricesRef}
+          />
+        )}
+
+        {/* 💎 1.59 CHARTE DÉDIÉE : TRIPLE ALIGNÉS (TOP 50 MOIS ∩ TOP 50 SEMAINE ∩ TOP 50 JOUR) */}
+        {showTripleAlignedChart && (
+          <MonthlyTripleAlignedChart
+            tokensData={tokensData}
+            tripleAnalysis={tripleAnalysis}
+            chartProcessedData={chartProcessedData}
+            chartUniverse={chartUniverse}
+            selectedSoloToken={selectedSoloToken}
+            setSelectedSoloToken={setSelectedSoloToken}
+            onClose={() => setShowTripleAlignedChart(false)}
+            livePricesRef={livePricesRef}
+          />
+        )}
+
+        {/* 🛡️ 1.60 CHARTE DÉDIÉE : TOP 50 DU MOIS N'AYANT JAMAIS FRANCHI LE MUR DE REJET */}
+        {showUnderRejectionChart && (
+          <MonthlyTop50UnderRejectionWallChart
+            tokensData={tokensData}
+            tripleAnalysis={tripleAnalysis}
+            chartProcessedData={chartProcessedData}
+            chartUniverse={chartUniverse}
+            selectedSoloToken={selectedSoloToken}
+            setSelectedSoloToken={setSelectedSoloToken}
+            onClose={() => setShowUnderRejectionChart(false)}
             livePricesRef={livePricesRef}
           />
         )}
