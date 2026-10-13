@@ -19,7 +19,7 @@ function App() {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
   const [selectedToken, setSelectedToken] = useState('BTC');
-  const [viewMode, setViewMode] = useState('solcore'); // 'solcore' | 'single' | 'global' | 'weekend' | 'signals' | 'pingpong'
+  const [viewMode, setViewMode] = useState('monthly_top50_benchmark'); // 'monthly_top50_benchmark' | 'solcore' | 'single' | 'global' | 'weekend' | 'signals' | 'pingpong'
   
   // Solana Core Hub State
   const [solCoreData, setSolCoreData] = useState(null);
@@ -128,22 +128,36 @@ function App() {
   };
 
   useEffect(() => {
-    fetchCorrelation();
-    fetchSignals();
-    fetchSolCore();
-    fetchSolCharts(solChartsTf);
-    const interval = setInterval(() => {
+    if (viewMode === 'monthly_top50_benchmark') {
+      setError(null);
+      return;
+    }
+
+    if (viewMode === 'single' || viewMode === 'global') {
+      fetchCorrelation();
+    } else if (viewMode === 'signals') {
       fetchSignals();
+    } else if (viewMode === 'solcore') {
       fetchSolCore();
       fetchSolCharts(solChartsTf);
+    }
+
+    const interval = setInterval(() => {
+      if (viewMode === 'signals') fetchSignals();
+      if (viewMode === 'solcore') {
+        fetchSolCore();
+        fetchSolCharts(solChartsTf);
+      }
     }, 30000); // Poll every 30s
     return () => clearInterval(interval);
-  }, [matrixPeriod]);
+  }, [matrixPeriod, viewMode]);
 
   // Refetch charts on timeframe change
   useEffect(() => {
-    fetchSolCharts(solChartsTf);
-  }, [solChartsTf]);
+    if (viewMode === 'solcore') {
+      fetchSolCharts(solChartsTf);
+    }
+  }, [solChartsTf, viewMode]);
 
   // Fetch Chart Data for Modal
   useEffect(() => {
@@ -296,7 +310,19 @@ function App() {
       <div className="flex flex-col xl:flex-row justify-between items-center mb-8 bg-surface p-4 rounded-xl border border-gray-800 gap-4">
         <div className="flex items-center gap-2 bg-[#0a1519] p-1 rounded-lg border border-gray-800 flex-wrap">
           <button 
-            onClick={() => setViewMode('single')}
+            onClick={() => setViewMode('monthly_top50_benchmark')}
+            className={cn("flex items-center gap-2 px-4 py-2 rounded-md font-geist text-sm transition-all shadow-lg border font-bold", viewMode === 'monthly_top50_benchmark' ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/50" : "text-cyan-400/80 hover:text-cyan-300 hover:bg-cyan-500/10 border-cyan-500/30")}
+          >
+            <Scale size={16} /> Bybit Benchmark (Top 50)
+          </button>
+          <button 
+            onClick={() => setViewMode('solcore')}
+            className={cn("flex items-center gap-2 px-4 py-2 rounded-md font-geist text-sm transition-all shadow-lg border font-bold", viewMode === 'solcore' ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/50" : "text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 border-cyan-500/30")}
+          >
+            <FiActivity /> ⚡ Solana Core Hub
+          </button>
+          <button 
+            onClick={() => { setSelectedToken('BTC'); setViewMode('single'); }}
             className={cn("flex items-center gap-2 px-4 py-2 rounded-md font-geist text-sm transition-all", viewMode === 'single' ? "bg-accent/20 text-accent" : "text-gray-400 hover:text-white")}
           >
             <FiTarget /> Single Token
@@ -325,18 +351,6 @@ function App() {
           >
             <FiRepeat /> Ping-Pong Grid
           </button>
-          <button 
-            onClick={() => setViewMode('solcore')}
-            className={cn("flex items-center gap-2 px-4 py-2 rounded-md font-geist text-sm transition-all shadow-lg border font-bold", viewMode === 'solcore' ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/50" : "text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 border-cyan-500/30")}
-          >
-            <FiActivity /> ⚡ Solana Core Hub
-          </button>
-          <button 
-            onClick={() => setViewMode('monthly_top50_benchmark')}
-            className={cn("flex items-center gap-2 px-4 py-2 rounded-md font-geist text-sm transition-all shadow-lg border font-bold", viewMode === 'monthly_top50_benchmark' ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/50" : "text-cyan-400/80 hover:text-cyan-300 hover:bg-cyan-500/10 border-cyan-500/30")}
-          >
-            <Scale size={16} /> Bybit Benchmark (Top 50)
-          </button>
 
         </div>
         
@@ -353,7 +367,11 @@ function App() {
       </div>
 
       {/* Main Content */}
-      {viewMode === 'pingpong' ? (
+      {viewMode === 'monthly_top50_benchmark' ? (
+        <div className="animate-fade-in">
+          <MonthlyTop50BenchmarkComparator />
+        </div>
+      ) : viewMode === 'pingpong' ? (
         <div className="space-y-8 animate-fade-in">
           <div className="bg-emerald-900/10 border border-emerald-500/50 rounded-2xl p-6 flex items-start gap-4">
             <FiRepeat className="text-emerald-500 text-3xl shrink-0 mt-1" />
@@ -504,9 +522,21 @@ function App() {
           </div>
         </div>
       ) : error ? (
-        <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-6 rounded-xl">
-          <h3 className="font-bold mb-2">Error Loading Data</h3>
-          <p className="font-geist text-sm">{error}</p>
+        <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-6 rounded-xl space-y-3">
+          <h3 className="font-bold text-lg flex items-center gap-2">
+            <FiAlertTriangle className="text-red-400 text-xl" /> Erreur de chargement (Backend Local)
+          </h3>
+          <p className="font-geist text-sm text-gray-300 leading-relaxed">
+            {error === 'Network Error'
+              ? "Cette section utilise le serveur local (port 8000). Si vous consultez ce dashboard sur Vercel, utilisez l'onglet « Bybit Benchmark (Top 50) » qui fonctionne 100% en direct sans serveur local."
+              : error}
+          </p>
+          <button
+            onClick={() => { setError(null); setViewMode('monthly_top50_benchmark'); }}
+            className="mt-2 px-4 py-2 bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 rounded-lg text-xs font-bold hover:bg-cyan-500/30 transition-all flex items-center gap-2"
+          >
+            <Scale size={14} /> Aller au Bybit Benchmark (Top 50)
+          </button>
         </div>
 
       ) : viewMode === 'solcore' ? (
@@ -887,10 +917,6 @@ function App() {
               Impossible de charger les données Solana Core pour le moment.
             </div>
           )}
-        </div>
-      ) : viewMode === 'monthly_top50_benchmark' ? (
-        <div className="animate-fade-in">
-          <MonthlyTop50BenchmarkComparator />
         </div>
       ) : viewMode === 'weekend' && weekendData ? (
         <div className="space-y-8 animate-fade-in">
