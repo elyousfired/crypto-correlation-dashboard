@@ -4446,9 +4446,6 @@ export function MonthlyTripleAlignedChart({
   const chartRef = useRef(null);
   const seriesMapRef = useRef({});
   const zeroLineRef = useRef(null);
-  const refEmaMonthRef = useRef(null);
-  const refEmaWeekRef = useRef(null);
-  const refEmaDayRef = useRef(null);
 
   const [chartHeight, setChartHeight] = useState(420);
   const [isDraggingHeight, setIsDraggingHeight] = useState(false);
@@ -4456,10 +4453,15 @@ export function MonthlyTripleAlignedChart({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [horizonMode, setHorizonMode] = useState('30d'); // '30d' (Mois) | '7d' (Semaine) | '24h' (Jour)
 
+  const [klines60mMap, setKlines60mMap] = useState({});
+  const [isLoadingKlines, setIsLoadingKlines] = useState(false);
+
   const dragStartYRef = useRef(0);
   const dragStartHeightRef = useRef(420);
   const hasFittedRef = useRef(false);
   const prevSymbolsRef = useRef('');
+  const curveCacheRef = useRef({});
+  const basePriceRef = useRef({});
 
   // 1. Détection stricte de l'intersection : Top 50 Mois ∩ Top 50 Semaine ∩ Top 50 Jour
   // "ya3ni matalan ila kan token f top 50 nta3 chhar omakynch f top 50 nta3 24h matbaynoch"
@@ -4514,9 +4516,125 @@ export function MonthlyTripleAlignedChart({
     }
   }, [selectedSoloToken, tripleAlignedTokens]);
 
+  // Chargement des vraies klines 60m (720 bars = 30 jours réels glissants)
+  useEffect(() => {
+    if (!tripleAlignedTokens || tripleAlignedTokens.length === 0) return;
+    let isMounted = true;
+    const symbols = tripleAlignedTokens.map(t => t.cleanSymbol);
+
+    async function load60mKlines() {
+      setIsLoadingKlines(true);
+      try {
+        const results = await Promise.all(
+          symbols.map(async (sym) => {
+            const klines = await fetchBybitKlines(sym, '60', 720);
+            return { sym, klines };
+          })
+        );
+        if (!isMounted) return;
+        const newMap = {};
+        results.forEach(r => {
+          if (r.klines && r.klines.length > 0) {
+            newMap[r.sym] = r.klines;
+          }
+        });
+        setKlines60mMap(newMap);
+      } catch (_) {}
+      if (isMounted) setIsLoadingKlines(false);
+    }
+
+    load60mKlines();
+    return () => { isMounted = false; };
+  }, [tripleAlignedTokens]);
+
+  // Extraction d'une courbe continue et réaliste selon l'horizon choisi
+  const getCurve = useCallback((item) => {
+    const sym = item.cleanSymbol;
+    const klines60 = klines60mMap[sym];
+
+    if (horizonMode === '30d') {
+      if (klines60 && klines60.length >= 10) {
+        const baseP = parseFloat(klines60[0][4]) || parseFloat(klines60[0][1]);
+        if (baseP > 0) {
+          basePriceRef.current[sym] = baseP;
+          return klines60.map(k => {
+            const t = Math.floor(parseInt(k[0]) / 1000);
+            const close = parseFloat(k[4]);
+            const val = ((close - baseP) / baseP) * 100;
+            return { time: t, value: parseFloat(val.toFixed(2)) };
+          });
+        }
+      }
+      // Fallback fluide depuis rawKlines (15m)
+      const raw = item.rawKlines || [];
+      if (raw.length >= 15) {
+        const baseP = parseFloat(raw[0][4]) || parseFloat(raw[0][1]);
+        if (baseP > 0) {
+          basePriceRef.current[sym] = baseP;
+          const curve = [];
+          for (let i = 0; i < raw.length; i += 4) {
+            const t = Math.floor(parseInt(raw[i][0]) / 1000);
+            const close = parseFloat(raw[i][4]);
+            const val = ((close - baseP) / baseP) * 100;
+            curve.push({ time: t, value: parseFloat(val.toFixed(2)) });
+          }
+          return curve;
+        }
+      }
+      return [];
+    } else if (horizonMode === '7d') {
+      if (klines60 && klines60.length >= 168) {
+        const slice = klines60.slice(-168);
+        const baseP = parseFloat(slice[0][4]) || parseFloat(slice[0][1]);
+        if (baseP > 0) {
+          basePriceRef.current[sym] = baseP;
+          return slice.map(k => {
+            const t = Math.floor(parseInt(k[0]) / 1000);
+            const close = parseFloat(k[4]);
+            const val = ((close - baseP) / baseP) * 100;
+            return { time: t, value: parseFloat(val.toFixed(2)) };
+          });
+        }
+      }
+      const raw = item.rawKlines || [];
+      if (raw.length >= 15) {
+        const slice = raw.slice(-672);
+        const baseP = parseFloat(slice[0][4]) || parseFloat(slice[0][1]);
+        if (baseP > 0) {
+          basePriceRef.current[sym] = baseP;
+          const curve = [];
+          for (let i = 0; i < slice.length; i += 4) {
+            const t = Math.floor(parseInt(slice[i][0]) / 1000);
+            const close = parseFloat(slice[i][4]);
+            const val = ((close - baseP) / baseP) * 100;
+            curve.push({ time: t, value: parseFloat(val.toFixed(2)) });
+          }
+          return curve;
+        }
+      }
+      return [];
+    } else {
+      // 24h
+      const raw = item.rawKlines || [];
+      if (raw.length >= 15) {
+        const slice = raw.slice(-96);
+        const baseP = parseFloat(slice[0][4]) || parseFloat(slice[0][1]);
+        if (baseP > 0) {
+          basePriceRef.current[sym] = baseP;
+          return slice.map(k => {
+            const t = Math.floor(parseInt(k[0]) / 1000);
+            const close = parseFloat(k[4]);
+            const val = ((close - baseP) / baseP) * 100;
+            return { time: t, value: parseFloat(val.toFixed(2)) };
+          });
+        }
+      }
+      return item.chartCurve24h || [];
+    }
+  }, [klines60mMap, horizonMode]);
+
   const effectiveHeight = isFullscreen ? (typeof window !== 'undefined' ? window.innerHeight - 150 : 620) : chartHeight;
 
-  // Zoom confortable avec marge droite native
   const applyComfortableZoom = (targetChart, offset = 35) => {
     if (!targetChart) return;
     try {
@@ -4533,7 +4651,6 @@ export function MonthlyTripleAlignedChart({
     applyComfortableZoom(chartRef.current, 35);
   };
 
-  // Fermer le plein écran avec la touche Échap
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isFullscreen) setIsFullscreen(false);
@@ -4542,7 +4659,6 @@ export function MonthlyTripleAlignedChart({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFullscreen]);
 
-  // ↕️ Redimensionnement interactif de la hauteur
   const handleMouseDownHeight = (e) => {
     setIsDraggingHeight(true);
     dragStartYRef.current = e.clientY;
@@ -4632,36 +4748,6 @@ export function MonthlyTripleAlignedChart({
       title: '0.00% (BASELINE)'
     });
 
-    // EMA 20 Mois
-    refEmaMonthRef.current = chart.addLineSeries({
-      color: '#ec4899',
-      lineWidth: 2.5,
-      lineStyle: 0,
-      priceLineVisible: false,
-      lastValueVisible: true,
-      title: '👑 EMA 20 MOIS'
-    });
-
-    // EMA 20 Semaine
-    refEmaWeekRef.current = chart.addLineSeries({
-      color: '#6366f1',
-      lineWidth: 2,
-      lineStyle: 0,
-      priceLineVisible: false,
-      lastValueVisible: true,
-      title: '🌐 EMA 20 SEMAINE'
-    });
-
-    // EMA 20 Jour
-    refEmaDayRef.current = chart.addLineSeries({
-      color: '#00ffff',
-      lineWidth: 2,
-      lineStyle: 0,
-      priceLineVisible: false,
-      lastValueVisible: true,
-      title: '🔵 EMA 20 JOUR'
-    });
-
     chartRef.current = chart;
 
     const handleResize = () => {
@@ -4684,7 +4770,7 @@ export function MonthlyTripleAlignedChart({
     };
   }, [effectiveHeight]);
 
-  // Mise à jour des séries et des courbes
+  // Synchronisation des séries & tracé des courbes sans collision
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart) return;
@@ -4701,24 +4787,21 @@ export function MonthlyTripleAlignedChart({
 
     let allTimestamps = [];
 
-    tripleAlignedTokens.forEach((item, idx) => {
+    tripleAlignedTokens.forEach(item => {
       const sym = item.cleanSymbol;
       const fixedColor = item.fixedColor;
       const isSolo = highlightedToken === sym || selectedSoloToken?.cleanSymbol === sym;
 
       let lineColor = fixedColor;
-      let lineWidth = 2.5;
-      let lastValVisible = true;
+      let lineWidth = 2.0;
 
       if (highlightedToken) {
         if (isSolo) {
           lineColor = fixedColor;
-          lineWidth = 4.2;
-          lastValVisible = true;
+          lineWidth = 3.8;
         } else {
-          lineColor = 'rgba(148, 163, 184, 0.14)';
+          lineColor = 'rgba(148, 163, 184, 0.12)';
           lineWidth = 1.0;
-          lastValVisible = false;
         }
       }
 
@@ -4728,7 +4811,8 @@ export function MonthlyTripleAlignedChart({
           ? `${item.p1w >= 0 ? '+' : ''}${item.p1w?.toFixed(1)}%` 
           : `${item.p30d >= 0 ? '+' : ''}${item.p30d?.toFixed(1)}%`;
 
-      const title = `#M${item.rankMonth} #W${item.rankWeek} #D${item.rankDay} ${sym} (${perfTag})`;
+      // 🛡️ FIX COLLISION : Seul le token solo affiche un badge étendu sur l'axe droit
+      const title = isSolo ? `#M${item.rankMonth} #W${item.rankWeek} #D${item.rankDay} ${sym} (${perfTag})` : '';
 
       let s = seriesMapRef.current[sym];
       if (!s) {
@@ -4736,44 +4820,22 @@ export function MonthlyTripleAlignedChart({
           color: lineColor,
           lineWidth: lineWidth,
           lineStyle: 0,
-          title: isSolo || !highlightedToken ? title : '',
+          title: title,
           priceLineVisible: false,
-          lastValueVisible: lastValVisible,
+          lastValueVisible: isSolo, // Empêche le chevauchement des 22 étiquettes
         });
         seriesMapRef.current[sym] = s;
       } else {
         s.applyOptions({
           color: lineColor,
           lineWidth: lineWidth,
-          title: isSolo || !highlightedToken ? title : '',
-          lastValueVisible: lastValVisible
+          title: title,
+          lastValueVisible: isSolo
         });
       }
 
-      // Extraction de la courbe selon l'horizon choisi
-      let curve = [];
-      if (horizonMode === '24h') {
-        curve = item.chartCurve24h || chartProcessedData?.tokenCurvesMap?.[sym] || [];
-      } else if (horizonMode === '7d') {
-        // Fallback 7d klines
-        const klines = item.rawKlines || [];
-        const tLen = klines.length;
-        const offset = Math.min(671, tLen - 1);
-        const baseP = tLen > 0 ? parseFloat(klines[tLen - 1 - offset][4]) : 0;
-        if (baseP > 0) {
-          curve = [];
-          for (let b = tLen - 1 - offset; b < tLen; b += 4) {
-            const tTime = Math.floor(parseInt(klines[b][0]) / 1000);
-            const closeP = parseFloat(klines[b][4]);
-            const val = ((closeP - baseP) / baseP) * 100;
-            curve.push({ time: tTime, value: parseFloat(val.toFixed(2)) });
-          }
-        }
-      } else {
-        // 30d (Mois)
-        curve = chartProcessedData?.tokenMonthCurvesMap?.[sym] || [];
-      }
-
+      const curve = getCurve(item);
+      curveCacheRef.current[sym] = curve;
       if (curve && curve.length > 0) {
         s.setData(curve);
         if (curve.length > allTimestamps.length) {
@@ -4782,35 +4844,9 @@ export function MonthlyTripleAlignedChart({
       }
     });
 
-    // Baseline 0%
+    // Ligne zéro Baseline
     if (zeroLineRef.current && allTimestamps.length > 0) {
       zeroLineRef.current.setData(allTimestamps.map(t => ({ time: t, value: 0 })));
-    }
-
-    // Affichage des EMAs correspondantes
-    if (refEmaMonthRef.current) {
-      const dataM = chartProcessedData?.dynamicEma20MonthData || [];
-      if (dataM.length > 0 && horizonMode === '30d') {
-        refEmaMonthRef.current.setData(dataM);
-      } else {
-        refEmaMonthRef.current.setData([]);
-      }
-    }
-    if (refEmaWeekRef.current) {
-      const dataW = chartProcessedData?.dynamicEma20WeekData || [];
-      if (dataW.length > 0 && (horizonMode === '7d' || horizonMode === '30d')) {
-        refEmaWeekRef.current.setData(dataW);
-      } else {
-        refEmaWeekRef.current.setData([]);
-      }
-    }
-    if (refEmaDayRef.current) {
-      const dataD = chartProcessedData?.dynamicEma20DayData || [];
-      if (dataD.length > 0 && (horizonMode === '24h' || horizonMode === '30d')) {
-        refEmaDayRef.current.setData(dataD);
-      } else {
-        refEmaDayRef.current.setData([]);
-      }
     }
 
     const currentKey = tripleAlignedTokens.map(t => t.cleanSymbol).sort().join(',') + '_' + horizonMode;
@@ -4820,17 +4856,14 @@ export function MonthlyTripleAlignedChart({
       hasFittedRef.current = true;
     }
     prevSymbolsRef.current = currentKey;
-  }, [tripleAlignedTokens, horizonMode, highlightedToken, selectedSoloToken, chartProcessedData]);
+  }, [tripleAlignedTokens, horizonMode, highlightedToken, selectedSoloToken, klines60mMap, getCurve]);
 
-  // Moteur Live 500ms
+  // Moteur Live 500ms sans distorsion temporelle
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart || !tripleAlignedTokens || tripleAlignedTokens.length === 0) return;
 
     const intervalId = setInterval(() => {
-      const nowSec = Math.floor(Date.now() / 1000);
-      const activeCandleTime = Math.floor(nowSec / 900) * 900;
-
       tripleAlignedTokens.forEach(item => {
         const sym = item.cleanSymbol;
         const livePrice = livePricesRef?.current?.[sym];
@@ -4839,33 +4872,22 @@ export function MonthlyTripleAlignedChart({
         const s = seriesMapRef.current[sym];
         if (!s) return;
 
-        let basePrice = 0;
-        let lastT = activeCandleTime;
+        const curve = curveCacheRef.current[sym];
+        if (!curve || curve.length === 0) return;
 
-        if (horizonMode === '24h') {
-          const klines = item.rawKlines || [];
-          const tLen = klines.length;
-          const offset = Math.min(95, tLen - 1);
-          basePrice = tLen > 0 ? parseFloat(klines[tLen - 1 - offset][4]) : 0;
-          const c24 = item.chartCurve24h;
-          if (c24 && c24.length > 0) lastT = c24[c24.length - 1].time;
-        } else {
-          basePrice = chartProcessedData?.tokenMonthBasePricesMap?.[sym] || item.price;
-          const c30 = chartProcessedData?.tokenMonthCurvesMap?.[sym];
-          if (c30 && c30.length > 0) lastT = c30[c30.length - 1].time;
-        }
+        const baseP = basePriceRef.current[sym];
+        if (!baseP || baseP <= 0) return;
 
-        if (basePrice > 0) {
-          const liveVal = parseFloat((((livePrice - basePrice) / basePrice) * 100).toFixed(2));
-          try {
-            s.update({ time: Math.max(lastT, activeCandleTime), value: liveVal });
-          } catch (_) {}
-        }
+        const lastBarTime = curve[curve.length - 1].time;
+        const liveVal = parseFloat((((livePrice - baseP) / baseP) * 100).toFixed(2));
+        try {
+          s.update({ time: lastBarTime, value: liveVal });
+        } catch (_) {}
       });
     }, 500);
 
     return () => clearInterval(intervalId);
-  }, [tripleAlignedTokens, horizonMode, chartProcessedData, livePricesRef]);
+  }, [tripleAlignedTokens, livePricesRef]);
 
   const handleToggleSolo = (sym) => {
     if (highlightedToken === sym) {
@@ -4943,6 +4965,11 @@ export function MonthlyTripleAlignedChart({
               }}>
                 {tripleAlignedTokens.length} QUALIFIÉS
               </span>
+              {isLoadingKlines && (
+                <span style={{ color: '#64748b', fontSize: '0.62rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <RefreshCw size={10} className="animate-spin" /> Synchronisation 30D...
+                </span>
+              )}
             </div>
             <div style={{ color: '#94a3b8', fontSize: '0.70rem', marginTop: '2px' }}>
               Seuls les tokens simultanément présents dans le <strong>Top 50 du Mois</strong>, le <strong>Top 50 de la Semaine</strong> et le <strong>Top 50 des 24H</strong>.
@@ -5053,7 +5080,9 @@ export function MonthlyTripleAlignedChart({
         background: 'rgba(0, 0, 0, 0.35)',
         padding: '6px 10px',
         borderRadius: '8px',
-        border: '1px solid rgba(255, 255, 255, 0.05)'
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        maxHeight: '110px',
+        overflowY: 'auto'
       }}>
         <span style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: '800' }}>
           FOCUS SOLO :
@@ -5080,6 +5109,7 @@ export function MonthlyTripleAlignedChart({
 
         {tripleAlignedTokens.map(t => {
           const isSelected = highlightedToken === t.cleanSymbol;
+          const perfVal = horizonMode === '24h' ? t.p24 : horizonMode === '7d' ? t.p1w : t.p30d;
           return (
             <button
               key={t.cleanSymbol}
@@ -5112,8 +5142,8 @@ export function MonthlyTripleAlignedChart({
               <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>
                 (#M{t.rankMonth} #W{t.rankWeek} #D{t.rankDay})
               </span>
-              <span style={{ color: t.p30d >= 0 ? '#34d399' : '#f87171', fontSize: '0.64rem' }}>
-                30j: {t.p30d >= 0 ? '+' : ''}{t.p30d?.toFixed(1)}%
+              <span style={{ color: perfVal >= 0 ? '#34d399' : '#f87171', fontSize: '0.64rem' }}>
+                {perfVal >= 0 ? '+' : ''}{perfVal?.toFixed(1)}%
               </span>
             </button>
           );
@@ -5188,10 +5218,15 @@ export function MonthlyTop50UnderRejectionWallChart({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [wallMode, setWallMode] = useState('MACRO'); // 'MACRO' (Résistance Macro) | 'P75' (Percentile 75 Sommets)
 
+  const [klines60mMap, setKlines60mMap] = useState({});
+  const [isLoadingKlines, setIsLoadingKlines] = useState(false);
+
   const dragStartYRef = useRef(0);
   const dragStartHeightRef = useRef(420);
   const hasFittedRef = useRef(false);
   const prevSymbolsRef = useRef('');
+  const curveCacheRef = useRef({});
+  const basePriceRef = useRef({});
 
   // 1. Détermination précise du Mur de Rejet du mois
   const macroResLvl = useMemo(() => {
@@ -5202,70 +5237,137 @@ export function MonthlyTop50UnderRejectionWallChart({
     return (chartUniverse === 'MONTH_PEAK' ? tripleAnalysis?.listMaxPointsMonth : tripleAnalysis?.listMonth) || [];
   }, [chartUniverse, tripleAnalysis]);
 
-  const tokenMonthCurvesMap = useMemo(() => {
-    return chartProcessedData?.tokenMonthCurvesMap || {};
-  }, [chartProcessedData]);
-
   // Calcul statistique du P75 des sommets atteints au cours du mois
   const p75WallLvl = useMemo(() => {
-    const peaks = listMonth.map(t => {
-      const curve = tokenMonthCurvesMap[t.cleanSymbol] || [];
-      let m = -Infinity;
-      curve.forEach(pt => { if (pt.value > m) m = pt.value; });
-      if (m === -Infinity) m = t.maxPointsMonth || t.p30d || 0;
-      return m;
-    }).filter(v => v > 0).sort((a, b) => a - b);
-
+    const peaks = listMonth.map(t => t.maxPointsMonth || t.p30d || 0).filter(v => v > 0).sort((a, b) => a - b);
     if (peaks.length === 0) return macroResLvl;
     const idx = Math.floor(peaks.length * 0.75);
     return parseFloat(peaks[Math.min(peaks.length - 1, idx)].toFixed(2));
-  }, [listMonth, tokenMonthCurvesMap, macroResLvl]);
+  }, [listMonth, macroResLvl]);
 
   const effectiveWallLvl = wallMode === 'P75' ? p75WallLvl : macroResLvl;
 
   // 2. RÈGLE STRICTE UTILISATEUR :
   // "chart kaywari lina les tokens li kayniiin f top 50 nta3 chhar , walakin ma3amrhom ma fato le mure de rejet nta3 chhar"
-  // Ne conserver QUE les tokens dont AUCUN point sur les 30 jours n'a dépassé le mur de rejet
-  const underWallTokens = useMemo(() => {
+  // Candidats : Sommet record mensuel ne doit jamais avoir dépassé le mur de rejet
+  const candidateTokens = useMemo(() => {
     return listMonth.slice(0, 50).filter(t => {
       const sym = t.cleanSymbol;
       if (!sym || sym === 'BTC' || sym === 'ETH') return false;
-      const curve = tokenMonthCurvesMap[sym] || [];
-      if (curve.length === 0) return false;
+      const peak = t.maxPointsMonth != null ? t.maxPointsMonth : (t.p30d || 0);
+      return peak <= effectiveWallLvl;
+    });
+  }, [listMonth, effectiveWallLvl]);
 
-      // Vérification stricte : aucun point ne dépasse le mur
-      let hasExceeded = false;
-      for (let i = 0; i < curve.length; i++) {
-        if (curve[i].value > effectiveWallLvl) {
-          hasExceeded = true;
-          break;
+  // Chargement des vraies bougies 60m 720 (30 jours réels) pour les tokens candidats
+  useEffect(() => {
+    if (!candidateTokens || candidateTokens.length === 0) return;
+    let isMounted = true;
+    const symbols = candidateTokens.map(t => t.cleanSymbol);
+
+    async function load60mKlines() {
+      setIsLoadingKlines(true);
+      try {
+        const results = await Promise.all(
+          symbols.map(async (sym) => {
+            const klines = await fetchBybitKlines(sym, '60', 720);
+            return { sym, klines };
+          })
+        );
+        if (!isMounted) return;
+        const newMap = {};
+        results.forEach(r => {
+          if (r.klines && r.klines.length > 0) {
+            newMap[r.sym] = r.klines;
+          }
+        });
+        setKlines60mMap(newMap);
+      } catch (_) {}
+      if (isMounted) setIsLoadingKlines(false);
+    }
+
+    load60mKlines();
+    return () => { isMounted = false; };
+  }, [candidateTokens]);
+
+  // Filtrage strict et génération des courbes 30J réelles
+  const underWallTokens = useMemo(() => {
+    return candidateTokens.filter(t => {
+      const sym = t.cleanSymbol;
+      const klines60 = klines60mMap[sym];
+      if (klines60 && klines60.length >= 10) {
+        const baseP = parseFloat(klines60[0][4]) || parseFloat(klines60[0][1]);
+        if (baseP <= 0) return false;
+        // Vérification stricte : aucun point de la courbe ne doit dépasser effectiveWallLvl
+        for (let i = 0; i < klines60.length; i++) {
+          const c = parseFloat(klines60[i][4]);
+          const val = ((c - baseP) / baseP) * 100;
+          if (val > effectiveWallLvl) return false;
         }
+        return true;
       }
-      return !hasExceeded;
+      // Fallback depuis rawKlines
+      const raw = t.rawKlines || [];
+      if (raw.length >= 15) {
+        const baseP = parseFloat(raw[0][4]) || parseFloat(raw[0][1]);
+        if (baseP <= 0) return false;
+        for (let i = 0; i < raw.length; i += 4) {
+          const c = parseFloat(raw[i][4]);
+          const val = ((c - baseP) / baseP) * 100;
+          if (val > effectiveWallLvl) return false;
+        }
+        return true;
+      }
+      return false;
     }).map((t, idx) => {
       const sym = t.cleanSymbol;
-      const curve = tokenMonthCurvesMap[sym] || [];
-      let maxPast = -Infinity;
-      curve.forEach(pt => { if (pt.value > maxPast) maxPast = pt.value; });
+      const klines60 = klines60mMap[sym];
+      let curve = [];
+      let baseP = 0;
+
+      if (klines60 && klines60.length >= 10) {
+        baseP = parseFloat(klines60[0][4]) || parseFloat(klines60[0][1]);
+        curve = klines60.map(k => {
+          const time = Math.floor(parseInt(k[0]) / 1000);
+          const close = parseFloat(k[4]);
+          const val = ((close - baseP) / baseP) * 100;
+          return { time, value: parseFloat(val.toFixed(2)) };
+        });
+      } else {
+        const raw = t.rawKlines || [];
+        baseP = parseFloat(raw[0][4]) || parseFloat(raw[0][1]);
+        for (let i = 0; i < raw.length; i += 4) {
+          const time = Math.floor(parseInt(raw[i][0]) / 1000);
+          const close = parseFloat(raw[i][4]);
+          const val = ((close - baseP) / baseP) * 100;
+          curve.push({ time, value: parseFloat(val.toFixed(2)) });
+        }
+      }
+
+      basePriceRef.current[sym] = baseP;
+      curveCacheRef.current[sym] = curve;
 
       const livePrice = (livePricesRef?.current?.[sym]) || t.price;
-      const basePrice = chartProcessedData?.tokenMonthBasePricesMap?.[sym] || t.price;
-      const liveVal = basePrice > 0 ? parseFloat((((livePrice - basePrice) / basePrice) * 100).toFixed(2)) : (t.p30d || 0);
+      const liveVal = baseP > 0 ? parseFloat((((livePrice - baseP) / baseP) * 100).toFixed(2)) : (t.p30d || 0);
       const distToWall = parseFloat((effectiveWallLvl - liveVal).toFixed(2));
       const fixedColor = getTokenFixedColor(sym);
+
+      let maxPast = -Infinity;
+      curve.forEach(pt => { if (pt.value > maxPast) maxPast = pt.value; });
 
       return {
         ...t,
         sym,
         rankMonth: t.rankMonth || idx + 1,
         curve,
+        baseP,
         maxPast: maxPast > -Infinity ? parseFloat(maxPast.toFixed(2)) : liveVal,
         liveVal,
         distToWall,
         fixedColor
       };
     }).sort((a, b) => b.liveVal - a.liveVal);
-  }, [listMonth, tokenMonthCurvesMap, effectiveWallLvl, livePricesRef, chartProcessedData]);
+  }, [candidateTokens, klines60mMap, effectiveWallLvl, livePricesRef]);
 
   // Synchronisation avec selectedSoloToken externe
   useEffect(() => {
@@ -5303,7 +5405,6 @@ export function MonthlyTop50UnderRejectionWallChart({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFullscreen]);
 
-  // ↕️ Redimensionnement hauteur
   const handleMouseDownHeight = (e) => {
     setIsDraggingHeight(true);
     dragStartYRef.current = e.clientY;
@@ -5339,7 +5440,7 @@ export function MonthlyTop50UnderRejectionWallChart({
     };
   }, [isDraggingHeight]);
 
-  // Initialisation du canvas Lightweight Charts
+  // Initialisation Lightweight Charts
   useEffect(() => {
     if (!containerRef.current) return;
     if (chartRef.current) {
@@ -5396,7 +5497,7 @@ export function MonthlyTop50UnderRejectionWallChart({
     // ⛔ MUR DE REJET DU MOIS (Ligne en pointillés rouge/rose fluo)
     rejectionWallSeriesRef.current = chart.addLineSeries({
       color: '#ff0055',
-      lineWidth: 3.5,
+      lineWidth: 3.0,
       lineStyle: 2, // Dashed
       priceLineVisible: false,
       lastValueVisible: true,
@@ -5425,7 +5526,7 @@ export function MonthlyTop50UnderRejectionWallChart({
     };
   }, [effectiveHeight]);
 
-  // Mise à jour des séries et des courbes
+  // Tracé des courbes sans collision de labels sur l'axe
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart) return;
@@ -5442,28 +5543,26 @@ export function MonthlyTop50UnderRejectionWallChart({
 
     let allTimestamps = [];
 
-    underWallTokens.forEach((item, idx) => {
+    underWallTokens.forEach(item => {
       const sym = item.cleanSymbol;
       const fixedColor = item.fixedColor;
       const isSolo = highlightedToken === sym || selectedSoloToken?.cleanSymbol === sym;
 
       let lineColor = fixedColor;
-      let lineWidth = 2.5;
-      let lastValVisible = true;
+      let lineWidth = 2.0;
 
       if (highlightedToken) {
         if (isSolo) {
           lineColor = fixedColor;
-          lineWidth = 4.2;
-          lastValVisible = true;
+          lineWidth = 3.8;
         } else {
-          lineColor = 'rgba(148, 163, 184, 0.14)';
+          lineColor = 'rgba(148, 163, 184, 0.12)';
           lineWidth = 1.0;
-          lastValVisible = false;
         }
       }
 
-      const title = `#${item.rankMonth} ${sym} (Actuel: +${item.liveVal}% | Marge: +${item.distToWall} pts)`;
+      // 🛡️ Seul le token solo affiche son badge sur l'échelle de prix
+      const title = isSolo ? `#${item.rankMonth} ${sym} (+${item.liveVal}% | Marge: +${item.distToWall} pts)` : '';
 
       let s = seriesMapRef.current[sym];
       if (!s) {
@@ -5471,17 +5570,17 @@ export function MonthlyTop50UnderRejectionWallChart({
           color: lineColor,
           lineWidth: lineWidth,
           lineStyle: 0,
-          title: isSolo || !highlightedToken ? title : '',
+          title: title,
           priceLineVisible: false,
-          lastValueVisible: lastValVisible,
+          lastValueVisible: isSolo,
         });
         seriesMapRef.current[sym] = s;
       } else {
         s.applyOptions({
           color: lineColor,
           lineWidth: lineWidth,
-          title: isSolo || !highlightedToken ? title : '',
-          lastValueVisible: lastValVisible
+          title: title,
+          lastValueVisible: isSolo
         });
       }
 
@@ -5520,9 +5619,6 @@ export function MonthlyTop50UnderRejectionWallChart({
     if (!chart || !underWallTokens || underWallTokens.length === 0) return;
 
     const intervalId = setInterval(() => {
-      const nowSec = Math.floor(Date.now() / 1000);
-      const activeCandleTime = Math.floor(nowSec / 900) * 900;
-
       underWallTokens.forEach(item => {
         const sym = item.cleanSymbol;
         const livePrice = livePricesRef?.current?.[sym];
@@ -5531,20 +5627,22 @@ export function MonthlyTop50UnderRejectionWallChart({
         const s = seriesMapRef.current[sym];
         if (!s) return;
 
-        const basePrice = chartProcessedData?.tokenMonthBasePricesMap?.[sym] || item.price;
-        if (basePrice > 0) {
-          const liveVal = parseFloat((((livePrice - basePrice) / basePrice) * 100).toFixed(2));
-          const c30 = item.curve;
-          const lastT = (c30 && c30.length > 0) ? c30[c30.length - 1].time : activeCandleTime;
-          try {
-            s.update({ time: Math.max(lastT, activeCandleTime), value: liveVal });
-          } catch (_) {}
-        }
+        const curve = curveCacheRef.current[sym];
+        if (!curve || curve.length === 0) return;
+
+        const baseP = basePriceRef.current[sym];
+        if (!baseP || baseP <= 0) return;
+
+        const lastBarTime = curve[curve.length - 1].time;
+        const liveVal = parseFloat((((livePrice - baseP) / baseP) * 100).toFixed(2));
+        try {
+          s.update({ time: lastBarTime, value: liveVal });
+        } catch (_) {}
       });
     }, 500);
 
     return () => clearInterval(intervalId);
-  }, [underWallTokens, chartProcessedData, livePricesRef]);
+  }, [underWallTokens, livePricesRef]);
 
   const handleToggleSolo = (sym) => {
     if (highlightedToken === sym) {
@@ -5622,6 +5720,11 @@ export function MonthlyTop50UnderRejectionWallChart({
               }}>
                 {underWallTokens.length} TOKENS SOUS LE PLAFOND (+{effectiveWallLvl} pts)
               </span>
+              {isLoadingKlines && (
+                <span style={{ color: '#64748b', fontSize: '0.62rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <RefreshCw size={10} className="animate-spin" /> Synchronisation 30D...
+                </span>
+              )}
             </div>
             <div style={{ color: '#94a3b8', fontSize: '0.70rem', marginTop: '2px' }}>
               Tokens du <strong>Top 50 du Mois</strong> n'ayant <strong>JAMAIS dépassé le Mur de Rejet</strong> au cours des 30 jours (accumulation / réserve d'explosion sous le plafond).
@@ -5734,7 +5837,9 @@ export function MonthlyTop50UnderRejectionWallChart({
         background: 'rgba(0, 0, 0, 0.35)',
         padding: '6px 10px',
         borderRadius: '8px',
-        border: '1px solid rgba(255, 255, 255, 0.05)'
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        maxHeight: '110px',
+        overflowY: 'auto'
       }}>
         <span style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: '800' }}>
           FOCUS SOLO :
